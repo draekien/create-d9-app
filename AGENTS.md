@@ -2,12 +2,12 @@
 
 ## Purpose
 
-Public npm `create-*` CLI; personal project. Scaffolds Turborepo monorepo. Default stack: `@tanstack/*`, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion.
+Public npm `create-*` CLI, published as `@draekien/create-d9-app`; personal project. Scaffolds Turborepo monorepo. Default stack: `@tanstack/*`, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion.
 
 - Every tool = pick-and-mix choice with alternatives; default stack preselected.
 - Output always Turborepo monorepo. No single-package layout.
-- `pnpm create d9-app .` → scaffold into current dir; dir must be empty.
-- `pnpm create d9-app my-app` → create `./my-app`, scaffold into it.
+- `pnpm create @draekien/d9-app .` → scaffold into current dir; dir must be empty.
+- `pnpm create @draekien/d9-app my-app` → create `./my-app`, scaffold into it.
 - Create paths: `npm create`, `pnpm create`, `yarn create`, `bun create`. Package manager defaults to invoker; changeable at prompt.
 
 ## Conventions

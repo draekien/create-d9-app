@@ -10,7 +10,7 @@ Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0
 
 ## Goal
 
-`pnpm create d9-app my-app` publishes from npm and produces the v0 default stack (`@tanstack/*`, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion) where install, build, lint, typecheck, and test pass. A daily workflow keeps template pins and generated template content current without manual work for patch and minor releases.
+`pnpm create @draekien/d9-app my-app` publishes from npm and produces the v0 default stack (`@tanstack/*`, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion) where install, build, lint, typecheck, and test pass. A daily workflow keeps template pins and generated template content current without manual work for patch and minor releases.
 
 ## Method
 
@@ -35,7 +35,7 @@ Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0
 | Git | `git init` + one commit at the end; skipped inside an existing repo; `--no-git` | `create-turbo` `src/utils/git.ts` |
 | Install | `pnpm install` by default; `--no-install` | `@tanstack/cli`, `create-t3-app` |
 | Dotfiles | `_gitignore` → `.gitignore` via one rename record; tests reuse the record | `create-vite` `renameFiles` |
-| Package manager | v0: `npm_config_user_agent` must start with `pnpm/`; otherwise exit 1 naming `pnpm create d9-app` | `docs/contexts/v0.md` |
+| Package manager | v0: `npm_config_user_agent` must start with `pnpm/`; otherwise exit 1 naming `pnpm create @draekien/d9-app` | `docs/contexts/v0.md` |
 | Git hooks | Lefthook | membank, parasol, mashay |
 | pnpm settings | `saveExact: true`, `allowBuilds` map; `minimumReleaseAge` and `trustPolicy` left at pnpm default (1440 min, `off`) | `F:\Dev\poly\src\Web\pnpm-workspace.yaml`; pnpm.io/settings/dependency-resolution |
 | Regression | e2e: built CLI → `pnpm install`, `build`, `check`, `typecheck`, `test` in output; snapshot of file tree + every `package.json` dependency map | `create-next-app` `test/production/create-next-app`; `sv` `src/cli/tests/snapshots` |
@@ -48,7 +48,7 @@ Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0
 create-d9-app/
 ├── .changeset/config.json
 ├── .github/workflows/{pr.yml,publish.yml,refresh-templates.yml}
-├── packages/create-d9-app/
+├── packages/cli/
 │   ├── index.js                  # bin shim
 │   ├── src/                      # CLI source
 │   ├── scripts/refresh-templates.ts
@@ -58,7 +58,7 @@ create-d9-app/
 ├── biome.json  lefthook.yml  turbo.json  tsconfig.json  pnpm-workspace.yaml
 ```
 
-`packages/create-d9-app/package.json`: `files: ["index.js", "dist", "templates"]`, `bin: { "create-d9-app": "index.js" }`, no `dependencies` key.
+`packages/cli/package.json`: `name: "@draekien/create-d9-app"`, `files: ["index.js", "dist", "templates"]`, `bin: { "create-d9-app": "index.js" }`, `publishConfig: { "access": "public" }`, no `dependencies` key. `pnpm create @draekien/d9-app` resolves to `@draekien/create-d9-app` (pnpm `convertToCreateName` in `pnpm11/exec/commands/src/create.ts`; npm: docs.npmjs.com/cli/v11/commands/npm-init, `npm init @usr/foo` → `@usr/create-foo`).
 
 ## Slice 1 — thinnest scaffold
 
@@ -72,7 +72,7 @@ Steps:
 4. `templates/base`: root `package.json` (scripts `build`, `check`, `typecheck`, `test`, `dev` through `turbo`), `pnpm-workspace.yaml` (`apps/*`, `packages/*`, `saveExact: true`), `turbo.json`, `tsconfig.json`, `_gitignore`, `AGENTS.md`, `CLAUDE.md` (`@AGENTS.md`), `apps/web` (TanStack Start, one route rendering text, one Vitest test). Use `F:\Dev\poly\src\Web\apps\admin` as the layout reference.
 5. `templates/tools/biome`: `biome.json`, `package.json` (`@biomejs/biome` devDependency, `check` script). `templates/tools/lefthook`: `lefthook.yml`, `package.json` (`lefthook` devDependency, `allowBuilds` entry).
 6. Overlap guard: a unit test fails when two overlays contain the same non-`package.json` path, or an overlay contains a base path other than `package.json`.
-7. e2e (`test/scaffold.e2e.test.ts`, Vitest): build the CLI, spawn `node packages/create-d9-app/index.js <tmp>/app --yes --no-git` with `npm_config_user_agent=pnpm/<version>`, then run `pnpm build`, `pnpm check`, `pnpm typecheck`, `pnpm test` in `<tmp>/app`. Snapshot the sorted file list and every `package.json` `dependencies`/`devDependencies` map.
+7. e2e (`test/scaffold.e2e.test.ts`, Vitest): build the CLI, spawn `node packages/cli/index.js <tmp>/app --yes --no-git` with `npm_config_user_agent=pnpm/<version>`, then run `pnpm build`, `pnpm check`, `pnpm typecheck`, `pnpm test` in `<tmp>/app`. Snapshot the sorted file list and every `package.json` `dependencies`/`devDependencies` map.
 8. Unit tests: empty-dir safe-list, name derivation for `.` and `my-app`, non-pnpm user agent exits 1, Node-major check in the shim.
 
 Done when: `pnpm turbo build typecheck test` and `pnpm check` exit 0 at the repo root on Windows locally, and the e2e passes.
@@ -85,11 +85,16 @@ Steps:
 
 1. `.changeset/config.json`: `access: "public"`, `baseBranch: "main"`, `commit: false`, `updateInternalDependencies: "patch"` (copy from `F:\Dev\membank\.changeset\config.json`).
 2. `pr.yml`: on `pull_request` to `main`; job `check` runs install (`--frozen-lockfile`), `check`, `build`, `typecheck`, `test` including the e2e, on `ubuntu-latest` Node 22 and 24 and `windows-latest` Node 24; job `ci` always runs and passes only when `check` succeeded. `ci` is the required status check. Also fail when the PR adds no `.changeset/*.md` (`changeset status --since=origin/main`).
-3. `publish.yml`: on push to `main`; install, build, test, then `changesets/action` with `publish: pnpm changeset publish`, title and commit `chore: version packages`, `permissions: { contents: write, pull-requests: write, id-token: write }`, `NPM_CONFIG_PROVENANCE: "true"`, no `NPM_TOKEN`.
-4. Owner setup (outside the repo): install the changeset bot GitHub App; configure npm trusted publishing for `create-d9-app` → this repo + `publish.yml`; branch protection on `main` requiring `ci`; enable "Allow auto-merge". <!-- unverified: whether npm trusted publishing can be configured before the package's first publish -->
-5. Pin actions by commit SHA.
+3. `publish.yml`: on push to `main`; install, build, test; then two jobs using the `changesets/action` v2 sub-actions (`v2.1.2` README recommends sub-actions for trusted publishing):
+   - `version` job: `changesets/action/version`, title and commit `chore: version packages`, `permissions: { contents: write, pull-requests: write }`.
+   - `publish` job: `changesets/action/publish` with `script: pnpm changeset publish`, `permissions: { contents: write, id-token: write }`, no `NPM_TOKEN`, no `--provenance` flag and no `NPM_CONFIG_PROVENANCE`. Trusted publishing from GitHub Actions generates provenance by default for a public repo and package (docs.npmjs.com/trusted-publishers).
+   - `publish` job runtime: Node >= 22.14.0 and npm >= 11.5.1 (docs.npmjs.com/trusted-publishers); install a pinned npm when the runner's bundled npm is older.
+4. `packages/cli/package.json` `repository.url` matches this GitHub repo exactly; trusted publishing rejects a mismatch (docs.npmjs.com/trusted-publishers).
+5. First publish, by the owner: `npm publish --access public` by hand from a clean build; scoped packages publish as private by default (docs.npmjs.com/creating-and-publishing-scoped-public-packages). Trusted publishing cannot be configured before the package exists: "The package you're configuring must already exist on the npm registry." (docs.npmjs.com/cli/v11/commands/npm-trust).
+6. Owner setup after the first publish: add the trusted publisher on npmjs.com (repository, workflow filename `publish.yml` with extension). The next publish through `publish.yml` must succeed within 2 days or the configuration expires (docs.npmjs.com/trusted-publishers). Also: install the changeset bot GitHub App; branch protection on `main` requiring `ci`; enable "Allow auto-merge".
+7. Pin actions by commit SHA.
 
-Done when: `pnpm create d9-app@<published version> demo --yes` from a clean directory produces a project where `pnpm build` passes.
+Done when: a version published by `publish.yml` through OIDC carries provenance, and `pnpm create @draekien/d9-app@<that version> demo --yes` from a clean directory produces a project where `pnpm build` passes.
 
 ## Slice 3 — refresh path
 
@@ -125,10 +130,13 @@ Scope: TanStack libraries in `apps/web`; TanStack Intent skill wiring.
 
 Steps:
 
-1. `apps/web`: TanStack Query (`QueryClient` with `staleTime`, provider, one query), Form (one form), Table (one table), Hotkeys (one binding). <!-- unverified: npm package name for TanStack Hotkeys; look up before pinning -->
-2. `package.json` `"intent": { "skills": ["*"] }`; `@tanstack/intent` pinned as a devDependency.
-3. Generator for Intent wiring: runs the pinned Intent setup command in the temp scaffold; declared output, owned by `templates/base`: `.intent/hooks/*`, `.claude/settings.json`, `.codex/hooks.json`, and the `<!-- intent-skills:start -->` … `<!-- intent-skills:end -->` block in `AGENTS.md`. <!-- unverified: Intent setup command name; docs at tanstack.com/intent -->
-4. Generated wiring calls `pnpm exec intent`, never `pnpm dlx @tanstack/intent@latest`. Reference: `F:\Dev\poly\src\Web\AGENTS.md`. <!-- unverified: whether Intent setup emits the exec form or needs post-processing -->
+1. `apps/web`: TanStack Query (`QueryClient` with `staleTime`, provider, one query), Form (one form), Table (one table), Hotkeys (one binding). Hotkeys package: `@tanstack/react-hotkeys` (0.x; re-exports `@tanstack/hotkeys`, so no separate core dependency; `TanStack/hotkeys` `docs/installation.md`).
+2. Root `package.json`: `"intent": { "skills": ["*"] }` written by the template, and `@tanstack/intent` >= 0.5.0 pinned as a devDependency (`TanStack/intent` `docs/getting-started/quick-start-consumers.md`: keep it in devDependencies).
+3. Generator for Intent wiring runs two commands in the temp scaffold after `pnpm install`:
+   - `pnpm exec intent install --no-notices` writes the `<!-- intent-skills:start -->` … `<!-- intent-skills:end -->` block in `AGENTS.md`. It prompts only when `intent.skills` is not configured; non-TTY first-run setup fails (`docs/cli/intent-install.md`), so step 2 must precede it.
+   - `pnpm exec intent hooks install` (defaults `--scope project --agents all`; no prompts) writes `.intent/hooks/intent-claude-gate.mjs`, `.intent/hooks/intent-codex-gate.mjs`, `.claude/settings.json`, `.codex/hooks.json` (`docs/cli/intent-hooks.md`; file paths from `packages/intent/src/hooks/install.ts`). Copilot hooks are skipped in project scope.
+   - Declared output, owned by `templates/base`: the four hook files and the `AGENTS.md` block.
+4. Intent >= 0.5.0 emits `pnpm exec intent …` for pnpm; 0.4.x and earlier emitted `pnpm dlx @tanstack/intent@latest …`. The form follows the detected package manager and the CLI version; no option selects it (`packages/intent/src/shared/command-runner.ts`; `docs/cli/intent-install.md`). No post-processing needed.
 
 Done when: e2e passes and `pnpm exec intent list` in the output lists TanStack skills.
 
@@ -154,15 +162,17 @@ Scope: interactive flow with flag parity.
 Steps:
 
 1. `@clack/prompts` flow: project directory when `[dir]` is absent; confirm git and install. Each prompt maps to a flag.
-2. Non-interactive with a missing required value and no default exits 1 naming the flag.
-3. Print the equivalent non-interactive command at the end (`sv` `argsFormatted` in `cli/create.ts`).
+2. The prompt layer takes `input: Readable` and `output: Writable` and passes them to every clack call; every clack prompt accepts both (`bombshell-dev/clack` `packages/core/src/prompts/prompt.ts`, `PromptOptions`). Production passes `process.stdin`/`process.stdout`.
+3. Non-interactive with a missing required value and no default exits 1 naming the flag.
+4. Print the equivalent non-interactive command at the end (`sv` `argsFormatted` in `cli/create.ts`).
+5. Test helpers: copy clack's mock `Readable`/`Writable` (`packages/prompts/test/test-utils.ts`; not exported by `@clack/prompts`) and drive keys with `input.emit('keypress', '', { name: 'return' })`. No pseudo-terminal, so the test runs unchanged on Linux and Windows.
 
-Done when: an e2e case drives the interactive flow through scripted stdin in a pseudo-terminal and produces a tree identical to `--yes`. <!-- unverified: pseudo-terminal approach for Windows CI -->
+Done when: a test drives the prompt layer through mock streams, accepting every default, and the resolved options equal the options `--yes` resolves to; the slice 1 e2e covers the files those options produce.
 
 ## Finish criteria
 
 - All seven slices meet their "Done when" line.
-- A published version scaffolds the v0 stack with `pnpm create d9-app my-app` and with `pnpm create d9-app .` in an empty directory.
+- A published version scaffolds the v0 stack with `pnpm create @draekien/d9-app my-app` and with `pnpm create @draekien/d9-app .` in an empty directory.
 - The refresh workflow has merged at least one pin bump with no manual action.
 - This plan's `status` is `done` in the change that completes slice 7.
 
