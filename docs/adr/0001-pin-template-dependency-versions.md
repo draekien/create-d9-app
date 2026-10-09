@@ -13,7 +13,7 @@ superseded-by:
 
 ## Context
 
-create-dstack writes a `package.json` for every package in the generated project. Each dependency version must come from somewhere: written into the template, or resolved from the npm registry when the user runs the CLI. A fresh scaffold must pass install, build, lint, and typecheck for every tool choice.
+create-d9-app writes a `package.json` for every package in the generated project. Each dependency version must come from somewhere: written into the template, or resolved from the npm registry when the user runs the CLI. A fresh scaffold must pass install, build, lint, and typecheck for every tool choice.
 
 ## Decision
 
@@ -21,7 +21,7 @@ We will pin exact dependency versions in the templates. Generated projects ship 
 
 ## Consequences
 
-Every scaffold produced by a given create-dstack release installs the same versions, so a project that passed install, build, lint, and typecheck at release time passes them on every later run. Template versions fall behind upstream between upgrades, and a generated project starts on the versions of the create-dstack release that produced it. Keeping templates current depends on running the upgrade-dependencies skill.
+Every scaffold produced by a given create-d9-app release installs the same versions, so a project that passed install, build, lint, and typecheck at release time passes them on every later run. Template versions fall behind upstream between upgrades, and a generated project starts on the versions of the create-d9-app release that produced it. Keeping templates current depends on running the upgrade-dependencies skill.
 
 ## Alternatives considered
 

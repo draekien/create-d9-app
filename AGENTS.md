@@ -1,4 +1,4 @@
-# create-dstack
+# create-d9-app
 
 ## Purpose
 
@@ -6,8 +6,8 @@ Public npm `create-*` CLI; personal project. Scaffolds Turborepo monorepo. Defau
 
 - Every tool = pick-and-mix choice with alternatives; default stack preselected.
 - Output always Turborepo monorepo. No single-package layout.
-- `pnpm create dstack .` → scaffold into current dir; dir must be empty.
-- `pnpm create dstack my-app` → create `./my-app`, scaffold into it.
+- `pnpm create d9-app .` → scaffold into current dir; dir must be empty.
+- `pnpm create d9-app my-app` → create `./my-app`, scaffold into it.
 - Create paths: `npm create`, `pnpm create`, `yarn create`, `bun create`. Package manager defaults to invoker; changeable at prompt.
 
 ## Conventions

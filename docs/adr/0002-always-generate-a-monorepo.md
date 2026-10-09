@@ -13,7 +13,7 @@ superseded-by:
 
 ## Context
 
-create-dstack generates projects that may start as a single app. A project with one app can be laid out as a single package or as a monorepo with one app in it. Projects often add a second app or a shared package later.
+create-d9-app generates projects that may start as a single app. A project with one app can be laid out as a single package or as a monorepo with one app in it. Projects often add a second app or a shared package later.
 
 ## Decision
 
