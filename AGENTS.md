@@ -30,6 +30,12 @@ A public npm `create-*` CLI that scaffolds a Turborepo monorepo on the author's 
 
 Agent docs are read on every turn — every line is context each agent pays for whether or not the task touches it. One rule per line, stated as the rule. No preamble, no restating the heading. Cut anything two source files would teach. State behaviour literally: no metaphor, no analogy. The domain's own vocabulary is not a metaphor. A pointer to another document names the task that triggers the read, never the directory it points at.
 
+In `AGENTS.md` files and `docs/contexts/`:
+- Shortest form that keeps every fact: drop articles, filler verbs, full sentences; never drop a fact.
+  - ✗ `The CLI uses no Bun-only or Deno-only APIs; Bun and Deno may only be targets the user picks.`
+  - ✓ `CLI: no Bun/Deno-only APIs. Bun/Deno = user-selectable targets only.`
+- Current state only. No history: no "previously", "renamed from", "migrated off", "used to".
+
 ## Documentation
 
 Agent-facing documentation lives in `docs/`. Read [docs/AGENTS.md](docs/AGENTS.md) before reading or writing anything there.
