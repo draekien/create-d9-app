@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Public npm `create-*` CLI; personal project. Scaffolds Turborepo monorepo. Default stack: TanStack Start, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion.
+Public npm `create-*` CLI; personal project. Scaffolds Turborepo monorepo. Default stack: `@tanstack/*`, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion.
 
 - Every tool = pick-and-mix choice with alternatives; default stack preselected.
 - Output always Turborepo monorepo. No single-package layout.
