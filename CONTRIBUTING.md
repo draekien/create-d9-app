@@ -37,7 +37,7 @@ docs: document v0 scope
 
 ## v0 scope
 
-Until v0 is released, the CLI scaffolds the default stack through `pnpm create d9-app` only. Do not add tool alternatives or other create paths. See [`docs/contexts/v0.md`](docs/contexts/v0.md).
+Until v0 is released, the CLI scaffolds the default stack through `pnpm create @draekien/d9-app` only. Do not add tool alternatives or other create paths. See [`docs/contexts/v0.md`](docs/contexts/v0.md).
 
 ## Design documents
 

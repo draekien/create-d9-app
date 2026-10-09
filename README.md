@@ -21,13 +21,13 @@ Scaffolds a Turborepo monorepo with this stack:
 Create `./my-app` and scaffold into it:
 
 ```sh
-pnpm create d9-app my-app
+pnpm create @draekien/d9-app my-app
 ```
 
 Scaffold into the current directory. The directory must be empty:
 
 ```sh
-pnpm create d9-app .
+pnpm create @draekien/d9-app .
 ```
 
 The output is always a Turborepo monorepo, including for a project with one app. See [ADR 0002](docs/adr/0002-always-generate-a-monorepo.md).
@@ -37,13 +37,13 @@ The output is always a Turborepo monorepo, including for a project with one app.
 Every prompt has an equivalent flag. `--yes` accepts the default for every option not set by a flag:
 
 ```sh
-pnpm create d9-app my-app --yes
+pnpm create @draekien/d9-app my-app --yes
 ```
 
 ## v0 scope
 
 - Scaffolds the default stack only. No tool alternatives.
-- `pnpm create d9-app` is the only supported create path. `npm create`, `yarn create` and `bun create` come after v0.
+- `pnpm create @draekien/d9-app` is the only supported create path. `npm create`, `yarn create` and `bun create` come after v0.
 
 ## Requirements
 
