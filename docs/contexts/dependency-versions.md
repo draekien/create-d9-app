@@ -1,10 +1,10 @@
 # Dependency versions
 
-Read before adding a dependency or changing a pinned version, in the CLI or in a template.
+Read before adding dependency or changing pinned version (CLI or template).
 
-- Templates pin exact dependency versions; never write `latest` or resolve versions at scaffold time.
-- Look up a package's current version on the npm registry before pinning it; never pin from memory.
-- Every generated project ships the upgrade-dependencies skill, which an agent uses to upgrade pinned versions systematically.
-- Upgrade this repo's template versions by running that same upgrade-dependencies skill against them.
-- The upgrade-dependencies skill does not exist yet; it will be written from the first manual dependency upgrade pass in this repo. Until then, upgrade by hand.
-- A new library bundled into the CLI needs a reason a few lines of code cannot meet; build tooling and template dependencies are not limited.
+- Templates pin exact versions. Never `latest`; never resolve at scaffold time.
+- Look up current version on npm registry before pinning. Never pin from memory.
+- Every generated project ships upgrade-dependencies skill; agent uses it to upgrade pinned versions systematically.
+- This repo's template versions: upgrade with same upgrade-dependencies skill.
+- upgrade-dependencies skill not yet written; written from first manual upgrade pass in this repo. Until then: upgrade by hand.
+- New library bundled into CLI needs reason a few lines of code cannot meet. Build tooling + template dependencies: no limit.

@@ -1,16 +1,17 @@
 # Documentation
 
-Five directories, five purposes. Put a document where its purpose says it goes; do not create new top-level directories here.
+Scope: everything under `docs/`. Five directories, one purpose each. Place doc by purpose. No new top-level directories under `docs/`.
 
 | Directory | Holds | Lifetime |
 | --- | --- | --- |
-| `adr/` | Architectural decision records | Permanent — amended in place for updates, superseded only for a reversal |
-| `references/` | Material pulled in from outside: API docs, `llms.txt` indexes, specs, vendor guides | Refreshed when the source changes |
-| `explorations/` | Investigations into options — the evidence gathered and what it favours, not a commitment to act | Kept as a record of what was already looked at |
-| `plans/` | Proposed work, written before it is done | Marked `done` once executed |
-| `contexts/` | Guidance only some tasks need, reached through a pointer in the root document | Updated when the convention it states changes |
+| `adr/` | Architectural decision records | Permanent. Amend in place for updates; supersede only for reversal |
+| `references/` | External material: API docs, `llms.txt` indexes, specs, vendor guides | Refresh when source changes |
+| `explorations/` | Option investigations: evidence + what it favours. Not commitment to act | Kept as record of what was examined |
+| `plans/` | Proposed work, written before doing it | `done` once executed |
+| `contexts/` | Guidance only some tasks need; reached via pointer in root `AGENTS.md` | Update when stated convention changes |
 
-Search `explorations/` and `plans/` for the topic before starting work, and `adr/` for a decision that constrains the approach. Read [adr/AGENTS.md](adr/AGENTS.md) before reading or writing an ADR — the bar is high, and most decisions do not clear it.
+- Before starting work: search `docs/explorations/` + `docs/plans/` for topic; search `docs/adr/` for constraining decision.
+- Before reading/writing ADR: read `docs/adr/AGENTS.md`. Bar high; most decisions fail it.
 
 ## Explorations and plans
 
@@ -25,22 +26,25 @@ supersedes: # optional, filename of the document this replaces
 ---
 ```
 
-An exploration records the question asked, the options examined, the evidence for each, and what the evidence favours. It may end without a recommendation — say so rather than manufacturing one.
-
-A plan records the goal, the steps, and how to tell the work is finished, linked to the exploration or ADR it follows from.
+- Exploration records: question, options examined, evidence per option, what evidence favours. May end without recommendation; say so, never manufacture one.
+- Plan records: goal, steps, finish criteria; links exploration or ADR it follows from.
 
 ## References
 
-Filename describes the source: `stripe-api.md`, `react-router-llms.txt`. Record where the material came from and when it was captured at the top of the file, so a reader can tell how stale it is.
+- Filename describes source: `stripe-api.md`, `react-router-llms.txt`.
+- Top of file: source + capture date, so staleness visible.
 
 ## Contexts
 
-Filename names the topic: `releasing.md`, `migrations.md`. Open the document with the tasks that need it, so an agent following a pointer can tell immediately whether it arrived somewhere useful.
-
-A document here is reached only through its pointer in the root document, and that pointer names the task that triggers the read, never the directory it points at. A context document nothing points at is unreachable.
-
-Guidance whose tasks cannot be named is not a context. It belongs in the root document, where every turn reads it.
+- Filename names topic: `releasing.md`, `migrations.md`.
+- First line: tasks that need the doc, so arriving agent knows if relevant.
+- Reached only via pointer in root `AGENTS.md`; pointer names triggering task, never just directory. Context doc with no pointer = unreachable.
+- Guidance whose tasks cannot be named ≠ context. Goes in root `AGENTS.md`, read every turn.
 
 ## Status discipline
 
-A stale `active` document is worse than a missing one — an agent will act on it. Set `done` when the work ships and `superseded` when a later document replaces it, naming the replacement in both, in the same change that finishes the work. Never delete.
+Applies to explorations and plans.
+
+- Stale `active` doc worse than missing: agent acts on it.
+- Work ships → `done`. Later doc replaces → `superseded`; name replacement in both. Same change that finishes the work.
+- Never delete.

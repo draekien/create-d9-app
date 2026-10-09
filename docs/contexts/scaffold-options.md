@@ -1,9 +1,9 @@
 # Scaffold options
 
-Read before adding or changing a tool choice, prompt, flag, default, or template.
+Read before adding/changing tool choice, prompt, flag, default, or template.
 
-- Every prompt has an equivalent flag; the CLI is fully usable both interactively and non-interactively.
-- `--yes` accepts the default for every option not set by a flag.
-- In non-interactive mode a missing flag falls back to its default; a required option with no default exits with an error naming the flag.
-- Every tool choice, combined with any other choice, produces a project where install, build, lint, and typecheck pass.
-- Render prompts with `@clack/prompts`; do not hand-roll terminal rendering.
+- Every prompt has equivalent flag. CLI fully usable interactive + non-interactive.
+- `--yes` → default for every option not set by flag.
+- Non-interactive, missing flag → its default. Required option with no default → exit with error naming the flag.
+- Every tool choice, in any combination → project where install, build, lint, typecheck pass.
+- Prompts rendered with `@clack/prompts`. No hand-rolled terminal rendering.
