@@ -18,7 +18,7 @@ A public npm `create-*` CLI that scaffolds a Turborepo monorepo on the author's 
 
 - The CLI runs on the oldest Node LTS major still in maintenance, and on every newer major.
 - The CLI uses no Bun-only or Deno-only APIs; Bun and Deno may only be targets the user picks.
-- Keep runtime dependencies to a minimum; every create path downloads them on each run.
+- The published CLI has zero runtime dependencies; libraries it uses are devDependencies bundled in at build time, because every create path downloads the package on each run.
 
 ## Contexts
 
