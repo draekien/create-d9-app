@@ -6,7 +6,7 @@ status: active
 
 # Tracer-bullet implementation of v0
 
-Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0003 (templates generated at build time; proposed). v0 scope: `docs/contexts/v0.md`.
+Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0003 (templates generated at build time). v0 scope: `docs/contexts/v0.md`.
 
 ## Goal
 
@@ -107,7 +107,7 @@ Steps:
 3. `refresh-templates.yml`: `schedule` (daily cron) + `workflow_dispatch`; token from a GitHub App (`actions/create-github-app-token`); run `refresh-templates`, `pnpm install --no-frozen-lockfile`, update snapshots (`vitest run -u`); exit when `git diff --quiet`; otherwise write `.changeset/refresh-templates-<date>.md` (patch) and push branch `bot/refresh-templates`, open or update its PR, `gh pr merge --auto --squash`.
 4. Majors: excluded from the auto-merged PR; each major bump goes to its own PR on `bot/major-<package>` with no auto-merge.
 5. Owner setup: create the GitHub App with `contents: write` and `pull-requests: write`; store its ID and private key as repo secrets. A PR opened with the default `GITHUB_TOKEN` starts no workflow run (docs.github.com, "Triggering a workflow from a workflow"), so `ci` would never report.
-6. Same change: amend ADR 0001 (this repo's templates are upgraded by the daily refresh; generated projects still ship the upgrade-dependencies skill); update `docs/contexts/dependency-versions.md` (refresh pin rule, majors held, refresh replaces manual template upgrades); set ADR 0003 `status: accepted`.
+6. Same change: amend ADR 0001 (this repo's templates are upgraded by the daily refresh; generated projects still ship the upgrade-dependencies skill); update `docs/contexts/dependency-versions.md` (refresh pin rule, majors held, refresh replaces manual template upgrades).
 
 Done when: a `workflow_dispatch` run opens a PR that bumps at least one pin, `ci` passes on it, and it merges without manual action; a second run with no upstream change opens no PR.
 
@@ -178,6 +178,6 @@ Done when: a test drives the prompt layer through mock streams, accepting every 
 
 ## Not covered
 
-- The upgrade-dependencies skill shipped in generated projects (required by ADR 0001). Needs its own plan.
+- The upgrade-dependencies skill shipped in generated projects (required by ADR 0001). Needs its own plan; ships before v1.
 - `npm create`, `yarn create`, `bun create`, and tool alternatives (after v0, `docs/contexts/v0.md`).
 - AST edits to files shared between tools; the overlap guard in slice 1 forbids overlap until an alternative needs it.

@@ -1,7 +1,7 @@
 ---
 id: 0003
 title: Generate templates at build time from upstream tools
-status: proposed
+status: accepted
 date: 2026-10-10
 deciders: [william-pei]
 tags: [templates, dependencies]
