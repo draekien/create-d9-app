@@ -1,0 +1,19 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "agentGuidance": false,
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "check": {},
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    },
+    "test": {},
+    "dev": {
+      "cache": false,
+      "persistent": true
+    }
+  }
+}
