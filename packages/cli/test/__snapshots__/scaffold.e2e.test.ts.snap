@@ -1,5 +1,60 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`--integrations none writes no MCP, Cursor or Codex integration files > integrations-none 1`] = `
+{
+  "codexSection": null,
+  "cursorMcp": null,
+  "cursorRuleExists": false,
+  "mcp": null,
+}
+`;
+
+exports[`--integrations shadcn,motion-plus,motion-cursor-rule writes the selected integration files > integrations-explicit 1`] = `
+{
+  "codexSection": "## Codex MCP servers
+
+Codex reads MCP servers only from \`~/.codex/config.toml\`, not from \`.mcp.json\`. Add these tables to that file to get the servers this project configures for Claude Code and Cursor:
+
+\`\`\`toml
+[mcp_servers.shadcn]
+command = "npx"
+args = ["shadcn@4.21.4", "mcp"]
+
+[mcp_servers.motion-plus]
+url = "https://mcp.motion.dev/plus"
+\`\`\`
+
+\`motion-plus\` needs a Motion+ sign-in.
+",
+  "cursorMcp": "{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@4.21.4", "mcp"]
+    },
+    "motion-plus": {
+      "url": "https://mcp.motion.dev/plus"
+    }
+  }
+}
+",
+  "cursorRuleExists": true,
+  "mcp": "{
+  "mcpServers": {
+    "shadcn": {
+      "command": "npx",
+      "args": ["shadcn@4.21.4", "mcp"]
+    },
+    "motion-plus": {
+      "type": "http",
+      "url": "https://mcp.motion.dev/plus"
+    }
+  }
+}
+",
+}
+`;
+
 exports[`scaffolded project has the expected files and dependencies > dependencies 1`] = `
 {
   "apps/web/package.json": {
