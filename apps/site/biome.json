@@ -1,0 +1,26 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
+  "root": false,
+  "extends": "//",
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "linter": {
+    "rules": {
+      "correctness": {
+        "useUniqueElementIds": "off"
+      },
+      "performance": {
+        "noJsxPropsBind": "off"
+      },
+      "suspicious": {
+        "noUndeclaredEnvVars": {
+          "level": "error",
+          "options": { "allowedEnvVars": ["BASE_URL", "VITEST"] }
+        }
+      }
+    }
+  }
+}

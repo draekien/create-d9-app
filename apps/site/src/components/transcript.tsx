@@ -1,0 +1,110 @@
+import { type ReactNode, useState } from "react"
+
+export function Line({
+  glyph = "│",
+  className,
+  children,
+}: {
+  glyph?: string
+  className?: string
+  children?: ReactNode
+}) {
+  return (
+    <div className={`tx-line ${className ?? ""}`}>
+      <span className="tx-glyph" aria-hidden="true">
+        {glyph}
+      </span>
+      <div className="tx-body">{children}</div>
+    </div>
+  )
+}
+
+export function Command({
+  active = false,
+  action,
+  children,
+}: {
+  active?: boolean
+  action?: ReactNode
+  children: ReactNode
+}) {
+  return (
+    <Line glyph="$">
+      <span className="flex w-full flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+        <code className="text-bright">
+          {children}
+          {active ? <span className="cursor" aria-hidden="true" /> : null}
+        </code>
+        {action}
+      </span>
+    </Line>
+  )
+}
+
+export function Prompt({
+  question,
+  answer,
+  flag,
+}: {
+  question: string
+  answer: string
+  flag: string
+}) {
+  return (
+    <Line glyph="◇">
+      <span className="text-fg">{question}</span>
+      <span className="text-mauve">{answer}</span>
+      <span className="text-muted">{flag}</span>
+    </Line>
+  )
+}
+
+const createCommand = "pnpm create @draekien/d9-app my-app"
+
+type CopyStatus = "idle" | "copied" | "failed"
+
+export function CopyCommand({ active = false }: { active?: boolean }) {
+  const [status, setStatus] = useState<CopyStatus>("idle")
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(createCommand)
+      setStatus("copied")
+    } catch {
+      setStatus("failed")
+    }
+  }
+
+  return (
+    <>
+      <Command
+        active={active}
+        action={
+          <button
+            type="button"
+            onClick={copy}
+            className="cursor-pointer bg-orange px-2.5 py-1 text-[0.6875rem] uppercase leading-none tracking-[0.12em] text-bg hover:bg-bright"
+          >
+            copy
+          </button>
+        }
+      >
+        {createCommand}
+      </Command>
+      <div role="status">
+        {status === "copied" && (
+          <Line>
+            <span className="text-mauve">copied</span>
+            <span className="text-muted">the command is on your clipboard</span>
+          </Line>
+        )}
+        {status === "failed" && (
+          <Line>
+            <span className="text-orange">copy failed</span>
+            <span className="text-muted">clipboard blocked; select the command and copy it</span>
+          </Line>
+        )}
+      </div>
+    </>
+  )
+}
