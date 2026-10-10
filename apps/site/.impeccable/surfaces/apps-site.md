@@ -7,11 +7,11 @@ related_targets: []
 
 THESIS: The page is a transcript of one real run. Each section is the next command typed and its real output; proof is the session itself, never a claim about it.
 
-OWN-WORLD: The owner's portfolio material. Dark and light grounds with a dot grid, two-tone mono display (pale, then mauve), bold sans name block, small mono nav, the orange \> mark as prompt glyph. Flat colour only.
+OWN-WORLD: The owner's portfolio material, its tokens taken from the portfolio source. Dark and light grounds behind a fixed dot canvas whose dots rise toward the pointer, JetBrains Mono two-tone display (pale, then mauve), Figtree body, bold uppercase name block, the orange \> mark. Flat colour only.
 
-STORY: Run the command, answer the clack prompts, see the empty directory become the tree, then agent setup, pinned versions, the tool table, and the removable examples, ending on the five root commands passing.
+STORY: Run the command, answer the clack prompts, see the empty directory become the tree, then agent setup, pinned versions, the tool table, and the removable examples, ending on the five root commands.
 
-FIRST VIEWPORT: Top bar with name block and mono nav plus a text-labelled theme toggle; left column with mark, headline, lead sentence, the copyable command, the first prompts with mauve defaults and grey flags, cursor on the active line.
+FIRST VIEWPORT: Top bar with name block, mono nav and a text-labelled theme toggle; left column with mark, headline, lead, the copyable command, prompts with mauve defaults and grey flags. Two moving elements: the cursor on the active line and the dot canvas answering the pointer; reduced motion stills both.
 
 FORM: Session Transcript, position 7 of 7 on the grounded list, seed key 971163ef.
 

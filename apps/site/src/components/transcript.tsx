@@ -31,7 +31,7 @@ export function Command({
   return (
     <Line glyph="$">
       <span className="flex w-full flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        <code className="text-bright">
+        <code className="text-foreground">
           {children}
           {active ? <span className="cursor" aria-hidden="true" /> : null}
         </code>
@@ -52,9 +52,9 @@ export function Prompt({
 }) {
   return (
     <Line glyph="◇">
-      <span className="text-fg">{question}</span>
-      <span className="text-mauve">{answer}</span>
-      <span className="text-muted">{flag}</span>
+      <span className="text-foreground">{question}</span>
+      <span className="text-secondary">{answer}</span>
+      <span className="text-muted-foreground">{flag}</span>
     </Line>
   )
 }
@@ -83,7 +83,7 @@ export function CopyCommand({ active = false }: { active?: boolean }) {
           <button
             type="button"
             onClick={copy}
-            className="cursor-pointer bg-orange px-2.5 py-1 text-[0.6875rem] uppercase leading-none tracking-[0.12em] text-bg hover:bg-bright"
+            className="cursor-pointer bg-primary px-2.5 py-1 text-[0.6875rem] uppercase leading-none tracking-[0.12em] text-on-primary hover:bg-foreground"
           >
             copy
           </button>
@@ -94,14 +94,16 @@ export function CopyCommand({ active = false }: { active?: boolean }) {
       <div role="status">
         {status === "copied" && (
           <Line>
-            <span className="text-mauve">copied</span>
-            <span className="text-muted">the command is on your clipboard</span>
+            <span className="text-secondary">copied</span>
+            <span className="text-muted-foreground">the command is on your clipboard</span>
           </Line>
         )}
         {status === "failed" && (
           <Line>
-            <span className="text-orange">copy failed</span>
-            <span className="text-muted">clipboard blocked; select the command and copy it</span>
+            <span className="text-primary-text">copy failed</span>
+            <span className="text-muted-foreground">
+              clipboard blocked; select the command and copy it
+            </span>
           </Line>
         )}
       </div>

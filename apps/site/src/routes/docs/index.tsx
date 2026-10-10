@@ -15,15 +15,15 @@ function DocsIndex() {
     >
       <ol className="doc-index">
         {docs.map((doc) => (
-          <li key={doc.slug} className="border-b border-rule py-5 first:pt-0">
+          <li key={doc.slug} className="border-b border-border py-5 first:pt-0">
             <Link
               to="/docs/$slug"
               params={{ slug: doc.slug }}
-              className="font-mono text-[1.0625rem] font-medium text-bright no-underline hover:text-mauve"
+              className="font-mono text-[1.0625rem] font-medium text-foreground no-underline hover:text-secondary"
             >
               {doc.title}
             </Link>
-            <p className="mt-1.5 text-mid">{doc.description}</p>
+            <p className="mt-1.5 text-muted-foreground">{doc.description}</p>
           </li>
         ))}
       </ol>

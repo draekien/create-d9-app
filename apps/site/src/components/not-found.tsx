@@ -21,19 +21,25 @@ export function NotFound() {
         <Command active>cd {path ?? "…"}</Command>
         {path === undefined ? (
           <Line>
-            <span className="text-muted">reading the path</span>
+            <span className="text-muted-foreground">reading the path</span>
           </Line>
         ) : (
           <Line>
-            <span className="text-orange">cd: no such file or directory:</span>
-            <span className="text-bright">{path}</span>
+            <span className="text-primary-text">cd: no such file or directory:</span>
+            <span className="text-foreground">{path}</span>
           </Line>
         )}
         <Line>
-          <Link to="/" className="text-mauve underline underline-offset-4 hover:text-bright">
+          <Link
+            to="/"
+            className="text-secondary underline underline-offset-4 hover:text-foreground"
+          >
             back to the start
           </Link>
-          <Link to="/docs" className="text-mauve underline underline-offset-4 hover:text-bright">
+          <Link
+            to="/docs"
+            className="text-secondary underline underline-offset-4 hover:text-foreground"
+          >
             the docs index
           </Link>
         </Line>

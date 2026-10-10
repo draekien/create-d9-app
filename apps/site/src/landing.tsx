@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router"
 import { type ReactNode, useEffect, useState } from "react"
-import { Mark } from "./components/mark.tsx"
+import { BrandMark, Mark } from "./components/mark.tsx"
 import { Command, CopyCommand, Line, Prompt } from "./components/transcript.tsx"
 
 const sections = [
@@ -100,7 +100,15 @@ function Step({
   children: ReactNode
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-8 pt-28 sm:pt-36">
+    <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-8 pt-24 sm:pt-32">
+      <div className="mb-12 flex max-w-[58rem] items-center gap-4" aria-hidden="true">
+        <BrandMark className="shrink-0 text-primary" />
+        <hr className="flex-1 border-border" />
+        <span className="shrink-0 font-mono text-sm tracking-wider text-secondary">
+          {sections.find((section) => section.id === id)?.label.toLowerCase()}
+        </span>
+        <BrandMark className="shrink-0 text-primary" />
+      </div>
       <Heading id={id} lead={lead} rest={rest} />
       {children}
     </section>
@@ -108,7 +116,11 @@ function Step({
 }
 
 function Prose({ children }: { children: ReactNode }) {
-  return <p className="mt-5 max-w-[60ch] text-[1.0625rem] leading-relaxed text-mid">{children}</p>
+  return (
+    <p className="mt-5 max-w-[60ch] text-[1.0625rem] leading-relaxed text-muted-foreground">
+      {children}
+    </p>
+  )
 }
 
 function Output({ children }: { children: ReactNode }) {
@@ -134,8 +146,8 @@ function OutputTable({
         <tbody>
           {rows.map(([name, value]) => (
             <tr key={name}>
-              <td className="whitespace-nowrap text-bright">{name}</td>
-              <td className="text-mid">{value}</td>
+              <td className="whitespace-nowrap text-foreground">{name}</td>
+              <td className="text-muted-foreground">{value}</td>
             </tr>
           ))}
         </tbody>
@@ -150,15 +162,12 @@ export function Landing() {
   return (
     <main className="px-5 pb-10 sm:px-10 lg:pl-[15.3vw]">
       <section id="run" aria-labelledby="run-title" className="max-w-[62.5rem] pt-12 sm:pt-16">
-        <Mark className="h-8 w-auto text-[var(--mark)] sm:h-9" />
-        <h1
-          id="run-title"
-          className="headline mt-5 text-[clamp(2rem,1.1rem+3vw,3.5rem)] tracking-[-0.035em]"
-        >
+        <Mark className="h-8 w-auto text-primary md:h-12" />
+        <h1 id="run-title" className="headline mt-4 text-[2.25rem] md:mt-6 md:text-[4.5rem]">
           <span className="whitespace-nowrap">Agent-ready</span>{" "}
           <em className="sm:inline-block">at the first commit</em>
         </h1>
-        <p className="mt-6 max-w-[35rem] text-[1.0625rem] leading-relaxed text-bright sm:text-lg">
+        <p className="mt-6 max-w-[35rem] text-[1.0625rem] leading-relaxed text-foreground sm:text-lg">
           A Turborepo monorepo with a TanStack Start app, every dependency pinned, and the rules
           your coding agent reads already written.
         </p>
@@ -172,12 +181,12 @@ export function Landing() {
             flag="--integrations <names>"
           />
           <Line>
-            <span className="text-mid">my-app/</span>
-            <span className="text-muted">(empty)</span>
-            <span className="text-muted" aria-hidden="true">
+            <span className="text-muted-foreground">my-app/</span>
+            <span className="text-muted-foreground">(empty)</span>
+            <span className="text-muted-foreground" aria-hidden="true">
               →
             </span>
-            <span className="text-mid">142 files · 2 workspace packages</span>
+            <span className="text-muted-foreground">142 files · 2 workspace packages</span>
           </Line>
           <pre className="tx-pre mt-1">{tree}</pre>
           <Command>cd my-app</Command>
@@ -188,15 +197,15 @@ export function Landing() {
       <Step id="agent-setup" lead="Agent setup" rest="ships in the scaffold">
         <Prose>
           The generated project configures Claude Code and Codex, and Cursor reads{" "}
-          <code className="font-mono text-[0.9em] text-bright">.cursor/mcp.json</code>. Other agents
-          that read <code className="font-mono text-[0.9em] text-bright">AGENTS.md</code> and{" "}
-          <code className="font-mono text-[0.9em] text-bright">.agents/skills/</code> get the rules
-          and the skills without extra setup.
+          <code className="font-mono text-[0.9em] text-foreground">.cursor/mcp.json</code>. Other
+          agents that read <code className="font-mono text-[0.9em] text-foreground">AGENTS.md</code>{" "}
+          and <code className="font-mono text-[0.9em] text-foreground">.agents/skills/</code> get
+          the rules and the skills without extra setup.
         </Prose>
         <Output>
           <Command active={active === "agent-setup"}>ls -A my-app</Command>
           <Line glyph=" ">
-            <span className="text-mid">{listing}</span>
+            <span className="text-muted-foreground">{listing}</span>
           </Line>
           <Command>{"# what each agent file does"}</Command>
           <OutputTable head={["file", "purpose"]} rows={agentFiles} />
@@ -212,7 +221,7 @@ export function Landing() {
         <Output>
           <Command>grep saveExact pnpm-workspace.yaml</Command>
           <Line glyph=" ">
-            <span className="text-mid">saveExact: true</span>
+            <span className="text-muted-foreground">saveExact: true</span>
           </Line>
           <Command active={active === "pinned"}>/upgrade-dependencies</Command>
           <pre className="tx-pre">{`| Package        | Old   | New   | Type  |
@@ -226,7 +235,7 @@ held: major
               to="/docs/$slug"
               params={{ slug: "agent-setup" }}
               hash="upgrade-dependencies"
-              className="text-mauve underline underline-offset-4 hover:text-bright"
+              className="text-secondary underline underline-offset-4 hover:text-foreground"
             >
               how the skill decides what to upgrade
             </Link>
@@ -244,9 +253,9 @@ held: major
 
       <Step id="minimal" lead="Minimal" rest="by default">
         <Prose>
-          <code className="font-mono text-[0.9em] text-bright">/</code> is a minimal page. The
+          <code className="font-mono text-[0.9em] text-foreground">/</code> is a minimal page. The
           query, form, table, hotkeys and motion examples render at{" "}
-          <code className="font-mono text-[0.9em] text-bright">/examples</code> and live in one
+          <code className="font-mono text-[0.9em] text-foreground">/examples</code> and live in one
           directory. Delete it to remove every example; the next build regenerates the route tree
           without it.
         </Prose>
@@ -254,8 +263,8 @@ held: major
           <Command active={active === "minimal"}>rm -r apps/web/src/routes/examples</Command>
           <Command>pnpm build</Command>
           <Line>
-            <span className="text-mid">apps/web/src/routeTree.gen.ts</span>
-            <span className="text-muted">regenerated without /examples</span>
+            <span className="text-muted-foreground">apps/web/src/routeTree.gen.ts</span>
+            <span className="text-muted-foreground">regenerated without /examples</span>
           </Line>
           <div className="mt-6">
             <OutputTable head={["command", "runs"]} rows={rootCommands} />
@@ -267,17 +276,22 @@ held: major
         <div className="tx">
           <CopyCommand />
           <Line>
-            <Link to="/docs" className="text-mauve underline underline-offset-4 hover:text-bright">
+            <Link
+              to="/docs"
+              className="text-secondary underline underline-offset-4 hover:text-foreground"
+            >
               read the docs
             </Link>
-            <span className="text-muted">prompts, flags, errors and the generated project</span>
+            <span className="text-muted-foreground">
+              prompts, flags, errors and the generated project
+            </span>
           </Line>
         </div>
       </section>
 
       <nav
         aria-label="Sections"
-        className="sticky bottom-0 mt-24 -mx-5 overflow-x-auto bg-bg px-5 py-4 font-mono text-[0.8125rem] sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
+        className="sticky bottom-0 mt-24 -mx-5 overflow-x-auto bg-background px-5 py-4 font-mono text-sm sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
       >
         <ul className="flex gap-7 whitespace-nowrap">
           {sections.map(({ id, label }) => (
@@ -285,9 +299,9 @@ held: major
               <a
                 href={`#${id}`}
                 aria-current={active === id ? "true" : undefined}
-                className="text-mid hover:text-bright aria-[current]:text-orange"
+                className="text-muted-foreground transition-colors duration-150 hover:text-foreground aria-[current]:text-primary-text"
               >
-                {active === id && <span aria-hidden="true">\\ </span>}
+                {active === id ? <BrandMark className="mr-1 text-primary" /> : null}
                 {label}
               </a>
             </li>

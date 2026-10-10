@@ -1,4 +1,5 @@
 import { createRootRoute, HeadContent, Outlet, ScriptOnce, Scripts } from "@tanstack/react-router"
+import { BackgroundFx } from "../components/background-fx.tsx"
 import { HighlightStyles } from "../components/markdown.tsx"
 import { TopBar } from "../components/top-bar.tsx"
 // biome-ignore lint/correctness/noUnresolvedImports: vite ?url query resolves to the stylesheet url, which Biome cannot resolve
@@ -15,8 +16,16 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "create-d9-app" },
       { name: "description", content: description },
-      { name: "theme-color", content: "#141414", media: "(prefers-color-scheme: dark)" },
-      { name: "theme-color", content: "#f4fafb", media: "(prefers-color-scheme: light)" },
+      {
+        name: "theme-color",
+        content: "oklch(0.21 0.004 318)",
+        media: "(prefers-color-scheme: dark)",
+      },
+      {
+        name: "theme-color",
+        content: "oklch(0.9911 0.0055 211.04)",
+        media: "(prefers-color-scheme: light)",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -33,13 +42,16 @@ export const Route = createRootRoute({
       <body>
         <a
           href="#content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:bg-bg focus:px-3 focus:py-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-20 focus:top-2 focus:left-2 focus:bg-background focus:px-3 focus:py-2"
         >
           Skip to content
         </a>
-        <TopBar />
-        <div id="content">
-          <Outlet />
+        <BackgroundFx />
+        <div className="relative z-10">
+          <TopBar />
+          <div id="content">
+            <Outlet />
+          </div>
         </div>
         <Scripts />
       </body>

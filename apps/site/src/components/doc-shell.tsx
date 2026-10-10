@@ -2,16 +2,15 @@ import type { MarkdownHeading } from "@tanstack/markdown"
 import { Link } from "@tanstack/react-router"
 import type { ReactNode } from "react"
 import { docs } from "../content.ts"
+import { BrandMark } from "./mark.tsx"
 
-const railLink = "group flex gap-2 py-1 text-mid hover:text-bright data-[status=active]:text-orange"
+const railLink =
+  "group flex gap-2 py-1 text-muted-foreground transition-colors duration-150 hover:text-foreground data-[status=active]:text-primary-text"
 
 function Marker() {
   return (
-    <span
-      aria-hidden="true"
-      className="invisible w-[2ch] shrink-0 group-data-[status=active]:visible"
-    >
-      {"\\\\"}
+    <span className="invisible w-[2ch] shrink-0 group-data-[status=active]:visible">
+      <BrandMark className="text-primary" />
     </span>
   )
 }
@@ -33,7 +32,7 @@ export function DocShell({
     <div className="grid gap-x-16 gap-y-10 px-5 pt-10 pb-24 sm:px-10 sm:pt-16 lg:grid-cols-[14rem_minmax(0,1fr)]">
       <nav
         aria-label="Docs"
-        className="font-mono text-[0.8125rem] lg:sticky lg:top-8 lg:self-start"
+        className="order-2 border-t border-border pt-8 font-mono text-sm lg:order-none lg:sticky lg:top-8 lg:self-start lg:border-t-0 lg:pt-0"
       >
         <ul>
           <li>
@@ -58,12 +57,15 @@ export function DocShell({
           </li>
         </ul>
         {contents.length > 0 && (
-          <div className="mt-8 hidden border-t border-rule pt-5 lg:block">
-            <p className="text-muted">on this page</p>
+          <div className="mt-8 hidden border-t border-border pt-5 lg:block">
+            <p className="text-muted-foreground">on this page</p>
             <ul className="mt-2">
               {contents.map((heading) => (
                 <li key={heading.id}>
-                  <a href={`#${heading.id}`} className="block py-1 text-mid hover:text-bright">
+                  <a
+                    href={`#${heading.id}`}
+                    className="block py-1 text-muted-foreground hover:text-foreground"
+                  >
                     {heading.text}
                   </a>
                 </li>
@@ -75,7 +77,9 @@ export function DocShell({
       <article className="min-w-0">
         <h1 className="headline text-[clamp(1.875rem,1.4rem+1.9vw,2.75rem)]">{title}</h1>
         {description ? (
-          <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-mid">{description}</p>
+          <p className="mt-4 max-w-[60ch] text-lg leading-relaxed text-muted-foreground">
+            {description}
+          </p>
         ) : null}
         <div className="prose mt-10">{children}</div>
       </article>
