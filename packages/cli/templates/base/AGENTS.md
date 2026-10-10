@@ -14,9 +14,16 @@ Before editing files for a substantial task:
 
 - Turborepo monorepo managed with pnpm. Apps in `apps/`, shared packages in `packages/`.
 - `apps/web`: TanStack Start on Vite, React, TypeScript, Vitest.
+- UI components come from `@workspace/ui` (`packages/ui`, shadcn).
 - Run tasks from the repo root: `pnpm build`, `pnpm check`, `pnpm typecheck`, `pnpm test`, `pnpm dev`.
+- Run `pnpm typecheck`, never a global `tsc`.
+- Use `pnpm exec` and `pnpm dlx`, never `npx`.
 - Dependency versions are exact. Never use `^`, `~` or `latest`.
-- Routes live in `apps/web/src/routes`. `routeTree.gen.ts` is generated; do not edit it.
+- Routes live in `apps/web/src/routes`. `routeTree.gen.ts` is generated; never edit it.
+- Test files sit beside their source. Never put one under `src/routes/` except inside a `-`-prefixed folder.
+- Write comments only to document a public API surface.
+- `pnpm check` and the pre-commit hook delete every `//` comment except `///`, `biome-ignore` and `@ts-` directives.
+- Path-scoped TypeScript and React rules live in `.claude/rules/` and load for matching files; do not restate them here.
 
 <!-- BEGIN:turborepo-agent-rules -->
 
