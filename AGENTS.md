@@ -29,6 +29,7 @@ Public npm `create-*` CLI, published as `@draekien/create-d9-app`; personal proj
 - Milestones: `v0` (`docs/contexts/v0.md` scope), `v1`.
 - Label `AFK`: agent may complete every task unsupervised. Label `HIL`: stop at each `[HIL]` task; owner completes it.
 - PRD breakdowns: sub-issues only. No `.draekien/` directory.
+- PR body: `Closes #<issue>` for the issue the PR completes; `Refs #<issue>` otherwise.
 
 ## Contexts
 
