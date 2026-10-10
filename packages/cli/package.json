@@ -15,7 +15,8 @@
   "files": [
     "index.js",
     "dist",
-    "templates"
+    "templates",
+    "!templates/biome.json"
   ],
   "publishConfig": {
     "access": "public"
