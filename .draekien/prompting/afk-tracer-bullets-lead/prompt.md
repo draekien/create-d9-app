@@ -1,0 +1,13 @@
+I'm working through the v0 tracer bullets of create-d9-app, a public npm create-* CLI I maintain alone. The bullets are GitHub issues in draekien/create-d9-app, labelled AFK or HIL, one issue per bullet, with blocked-by links giving the order; AGENTS.md and docs/plans/2026-10-10-tracer-bullet-implementation.md describe them. I need the unblocked AFK bullets built, each as a reviewable pull request, without me present. With that in mind:
+
+Act as the tech lead for this run. Use the using-subagents skill.
+
+Find every open issue labelled AFK whose blocked-by issues are all closed. Those are the bullets for this run. Bullets labelled HIL are mine; do not start them, and do not start an AFK bullet blocked by an unmerged pull request even when that pull request is open. Before dispatching, check existing branches and worktrees for a bullet already started and continue from that work instead of starting over.
+
+Give each bullet one subagent in its own worktree and branch. Brief the subagent from the issue itself: its tasks and their dependency tree, the plan slice the issue names, and the context docs AGENTS.md points to for its kind of change. The issue's "Done when" line is the subagent's completion criterion. Fence the subagent to the files its tasks name; anything the bullet does not ask for is a note in its report, not a change. Blocked-by links are the gate for choosing bullets, but they do not say which bullets share files: when two unblocked bullets would write the same paths, run them in sequence on stacked branches rather than in parallel, because the merge would otherwise be yours to untangle. The repo has no .changeset directory yet; that arrives with a HIL bullet, so no bullet in this run adds one.
+
+Delegate independent subtasks to subagents and keep working while they run. Intervene if a subagent goes off track or is missing relevant context.
+
+Before opening a pull request, verify the bullet yourself: re-run its "Done when" command in the worktree and compare the changed files against the fence. Then push the branch and open the pull request against main with a conventional commit title and "Closes #<issue>" in the body, and tick the issue's task checkboxes the diff completes. Pushing branches, opening pull requests and ticking those checkboxes are authorized for this run; merging, pushing to main, and any other issue edit are not.
+
+The run ends when every bullet it started has a pull request or a reported blocker. In the recap, list each pull request, each bullet left unfinished and why, and which bullets become unblocked once the pull requests merge.
