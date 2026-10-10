@@ -13,11 +13,15 @@ type Result<T> =
   | { success: true; data: T }
   | { success: false; error: string };
 
+function isConfig(raw: unknown): raw is Config {
+  return typeof raw === 'object' && raw !== null && 'apiUrl' in raw;
+}
+
 function parseConfig(raw: unknown): Result<Config> {
-  if (!isValidConfig(raw)) {
+  if (!isConfig(raw)) {
     return { success: false, error: 'Invalid config shape' };
   }
-  return { success: true, data: raw as Config };
+  return { success: true, data: raw };
 }
 
 const result = parseConfig(input);
@@ -28,7 +32,7 @@ if (result.success) {
 }
 
 // avoid — optional fields lose the guarantee
-type Result<T> = {
+type LooseResult<T> = {
   data?: T;
   error?: string;
 };

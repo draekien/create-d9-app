@@ -21,6 +21,7 @@ Before editing files for a substantial task:
 - Dependency versions are exact. Never use `^`, `~` or `latest`.
 - Routes live in `apps/web/src/routes`. `routeTree.gen.ts` is generated; never edit it.
 - Test files sit beside their source. Never put one under `src/routes/` except inside a `-`-prefixed folder.
+- Never suppress `useExhaustiveDependencies`; fix the dependency list.
 - Write comments only to document a public API surface.
 - `pnpm check` and the pre-commit hook delete every `//` comment except `///`, `biome-ignore` and `@ts-` directives.
 - Path-scoped TypeScript and React rules live in `.claude/rules/` and load for matching files; do not restate them here.
