@@ -1,7 +1,7 @@
 import { renderToString } from "react-dom/server"
-import { expect, test } from "vitest"
+import { expect, it } from "vitest"
 import { Home } from "./home.tsx"
 
-test("renders the greeting", () => {
+it("renders the greeting", () => {
   expect(renderToString(<Home />)).toContain("Hello from your new app")
 })

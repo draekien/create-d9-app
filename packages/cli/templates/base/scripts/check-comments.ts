@@ -1,6 +1,5 @@
 import { execFileSync } from "node:child_process"
 import { readdirSync, readFileSync, writeFileSync } from "node:fs"
-import { join } from "node:path"
 import { parse } from "@babel/parser"
 
 const directive = /^(\/|\s*biome-ignore|\s*@ts-)/
@@ -20,7 +19,7 @@ const walk = (dir: string): string[] =>
       ? []
       : entry.isDirectory()
         ? walk(`${dir}/${entry.name}`)
-        : [`${dir}/${entry.name}`],
+        : [`${dir}/${entry.name}`]
   )
 
 const listFiles = () => {
@@ -57,7 +56,7 @@ const lineComments = (file: string, source: string) =>
   ).flatMap(({ type, value, start, end, loc }) =>
     type === "CommentLine" && !directive.test(value) && start != null && end != null && loc
       ? [{ start, end, line: loc.start.line, column: loc.start.column }]
-      : [],
+      : []
   )
 
 const removeComment = (source: string, start: number, end: number) => {
@@ -81,7 +80,7 @@ for (const file of files) {
   if (fix) {
     const fixed = comments.reduceRight(
       (text, comment) => removeComment(text, comment.start, comment.end),
-      source,
+      source
     )
     writeFileSync(file, fixed)
     console.log(`${file}: removed ${comments.length} comment(s)`)
@@ -90,14 +89,12 @@ for (const file of files) {
 
   for (const { line, column } of comments) {
     console.log(
-      `${file}:${line}:${column + 1} line comment; rename or document the public API with JSDoc instead`,
+      `${file}:${line}:${column + 1} line comment; rename or document the public API with JSDoc instead`
     )
   }
 }
 
 if (!fix && violations > 0) {
-  console.error(
-    `\n${violations} line comment(s). Run \`pnpm lint:comments --fix\` to remove them.`,
-  )
+  console.error(`\n${violations} line comment(s). Run \`pnpm lint:comments --fix\` to remove them.`)
   process.exit(1)
 }
