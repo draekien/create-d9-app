@@ -8,12 +8,14 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "check": "turbo run check",
+    "check": "turbo run check lint:comments",
+    "lint:comments": "node scripts/check-comments.ts",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "dev": "turbo run dev"
   },
   "devDependencies": {
+    "@babel/parser": "8.0.7",
     "turbo": "2.11.7",
     "typescript": "7.0.2"
   }
