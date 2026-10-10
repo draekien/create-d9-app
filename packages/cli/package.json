@@ -1,6 +1,6 @@
 {
   "name": "@draekien/create-d9-app",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Scaffold a Turborepo monorepo with the draekien default stack",
   "license": "MIT",
