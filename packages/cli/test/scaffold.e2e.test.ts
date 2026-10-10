@@ -64,7 +64,7 @@ beforeAll(() => {
 
 afterAll(() => {
   fs.rmSync(tmpRoot, { recursive: true, force: true, maxRetries: 5 })
-})
+}, 120_000)
 
 test("scaffolded project has the expected files and dependencies", () => {
   const files = listFiles(appDir)
