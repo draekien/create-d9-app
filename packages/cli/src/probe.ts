@@ -1,1 +1,1 @@
-export const unused = (a: any) => a
+export const probe   =   1
