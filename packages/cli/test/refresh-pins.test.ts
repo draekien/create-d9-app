@@ -200,3 +200,104 @@ describe("refreshPins packageManager", () => {
     expect(manifest("packages/cli/package.json")).toEqual({})
   })
 })
+
+describe("refreshPins integrations catalog", () => {
+  let root: string
+  const catalogFile = "packages/cli/templates/integrations.json"
+  const catalog = `${JSON.stringify(
+    {
+      shadcn: { kind: "stdio", command: "npx", args: ["shadcn@4.21.4", "mcp"], default: true },
+      hugeicons: {
+        kind: "stdio",
+        command: "npx",
+        args: ["-y", "@hugeicons/mcp-server@0.2.2"],
+        default: true,
+      },
+      motion: { kind: "http", url: "https://mcp.motion.dev", default: true },
+      cursorRule: { kind: "overlay", default: false },
+    },
+    null,
+    2,
+  )}\n`
+  const shadcnTimes = {
+    "4.21.4": "2026-08-01T00:00:00.000Z",
+    "4.22.0": "2026-09-01T00:00:00.000Z",
+    "5.0.0": "2026-09-02T00:00:00.000Z",
+  }
+  const times: Record<string, Record<string, string>> = {
+    shadcn: shadcnTimes,
+    "@hugeicons/mcp-server": { "0.2.2": "2026-08-01T00:00:00.000Z" },
+  }
+  const lookup = async (name: string) => times[name] ?? {}
+
+  function write(file: string, content: string) {
+    const full = path.join(root, file)
+    fs.mkdirSync(path.dirname(full), { recursive: true })
+    fs.writeFileSync(full, content)
+  }
+
+  function readCatalog() {
+    return fs.readFileSync(path.join(root, catalogFile), "utf8")
+  }
+
+  function run(options: Partial<RefreshOptions> = {}) {
+    return refreshPins({ repoRoot: root, now, lookup, ...options })
+  }
+
+  beforeEach(() => {
+    root = fs.mkdtempSync(path.join(os.tmpdir(), "d9-pins-"))
+    write("package.json", "{}\n")
+    write("packages/cli/package.json", "{}\n")
+    write(catalogFile, catalog)
+  })
+
+  afterEach(() => {
+    fs.rmSync(root, { recursive: true, force: true })
+  })
+
+  it("reports and rewrites a stdio pin on a minor bump", async () => {
+    const minor = { "4.21.4": shadcnTimes["4.21.4"], "4.22.0": shadcnTimes["4.22.0"] }
+    const { changes } = await run({ lookup: async (name) => (name === "shadcn" ? minor : {}) })
+    expect(changes).toEqual([
+      {
+        file: catalogFile,
+        name: "shadcn",
+        from: "4.21.4",
+        to: "4.22.0",
+        kind: "minor",
+        applied: true,
+      },
+    ])
+    expect(readCatalog()).toBe(catalog.replace("shadcn@4.21.4", "shadcn@4.22.0"))
+  })
+
+  it("holds a major without includeMajor", async () => {
+    const { changes } = await run()
+    expect(changes).toEqual([
+      {
+        file: catalogFile,
+        name: "shadcn",
+        from: "4.21.4",
+        to: "5.0.0",
+        kind: "major",
+        applied: false,
+      },
+    ])
+    expect(readCatalog()).toBe(catalog)
+  })
+
+  it("applies a major with includeMajor and leaves everything else untouched", async () => {
+    await run({ includeMajor: true })
+    const data = JSON.parse(readCatalog()) as Record<string, Record<string, unknown>>
+    expect(data.shadcn.args).toEqual(["shadcn@5.0.0", "mcp"])
+    expect(data.hugeicons.args).toEqual(["-y", "@hugeicons/mcp-server@0.2.2"])
+    expect(data.motion).toEqual({ kind: "http", url: "https://mcp.motion.dev", default: true })
+    expect(data.cursorRule).toEqual({ kind: "overlay", default: false })
+  })
+
+  it("writes nothing on dryRun", async () => {
+    const { changes } = await run({ dryRun: true, includeMajor: true })
+    expect(changes).toHaveLength(1)
+    expect(readCatalog()).toBe(catalog)
+  })
+})
