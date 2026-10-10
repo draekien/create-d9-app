@@ -1,7 +1,10 @@
 import { writeFile } from "node:fs/promises"
+import path from "node:path"
 import { fileURLToPath } from "node:url"
+import { runGenerators } from "./refresh/generators.ts"
 import { refreshPins } from "./refresh/pins.ts"
 import { planPullRequests } from "./refresh/plan.ts"
+import { generators } from "./refresh/registry.ts"
 
 const repoRoot = fileURLToPath(new URL("../../../", import.meta.url))
 
@@ -25,6 +28,19 @@ const { changes, failures } = await refreshPins({
   onChange: (change) => process.stdout.write(`${JSON.stringify(change)}\n`),
   onProgress: (message) => process.stderr.write(`${message}\n`),
 })
+
+if (!process.argv.includes("--dry-run")) {
+  const generated = await runGenerators({
+    templateRoot: path.join(repoRoot, "packages", "cli", "templates"),
+    generators,
+    onProgress: (message) =>
+      process.stderr.write(`${message}
+`),
+  })
+  for (const file of generated)
+    process.stdout.write(`${JSON.stringify({ generated: file })}
+`)
+}
 
 if (planPath) {
   await writeFile(planPath, JSON.stringify(planPullRequests(changes), null, 2))
