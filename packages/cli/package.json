@@ -27,6 +27,7 @@
   "scripts": {
     "build": "rolldown -c rolldown.config.ts",
     "typecheck": "tsc --noEmit",
+    "refresh-templates": "node scripts/refresh-templates.ts",
     "test": "vitest run"
   },
   "devDependencies": {
