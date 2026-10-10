@@ -1,0 +1,37 @@
+{
+  "name": "@draekien/create-d9-app",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "Scaffold a Turborepo monorepo with the draekien default stack",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/draekien/create-d9-app.git",
+    "directory": "packages/cli"
+  },
+  "bin": {
+    "create-d9-app": "index.js"
+  },
+  "files": [
+    "index.js",
+    "dist",
+    "templates"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "rolldown -c rolldown.config.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "rolldown": "1.2.13",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3"
+  }
+}
