@@ -1,5 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query"
 import { createRootRouteWithContext, HeadContent, Outlet, Scripts } from "@tanstack/react-router"
+// biome-ignore lint/correctness/noUnresolvedImports: vite ?url query resolves to the stylesheet url, which Biome cannot resolve
 import appCss from "@workspace/ui/globals.css?url"
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
