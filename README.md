@@ -145,7 +145,7 @@ Import them from the app as `@workspace/ui/components/dialog`.
 
 ## Agent setup
 
-The generated project configures Claude Code and Codex. Other agents that read `AGENTS.md` and `.agents/skills/` get the rules and the upgrade skill without extra setup.
+The generated project configures Claude Code and Codex. Cursor reads `.cursor/mcp.json`. Other agents that read `AGENTS.md` and `.agents/skills/` get the rules and the skills without extra setup.
 
 | File | Purpose |
 | --- | --- |
@@ -153,7 +153,9 @@ The generated project configures Claude Code and Codex. Other agents that read `
 | `.claude/rules/*.md` | Path-scoped rules for TypeScript, components, tests and generated files. Loaded only for matching files. |
 | `.claude/settings.json`, `.codex/hooks.json` | `SessionStart` and `PreToolUse` hooks that run the TanStack Intent gate. |
 | `.intent/hooks/` | The gate: lists the skills shipped inside the installed `@tanstack/*` packages at session start, and denies the first edit of a session until the agent has checked that list and loaded a matching skill with `pnpm exec intent load`. |
-| `.agents/skills/`, `.claude/skills/` | `shadcn` (pinned in `skills-lock.json`) and `upgrade-dependencies`. |
+| `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the skills each project publishes, pinned by content hash in `skills-lock.json`; and `upgrade-dependencies`. |
+| `.claude/agents/motion-reviewer.md` | Motion's reviewer subagent, from the same source as the `motion` skill. |
+| `.mcp.json`, `.cursor/mcp.json` | MCP servers for Claude Code and Cursor: `shadcn` and `hugeicons` as pinned `npx` commands, `motion` over HTTP. Claude Code asks you to approve project servers on first use. |
 | `biome.json` | GritQL plugins that enforce React and TanStack Query rules, such as no fetch in an effect and no inline query key. |
 
 ### upgrade-dependencies

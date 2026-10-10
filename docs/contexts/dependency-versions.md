@@ -16,3 +16,4 @@ Read before adding dependency or changing pinned version (CLI or template).
 - `@types/node` major = lowest supported Node major (`MAJOR_CEILINGS` in `packages/cli/scripts/refresh/pins.ts`). Raise it in the same change as `engines.node` and the Node check in `packages/cli/index.js`.
 - New library bundled into CLI needs reason a few lines of code cannot meet. Build tooling + template dependencies: no limit.
 - Upstream-tool output under `templates/`: rewritten by refresh generators registered in `packages/cli/scripts/refresh/registry.ts`, each declaring owned paths or `d9:begin`/`d9:end` blocks. Never edit declared outputs by hand.
+- `skills` generator: run on Linux only (CI, or a `node:22` container). `hugeicons/hugeicons` contains `icons/re:.svg`; git refuses that path on NTFS.
