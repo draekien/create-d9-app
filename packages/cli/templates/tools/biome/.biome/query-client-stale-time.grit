@@ -1,0 +1,8 @@
+language js
+
+or {
+  `new QueryClient()`,
+  `new QueryClient($options)` where { $options <: not contains `staleTime: $_` }
+} as $client where {
+  register_diagnostic(span = $client, message = "Set a default staleTime on the QueryClient; the built-in 0 refetches on every mount.")
+}

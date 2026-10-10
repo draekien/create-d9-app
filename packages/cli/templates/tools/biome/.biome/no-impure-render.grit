@@ -1,0 +1,8 @@
+language js
+
+or { `Math.random()`, `Date.now()`, `new Date()`, `DateTime.now()` } as $call where {
+  $call <: within JsFunctionDeclaration(id = $component) where { $component <: r"[A-Z]\w*" },
+  $call <: not within JsArrowFunctionExpression(),
+  $call <: not within JsFunctionDeclaration(id = $handler) where { $handler <: r"handle[A-Z]\w*" },
+  register_diagnostic(span = $call, message = "Non-deterministic value during render; move it into an effect, handler, or useState initialiser.", severity = "error")
+}

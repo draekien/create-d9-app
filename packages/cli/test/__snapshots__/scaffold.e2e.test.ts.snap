@@ -34,6 +34,18 @@ exports[`scaffolded project has the expected files and dependencies > dependenci
 
 exports[`scaffolded project has the expected files and dependencies > files 1`] = `
 [
+  ".biome/effect-cleanup.grit",
+  ".biome/handler-naming.grit",
+  ".biome/no-default-props.grit",
+  ".biome/no-derived-state-effect.grit",
+  ".biome/no-double-assertion.grit",
+  ".biome/no-fetch-in-effect.grit",
+  ".biome/no-impure-render.grit",
+  ".biome/no-inline-query-key.grit",
+  ".biome/no-query-client-in-render.grit",
+  ".biome/no-refetch-on-success.grit",
+  ".biome/no-try-around-jsx.grit",
+  ".biome/query-client-stale-time.grit",
   ".gitignore",
   "AGENTS.md",
   "CLAUDE.md",

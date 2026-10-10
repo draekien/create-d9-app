@@ -1,0 +1,6 @@
+language js
+
+`useEffect($callback, $deps)` as $effect where {
+  $callback <: contains `fetch($_)`,
+  register_diagnostic(span = $effect, message = "Fetch with TanStack Query (useQuery), not useEffect.")
+}

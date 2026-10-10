@@ -1,0 +1,9 @@
+language js
+
+JsxAttribute() as $attr where {
+  $attr <: r"on[A-Z]\w*=\{\w+\}",
+  $attr <: not r"on[A-Z]\w*=\{handle[A-Z]\w*\}",
+  $attr <: not r"on[A-Z]\w*=\{on[A-Z]\w*\}",
+  $attr <: not r"on[A-Z]\w*=\{set[A-Z]\w*\}",
+  register_diagnostic(span = $attr, message = "Name the function passed to an on<Event> prop handle<Action>.", severity = "error")
+}

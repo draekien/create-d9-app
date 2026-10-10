@@ -1,0 +1,7 @@
+language js
+
+`useEffect($callback, $deps)` as $effect where {
+  $callback <: contains `$setter($_)` where { $setter <: r"set[A-Z]\w*" },
+  $callback <: not contains or { `$_.then($_)`, `await $_`, `setTimeout($_, $_)`, `setInterval($_, $_)`, `$_.addEventListener($_, $_)`, `$_.subscribe($_)` },
+  register_diagnostic(span = $effect, message = "Compute derived values during render instead of syncing them with useEffect.", severity = "error")
+}
