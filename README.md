@@ -75,6 +75,8 @@ Options:
   --yes          Accept every default and skip all prompts
   --no-git       Do not initialise a git repository or make the initial commit
   --no-install   Do not run pnpm install
+  --integrations <names>
+                 Comma-separated agent integrations to configure, or "none"
   --help         Show this message
 ```
 
@@ -96,6 +98,7 @@ Every prompt has a flag. A flag answers its prompt without asking.
 | Where should the project be created? | `my-app` | `<dir>` |
 | Initialise a git repository? | yes | `--no-git` |
 | Install dependencies? | yes | `--no-install` |
+| Which agent integrations do you want? | `shadcn`, `hugeicons`, `motion` | `--integrations <names>` or `--integrations none` |
 
 After an interactive run the CLI prints the command that reproduces your answers:
 

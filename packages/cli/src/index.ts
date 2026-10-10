@@ -4,7 +4,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
 import { initGit } from "./git.ts"
-import { defaultSelection, readCatalog, writeMcpConfig } from "./integrations.ts"
+import { readCatalog, writeCodexDocs, writeMcpConfig } from "./integrations.ts"
 import { isInteractive } from "./interactive.ts"
 import { buildNextSteps } from "./next-steps.ts"
 import { applyOverlays } from "./overlays.ts"
@@ -12,6 +12,7 @@ import { isPnpm, unsupportedPackageManagerMessage } from "./package-manager.ts"
 import {
   missingValueMessage,
   printCommand,
+  type ResolvedOptions,
   resolveFromFlags,
   resolveWithPrompts,
 } from "./prompts.ts"
@@ -27,6 +28,8 @@ Options:
   --yes          Accept every default and skip all prompts
   --no-git       Do not initialise a git repository or make the initial commit
   --no-install   Do not run pnpm install
+  --integrations <names>
+                 Comma-separated agent integrations to configure, or "none"
   --help         Show this message
 `
 
@@ -65,6 +68,7 @@ async function main() {
       yes: { type: "boolean" },
       "no-git": { type: "boolean" },
       "no-install": { type: "boolean" },
+      integrations: { type: "string" },
       help: { type: "boolean" },
     },
   })
@@ -83,7 +87,10 @@ async function main() {
     yes: values.yes,
     "no-git": values["no-git"],
     "no-install": values["no-install"],
+    integrations: values.integrations,
   }
+
+  const catalog = readCatalog(templateRoot)
 
   const interactive = isInteractive({
     stdin: process.stdin,
@@ -99,12 +106,14 @@ ${helpText}`)
     process.exit(1)
   }
 
-  const options = interactive
-    ? await resolveWithPrompts(flags, {
-        input: process.stdin,
-        output: process.stdout,
-      })
-    : resolveFromFlags(flags)
+  let options: ResolvedOptions
+  try {
+    options = interactive
+      ? await resolveWithPrompts(flags, { input: process.stdin, output: process.stdout }, catalog)
+      : resolveFromFlags(flags, catalog)
+  } catch (error) {
+    fail(error instanceof Error ? error.message : String(error))
+  }
 
   const targetDir = path.resolve(options.dir)
   const name = packageNameFor(targetDir)
@@ -120,10 +129,10 @@ ${helpText}`)
   }
 
   copyDir(templateDir, targetDir)
-  const catalog = readCatalog(templateRoot)
-  const selection = defaultSelection(catalog)
+  const selection = options.integrations
   applyOverlays(templateRoot, targetDir, selection)
   writeMcpConfig(catalog, selection, targetDir)
+  writeCodexDocs(catalog, selection, targetDir)
   setPackageName(targetDir, name)
 
   if (options.install) {
@@ -148,7 +157,7 @@ ${helpText}`)
   process.stdout.write(buildNextSteps({ targetDir, cwd: process.cwd(), install: options.install }))
 
   if (interactive) {
-    printCommand(options, { input: process.stdin, output: process.stdout })
+    printCommand(options, { input: process.stdin, output: process.stdout }, catalog)
   }
 }
 

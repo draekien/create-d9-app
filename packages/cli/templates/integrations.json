@@ -18,5 +18,5 @@
     "login": "Motion+ sign-in",
     "default": false
   },
-  "motion-cursor-rule": { "kind": "overlay", "default": false }
+  "motion-cursor-rule": { "kind": "overlay", "hint": "Cursor only", "default": false }
 }

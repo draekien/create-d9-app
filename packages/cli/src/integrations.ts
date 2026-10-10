@@ -4,7 +4,7 @@ import path from "node:path"
 export type Integration =
   | { kind: "stdio"; command: string; args: string[]; default: boolean }
   | { kind: "http"; url: string; login?: string; default: boolean }
-  | { kind: "overlay"; default: boolean }
+  | { kind: "overlay"; hint?: string; default: boolean }
 
 export type Catalog = Record<string, Integration>
 
@@ -67,4 +67,79 @@ export function writeMcpConfig(catalog: Catalog, selection: string[], targetDir:
 
   writeJson(path.join(targetDir, ".mcp.json"), { mcpServers: servers("claude") })
   writeJson(path.join(targetDir, ".cursor", "mcp.json"), { mcpServers: servers("cursor") })
+}
+
+/**
+ * Resolves the `--integrations` flag value to catalog names in catalog order.
+ * `none` yields an empty selection; otherwise the value is a comma-separated
+ * list of catalog names.
+ *
+ * @param value Raw flag value.
+ * @param catalog Parsed `integrations.json`.
+ * @throws Error naming `--integrations` and the valid names when a name is not in the catalog.
+ */
+export function parseIntegrations(value: string, catalog: Catalog): string[] {
+  const requested = value
+    .split(",")
+    .map((name) => name.trim())
+    .filter(Boolean)
+  if (requested.length === 1 && requested[0] === "none") return []
+  const valid = Object.keys(catalog)
+  const unknown = requested.filter((name) => !valid.includes(name))
+  if (unknown.length > 0 || requested.length === 0) {
+    throw new Error(
+      `Unknown --integrations value ${unknown.length > 0 ? unknown.join(", ") : JSON.stringify(value)}. Valid names: ${valid.join(", ")}, or none.`,
+    )
+  }
+  return valid.filter((name) => requested.includes(name))
+}
+
+/**
+ * Renders the Markdown section that gives the `~/.codex/config.toml` tables
+ * for the stdio and http catalog entries named in `selection`, in catalog
+ * order. Returns an empty string when no stdio or http entry is selected.
+ *
+ * @param catalog Parsed `integrations.json`.
+ * @param selection Catalog names to include.
+ */
+export function codexSection(catalog: Catalog, selection: string[]): string {
+  const tables: string[] = []
+  const logins: string[] = []
+  for (const [name, integration] of Object.entries(catalog)) {
+    if (!selection.includes(name) || integration.kind === "overlay") continue
+    if (integration.kind === "stdio") {
+      tables.push(
+        `[mcp_servers.${name}]\ncommand = ${JSON.stringify(integration.command)}\nargs = [${integration.args.map((arg) => JSON.stringify(arg)).join(", ")}]`,
+      )
+    } else {
+      tables.push(`[mcp_servers.${name}]\nurl = ${JSON.stringify(integration.url)}`)
+      if (integration.login) logins.push(`\`${name}\` needs a ${integration.login}.`)
+    }
+  }
+  if (tables.length === 0) return ""
+  return [
+    "## Codex MCP servers",
+    "",
+    "Codex reads MCP servers only from `~/.codex/config.toml`, not from `.mcp.json`. Add these tables to that file to get the servers this project configures for Claude Code and Cursor:",
+    "",
+    "```toml",
+    tables.join("\n\n"),
+    "```",
+    ...(logins.length > 0 ? ["", logins.join(" ")] : []),
+    "",
+  ].join("\n")
+}
+
+/**
+ * Appends the {@link codexSection} for `selection` to `AGENTS.md` in
+ * `targetDir`. Does nothing when the section is empty.
+ *
+ * @param catalog Parsed `integrations.json`.
+ * @param selection Catalog names to include.
+ * @param targetDir Scaffold root containing `AGENTS.md`.
+ */
+export function writeCodexDocs(catalog: Catalog, selection: string[], targetDir: string) {
+  const section = codexSection(catalog, selection)
+  if (!section) return
+  fs.appendFileSync(path.join(targetDir, "AGENTS.md"), `\n${section}`)
 }

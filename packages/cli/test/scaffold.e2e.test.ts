@@ -103,3 +103,63 @@ test("pnpm check exits 0 until a line comment is added to an apps/web source fil
     fs.writeFileSync(file, original)
   }
 }, 300_000)
+
+function scaffoldIntegrations(name: string, integrations: string) {
+  const dir = path.join(tmpRoot, name)
+  const result = run(
+    "node",
+    [
+      path.join(cliRoot, "index.js"),
+      dir,
+      "--yes",
+      "--no-git",
+      "--no-install",
+      "--integrations",
+      integrations,
+    ],
+    tmpRoot,
+    { npm_config_user_agent: `pnpm/${execSync("pnpm --version", { encoding: "utf8" }).trim()}` },
+  )
+  expect(result.status, result.output).toBe(0)
+  return dir
+}
+
+function readIfPresent(file: string) {
+  return fs.existsSync(file) ? fs.readFileSync(file, "utf8") : null
+}
+
+function integrationFiles(dir: string) {
+  const agents = readIfPresent(path.join(dir, "AGENTS.md")) ?? ""
+  const start = agents.indexOf("## Codex MCP servers")
+  const rest = start === -1 ? "" : agents.slice(start + 1)
+  const next = rest.search(/\n## /)
+  return {
+    mcp: readIfPresent(path.join(dir, ".mcp.json")),
+    cursorMcp: readIfPresent(path.join(dir, ".cursor", "mcp.json")),
+    cursorRuleExists: fs.existsSync(path.join(dir, ".cursor", "rules", "motion.mdc")),
+    codexSection:
+      start === -1 ? null : agents.slice(start, next === -1 ? undefined : start + 1 + next),
+  }
+}
+
+test("--integrations none writes no MCP, Cursor or Codex integration files", () => {
+  const dir = scaffoldIntegrations("none", "none")
+  const files = integrationFiles(dir)
+  expect(files.mcp).toBeNull()
+  expect(fs.existsSync(path.join(dir, ".cursor"))).toBe(false)
+  expect(files.codexSection).toBeNull()
+  expect(files).toMatchSnapshot("integrations-none")
+}, 120_000)
+
+test("--integrations shadcn,motion-plus,motion-cursor-rule writes the selected integration files", () => {
+  const dir = scaffoldIntegrations("explicit", "shadcn,motion-plus,motion-cursor-rule")
+  const files = integrationFiles(dir)
+  expect(files.cursorRuleExists).toBe(true)
+  expect(files.codexSection).toContain("`motion-plus` needs a Motion+ sign-in.")
+  expect(files).toMatchSnapshot("integrations-explicit")
+
+  const install = run("pnpm", ["install"], dir)
+  expect(install.status, install.output).toBe(0)
+  const check = run("pnpm", ["check"], dir)
+  expect(check.status, check.output).toBe(0)
+}, 600_000)
