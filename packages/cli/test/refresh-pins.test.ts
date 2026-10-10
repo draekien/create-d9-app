@@ -12,6 +12,17 @@ describe("publishedTimes", () => {
   })
 })
 
+describe("pickVersion with a major ceiling", () => {
+  it("skips versions above the ceiling", () => {
+    const times = {
+      "22.20.5": "2026-09-01T00:00:00.000Z",
+      "24.19.2": "2026-09-01T00:00:00.000Z",
+      "26.6.4": "2026-09-01T00:00:00.000Z",
+    }
+    expect(pickVersion(times, new Date("2026-10-10T12:00:00.000Z"), 1440, 22)).toBe("22.20.5")
+  })
+})
+
 const now = new Date("2026-10-10T12:00:00.000Z")
 
 describe("pickVersion", () => {

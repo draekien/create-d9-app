@@ -27,6 +27,7 @@ const SECTIONS = [
 ] as const
 const LOOKUP_CONCURRENCY = 8
 export const DEFAULT_MIN_AGE_MINUTES = 1440
+export const MAJOR_CEILINGS: Record<string, number> = { "@types/node": 22 }
 
 function parseVersion(version: string): [number, number, number] | undefined {
   const match = EXACT_VERSION.exec(version)
@@ -46,12 +47,14 @@ export function pickVersion(
   times: PublishTimes,
   now: Date,
   minAgeMinutes: number = DEFAULT_MIN_AGE_MINUTES,
+  maxMajor?: number,
 ): string | undefined {
   const cutoff = now.getTime() - minAgeMinutes * 60_000
   let best: { version: string; parts: number[] } | undefined
   for (const [version, published] of Object.entries(times)) {
     const parts = parseVersion(version)
     if (!parts) continue
+    if (maxMajor !== undefined && parts[0] > maxMajor) continue
     const publishedAt = Date.parse(published)
     if (Number.isNaN(publishedAt) || publishedAt > cutoff) continue
     if (!best || compareParts(parts, best.parts) > 0) {
@@ -163,7 +166,7 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
   await mapLimited(names, LOOKUP_CONCURRENCY, async (name) => {
     try {
       options.onProgress?.(`looking up ${name}`)
-      picks.set(name, pickVersion(await lookup(name), now, minAge))
+      picks.set(name, pickVersion(await lookup(name), now, minAge, MAJOR_CEILINGS[name]))
     } catch (error) {
       failures.push(name)
       options.onProgress?.(

@@ -11,4 +11,5 @@ Read before adding dependency or changing pinned version (CLI or template).
 - Patch + minor bumps: written, auto-merged once `ci` check passes.
 - Major bumps: each in own PR on branch `bot/major-<slug>`, never auto-merged; owner reviews.
 - `<slug>` = package name without leading `@`, `/` replaced by `-`.
+- `@types/node` major = lowest supported Node major (`MAJOR_CEILINGS` in `packages/cli/scripts/refresh/pins.ts`). Raise it in the same change as `engines.node` and the Node check in `packages/cli/index.js`.
 - New library bundled into CLI needs reason a few lines of code cannot meet. Build tooling + template dependencies: no limit.
