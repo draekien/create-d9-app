@@ -7,5 +7,5 @@ JsClassDeclaration() as $class where {
       and { $name <: r"getDerivedStateFromError", $modifiers <: r".*static.*" }
     }
   },
-  register_diagnostic(span = $class, message = "Use ErrorBoundary from react-error-boundary instead of a class error boundary.", severity = "error")
+  register_diagnostic(span = $class, message = "Use the route errorComponent, or CatchBoundary from @tanstack/react-router, instead of a class error boundary.", severity = "error")
 }
