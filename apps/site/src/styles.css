@@ -312,6 +312,7 @@ a {
   font-size: 0.8125rem;
   line-height: 1.75;
   border: 1px solid var(--rule);
+  overflow-x: auto;
   scrollbar-width: thin;
 }
 
