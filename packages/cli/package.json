@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/draekien/create-d9-app",
+    "url": "git+https://github.com/draekien/create-d9-app.git",
     "directory": "packages/cli"
   },
   "bin": {
