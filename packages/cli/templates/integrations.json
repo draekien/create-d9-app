@@ -1,0 +1,23 @@
+{
+  "shadcn": {
+    "kind": "stdio",
+    "command": "npx",
+    "args": ["shadcn@4.21.4", "mcp"],
+    "default": true
+  },
+  "hugeicons": {
+    "kind": "stdio",
+    "command": "npx",
+    "args": ["-y", "@hugeicons/mcp-server@0.2.2"],
+    "default": true
+  },
+  "motion": { "kind": "http", "url": "https://mcp.motion.dev", "default": true },
+  "motion-plus": {
+    "kind": "http",
+    "url": "https://mcp.motion.dev/plus",
+    "login": "Motion+ sign-in",
+    "default": false
+  },
+  "hugeicons-flutter-icons": { "kind": "overlay", "default": false },
+  "motion-cursor-rule": { "kind": "overlay", "default": false }
+}

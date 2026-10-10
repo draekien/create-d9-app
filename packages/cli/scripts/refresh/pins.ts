@@ -143,6 +143,38 @@ function pinnedEntries(manifest: Manifest) {
   return entries
 }
 
+const CATALOG_PATH = ["packages", "cli", "templates", "integrations.json"]
+const CATALOG_ARG = /^((?:@[a-z0-9._~-]+\/)?[a-z0-9._~-]+)@(\d+\.\d+\.\d+)$/
+
+function catalogEntries(catalog: Manifest) {
+  const entries: { section: string; name: string; version: string }[] = []
+  for (const server of Object.values(catalog)) {
+    const args = (server as { args?: unknown }).args
+    if (!Array.isArray(args)) continue
+    for (const arg of args) {
+      const match = typeof arg === "string" ? CATALOG_ARG.exec(arg) : null
+      if (match) {
+        entries.push({
+          section: "integrations",
+          name: match[1] as string,
+          version: match[2] as string,
+        })
+      }
+    }
+  }
+  return entries
+}
+
+async function readCatalog(repoRoot: string) {
+  const path = join(repoRoot, ...CATALOG_PATH)
+  try {
+    return { path, text: await readFile(path, "utf8") }
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return undefined
+    throw error
+  }
+}
+
 export type RefreshOptions = {
   repoRoot: string
   now?: Date
@@ -168,8 +200,16 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
     })),
   )
 
+  const catalog = await readCatalog(options.repoRoot)
+  const catalogData = catalog ? (JSON.parse(catalog.text) as Manifest) : undefined
+
   const lookup = options.lookup ?? lookupTimes
-  const names = [...new Set(manifests.flatMap((m) => pinnedEntries(m.data).map((e) => e.name)))]
+  const names = [
+    ...new Set([
+      ...manifests.flatMap((m) => pinnedEntries(m.data).map((e) => e.name)),
+      ...(catalogData ? catalogEntries(catalogData).map((e) => e.name) : []),
+    ]),
+  ]
   const picks = new Map<string, string | undefined>()
   const failures: string[] = []
   await mapLimited(names, LOOKUP_CONCURRENCY, async (name) => {
@@ -185,6 +225,23 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
   })
 
   const changes: PinChange[] = []
+  const shouldApply = (kind: BumpKind, name: string) =>
+    options.onlyMajor !== undefined
+      ? kind === "major" && name === options.onlyMajor
+      : kind !== "major" || options.includeMajor === true
+  const record = (
+    file: string,
+    name: string,
+    from: string,
+    to: string,
+    kind: BumpKind,
+    applied: boolean,
+  ) => {
+    const change = { file, name, from, to, kind, applied }
+    changes.push(change)
+    options.onChange?.(change)
+  }
+
   for (const { path, data } of manifests) {
     let dirty = false
     const file = relative(options.repoRoot, path).split(sep).join("/")
@@ -193,10 +250,7 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
       if (!to) continue
       const kind = classifyBump(version, to)
       if (kind === "none") continue
-      const applied =
-        options.onlyMajor !== undefined
-          ? kind === "major" && name === options.onlyMajor
-          : kind !== "major" || options.includeMajor === true
+      const applied = shouldApply(kind, name)
       if (applied) {
         if (section === "packageManager") {
           data.packageManager = `${name}@${to}`
@@ -205,13 +259,26 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
         }
         dirty = true
       }
-      const change = { file, name, from: version, to, kind, applied }
-      changes.push(change)
-      options.onChange?.(change)
+      record(file, name, version, to, kind, applied)
     }
     if (dirty && options.dryRun !== true) {
       await writeFile(path, `${JSON.stringify(data, null, 2)}\n`)
     }
+  }
+
+  if (catalog && catalogData) {
+    let text = catalog.text
+    const file = CATALOG_PATH.join("/")
+    for (const { name, version } of catalogEntries(catalogData)) {
+      const to = picks.get(name)
+      if (!to) continue
+      const kind = classifyBump(version, to)
+      if (kind === "none") continue
+      const applied = shouldApply(kind, name)
+      if (applied) text = text.replaceAll(`"${name}@${version}"`, `"${name}@${to}"`)
+      record(file, name, version, to, kind, applied)
+    }
+    if (text !== catalog.text && options.dryRun !== true) await writeFile(catalog.path, text)
   }
   return { changes, failures }
 }
