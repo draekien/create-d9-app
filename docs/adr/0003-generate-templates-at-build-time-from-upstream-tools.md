@@ -19,11 +19,11 @@ The shadcn package exports `addRegistryItems` from `shadcn/registry` but not `in
 
 ## Decision
 
-We will run upstream tools inside this repository, at pinned versions, through a refresh script, and commit their output under `templates/`. The published CLI only copies files from `templates/`; it never runs an upstream tool and never reaches the network for template content. A daily GitHub Actions workflow runs the refresh script, bumps pins, regenerates output, runs the regression suite, and auto-merges patch and minor changes; major bumps wait for human review.
+We will run upstream tools inside this repository, at pinned versions, through a refresh script, and commit their output under `templates/`. The published CLI only copies files from `templates/`; it never runs an upstream tool and never reaches the network for template content. A GitHub Actions workflow, scheduled on the 1st and 15th of each month and on manual dispatch, runs the refresh script, bumps pins, regenerates output, runs the regression suite, and auto-merges patch and minor changes; major bumps wait for human review.
 
 ## Consequences
 
-A scaffold works offline and installs exactly what the regression suite tested. Every upstream change arrives as a reviewable diff in a pull request. Templates trail upstream by at least one day (pnpm `minimumReleaseAge` default 1440 minutes) and by one release cycle of this CLI. The refresh script and the daily workflow are code this repository maintains, with no prior art in other `create-*` CLIs. Template content that no upstream CLI produces is hand-written and kept current only by pin bumps.
+A scaffold works offline and installs exactly what the regression suite tested. Every upstream change arrives as a reviewable diff in a pull request. Templates trail upstream by at least one day (pnpm `minimumReleaseAge` default 1440 minutes) and by one release cycle of this CLI. The refresh script and the scheduled workflow are code this repository maintains, with no prior art in other `create-*` CLIs. Template content that no upstream CLI produces is hand-written and kept current only by pin bumps.
 
 ## Alternatives considered
 
@@ -34,3 +34,5 @@ A scaffold works offline and installs exactly what the regression suite tested. 
 **Fetch skill and registry files at scaffold time from pinned commit SHAs.** Rejected because it needs network at scaffold time and reimplementing shadcn's alias and CSS-variable transforms.
 
 ## Amendments
+
+- 2026-10-10: Refresh schedule set to the 1st and 15th of each month instead of daily, to reduce pull request volume.
