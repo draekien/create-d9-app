@@ -1,5 +1,12 @@
 # @draekien/create-d9-app
 
+## 0.0.3
+
+### Patch Changes
+
+- 16f55a1: feat(templates): ship agent rule files, the shadcn agent skill and a one-rule-per-line AGENTS.md
+- 31de661: feat(templates): enforce agent rules with gritql plugins and keep only residual prose
+
 ## 0.0.2
 
 ### Patch Changes
