@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 concurrency:
   group: pr-${{ github.ref }}
   cancel-in-progress: true
@@ -51,6 +54,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: git fetch origin main:refs/remotes/origin/main
       - run: pnpm exec changeset status --since=origin/main
+      - run: git diff --name-only --diff-filter=A origin/main...HEAD -- '.changeset/*.md' | grep .
 
   ci:
     name: ci
