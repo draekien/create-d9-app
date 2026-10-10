@@ -1,5 +1,13 @@
 # @draekien/create-d9-app
 
+## 0.0.4
+
+### Patch Changes
+
+- 5bd4d97: chore(templates): pin pnpm 12
+- dd64d29: feat(refresh): bump packageManager pin
+- 0955f12: feat(templates): ship upgrade-dependencies skill
+
 ## 0.0.3
 
 ### Patch Changes
