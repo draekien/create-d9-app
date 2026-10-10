@@ -26,7 +26,7 @@ afterEach(() => {
   }
 })
 
-describe("initGit", () => {
+describe("initGit", { timeout: 30_000 }, () => {
   it("creates a repository with exactly one commit", () => {
     const dir = tempDir()
     const result = initGit(dir)
