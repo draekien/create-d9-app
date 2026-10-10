@@ -99,7 +99,6 @@ exports[`scaffolded project has the expected files and dependencies > files 1`] 
   "apps/web/src/routes/index.tsx",
   "apps/web/tsconfig.json",
   "apps/web/vite.config.ts",
-  "apps/web/vitest.config.ts",
   "biome.json",
   "lefthook.yml",
   "package.json",
