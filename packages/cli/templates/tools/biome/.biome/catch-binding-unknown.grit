@@ -1,0 +1,7 @@
+language js
+
+JsCatchClause(declaration = JsCatchDeclaration(type_annotation = $annotation)) where {
+  $annotation <: TsTypeAnnotation(ty = $type),
+  $type <: not `unknown`,
+  register_diagnostic(span = $annotation, message = "Type the catch binding as unknown and narrow it.", severity = "error")
+}

@@ -1,0 +1,11 @@
+language js
+
+JsClassDeclaration() as $class where {
+  $class <: contains JsMethodClassMember(modifiers = $modifiers, name = $name) where {
+    or {
+      $name <: r"componentDidCatch",
+      and { $name <: r"getDerivedStateFromError", $modifiers <: r".*static.*" }
+    }
+  },
+  register_diagnostic(span = $class, message = "Use ErrorBoundary from react-error-boundary instead of a class error boundary.", severity = "error")
+}

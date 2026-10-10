@@ -1,7 +1,10 @@
 language js
 
 `new QueryClient($_)` as $client where {
-  $client <: within JsFunctionDeclaration(id = $component) where { $component <: r"[A-Z]\w*" },
+  $client <: within or {
+    JsFunctionDeclaration(id = $component),
+    JsVariableDeclarator(id = $component, initializer = JsInitializerClause(expression = or { JsArrowFunctionExpression(), JsFunctionExpression() }))
+  } where { $component <: r"[A-Z]\w*" },
   $client <: not within `useState($_)`,
   register_diagnostic(span = $client, message = "Create the QueryClient once at module scope or in a useState initialiser.")
 }

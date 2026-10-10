@@ -1,0 +1,20 @@
+language js
+
+`$fn($...)` as $call where {
+  $fn <: r"[A-Z]\w*",
+  $fn <: not r"String",
+  $fn <: not r"Number",
+  $fn <: not r"Boolean",
+  $fn <: not r"Symbol",
+  $fn <: not r"BigInt",
+  $fn <: not r"Date",
+  $fn <: not r"Error",
+  $fn <: not r"Object",
+  $fn <: not r"Array",
+  $fn <: not r"Promise",
+  $fn <: not r"Map",
+  $fn <: not r"Set",
+  $fn <: not r"RegExp",
+  $call <: not within or { JsxElement(), JsxSelfClosingElement(), JsxFragment() },
+  register_diagnostic(span = $call, message = "Render a component in JSX instead of calling it as a function.", severity = "error")
+}

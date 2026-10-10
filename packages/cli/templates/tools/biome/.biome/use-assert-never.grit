@@ -1,0 +1,6 @@
+language js
+
+`const $x: never = $y` as $declaration where {
+  $declaration <: within or { JsDefaultClause(), JsElseClause() },
+  register_diagnostic(span = $declaration, message = "Use the shared assertNever helper instead of an inline never assignment.", severity = "error")
+}

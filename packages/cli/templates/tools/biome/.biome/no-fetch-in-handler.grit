@@ -1,0 +1,12 @@
+language js
+
+`fetch($...)` as $call where {
+  $call <: not within JsPropertyObjectMember(name = $query) where { $query <: r"queryFn" },
+  $call <: not within JsPropertyObjectMember(name = $mutation) where { $mutation <: r"mutationFn" },
+  or {
+    $call <: within JsFunctionDeclaration(id = $declared) where { $declared <: r"handle[A-Z]\w*" },
+    $call <: within JsVariableDeclarator(id = $assigned) where { $assigned <: r"handle[A-Z]\w*" },
+    $call <: within JsxAttribute(name = $prop) where { $prop <: r"on[A-Z]\w*" }
+  },
+  register_diagnostic(span = $call, message = "Call a useMutation mutate function from the handler; put fetch in mutationFn.", severity = "error")
+}

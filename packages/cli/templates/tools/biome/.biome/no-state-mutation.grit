@@ -1,0 +1,19 @@
+language js
+
+or {
+  `$state.push($...)`,
+  `$state.pop($...)`,
+  `$state.shift($...)`,
+  `$state.unshift($...)`,
+  `$state.splice($...)`,
+  `$state.sort($...)`,
+  `$state.reverse($...)`,
+  `$state.fill($...)`,
+  `$state.$prop = $_`,
+  `$state[$i] = $_`
+} as $mutation where {
+  $mutation <: within or { JsFunctionDeclaration(), JsFunctionExpression(), JsArrowFunctionExpression() } as $fn where {
+    $fn <: contains `const [$state, $_] = useState($_)`
+  },
+  register_diagnostic(span = $mutation, message = "State is immutable; call the setter with a new array or object.", severity = "error")
+}

@@ -1,8 +1,13 @@
 language js
 
 or { `Math.random()`, `Date.now()`, `new Date()`, `DateTime.now()` } as $call where {
-  $call <: within JsFunctionDeclaration(id = $component) where { $component <: r"[A-Z]\w*" },
-  $call <: not within JsArrowFunctionExpression(),
+  $call <: within or {
+    JsFunctionDeclaration(id = $component),
+    JsVariableDeclarator(id = $component, initializer = JsInitializerClause(expression = or { JsArrowFunctionExpression(), JsFunctionExpression() }))
+  } where { $component <: r"[A-Z]\w*" },
+  $call <: not within or { `useEffect($...)`, `useLayoutEffect($...)`, `useMemo($...)`, `useCallback($...)`, `useState($...)` },
+  $call <: not within JsxAttribute(name = $prop) where { $prop <: r"on[A-Z]\w*" },
   $call <: not within JsFunctionDeclaration(id = $handler) where { $handler <: r"handle[A-Z]\w*" },
+  $call <: not within JsVariableDeclarator(id = $assigned) where { $assigned <: r"handle[A-Z]\w*" },
   register_diagnostic(span = $call, message = "Non-deterministic value during render; move it into an effect, handler, or useState initialiser.", severity = "error")
 }
