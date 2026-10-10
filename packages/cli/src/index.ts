@@ -3,6 +3,8 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
+import { isInteractive } from "./interactive.ts"
+import { resolveFromFlags, resolveWithPrompts } from "./prompts.ts"
 import { renameFiles } from "./rename-files.ts"
 
 const helpText = `Usage: create-d9-app <dir> [options]
@@ -36,7 +38,7 @@ function setPackageName(targetDir: string) {
   fs.writeFileSync(file, `${JSON.stringify(pkg, null, 2)}\n`)
 }
 
-function main() {
+async function main() {
   const { values, positionals } = parseArgs({
     allowPositionals: true,
     options: {
@@ -52,17 +54,39 @@ function main() {
     return
   }
 
-  const dir = positionals[0]
-  if (!dir) {
-    process.stderr.write(`Missing project directory.\n\n${helpText}`)
+  const flags = {
+    dir: positionals[0],
+    yes: values.yes,
+    "no-git": values["no-git"],
+    "no-install": values["no-install"],
+  }
+
+  const interactive = isInteractive({
+    stdin: process.stdin,
+    stdout: process.stdout,
+    env: process.env,
+    yes: Boolean(values.yes),
+  })
+
+  if (!interactive && !flags.dir) {
+    process.stderr.write(`Missing project directory.
+
+${helpText}`)
     process.exit(1)
   }
 
-  const targetDir = path.resolve(dir)
+  const options = interactive
+    ? await resolveWithPrompts(flags, {
+        input: process.stdin,
+        output: process.stdout,
+      })
+    : resolveFromFlags(flags)
+
+  const targetDir = path.resolve(options.dir)
   copyDir(templateDir, targetDir)
   setPackageName(targetDir)
 
-  if (!values["no-install"]) {
+  if (options.install) {
     const result = spawnSync("pnpm install", {
       cwd: targetDir,
       stdio: "inherit",
@@ -76,4 +100,4 @@ function main() {
   process.stdout.write(`Created ${targetDir}\n`)
 }
 
-main()
+await main()
