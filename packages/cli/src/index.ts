@@ -4,6 +4,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
 import { initGit } from "./git.ts"
+import { defaultSelection, readCatalog, writeMcpConfig } from "./integrations.ts"
 import { isInteractive } from "./interactive.ts"
 import { buildNextSteps } from "./next-steps.ts"
 import { applyOverlays } from "./overlays.ts"
@@ -119,7 +120,10 @@ ${helpText}`)
   }
 
   copyDir(templateDir, targetDir)
-  applyOverlays(templateRoot, targetDir)
+  const catalog = readCatalog(templateRoot)
+  const selection = defaultSelection(catalog)
+  applyOverlays(templateRoot, targetDir, selection)
+  writeMcpConfig(catalog, selection, targetDir)
   setPackageName(targetDir, name)
 
   if (options.install) {

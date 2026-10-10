@@ -99,10 +99,15 @@ function copyOverlay(from: string, to: string) {
 
 /**
  * Copies every `tools/<tool>` overlay under `templateRoot` into `targetDir`
- * in sorted order, deep-merging `package.json` files into existing ones.
+ * in sorted order, then each `optional/<name>` overlay named in `selection`
+ * that exists, deep-merging `package.json` files into existing ones.
  */
-export function applyOverlays(templateRoot: string, targetDir: string) {
+export function applyOverlays(templateRoot: string, targetDir: string, selection: string[] = []) {
   for (const tool of listOverlays(templateRoot)) {
     copyOverlay(path.join(templateRoot, "tools", tool), targetDir)
+  }
+  for (const name of [...selection].sort()) {
+    const dir = path.join(templateRoot, "optional", name)
+    if (fs.existsSync(dir)) copyOverlay(dir, targetDir)
   }
 }
