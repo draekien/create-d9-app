@@ -1,0 +1,365 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-11T00:00:00Z",
+  "title": "Design System: create-d9-app",
+  "extensions": {
+    "colorMeta": {
+      "background": {
+        "role": "neutral",
+        "displayName": "Ground",
+        "canonical": "light-dark(oklch(0.9911 0.0055 211.04), oklch(0.21 0.004 318))",
+        "grounds": { "light": "oklch(0.9911 0.0055 211.04)", "dark": "oklch(0.21 0.004 318)" },
+        "source": "portfolio app/globals.css",
+        "tonalRamp": [
+          "oklch(0.15 0.0055 211.04)",
+          "oklch(0.264 0.0055 211.04)",
+          "oklch(0.379 0.0055 211.04)",
+          "oklch(0.493 0.0055 211.04)",
+          "oklch(0.607 0.0055 211.04)",
+          "oklch(0.721 0.0055 211.04)",
+          "oklch(0.836 0.0055 211.04)",
+          "oklch(0.95 0.0055 211.04)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "light-dark(oklch(0.2178 0 0), oklch(0.8877 0.0288 218.97))",
+        "grounds": { "light": "oklch(0.2178 0 0)", "dark": "oklch(0.8877 0.0288 218.97)" },
+        "source": "portfolio app/globals.css",
+        "tonalRamp": [
+          "oklch(0.15 0.0288 218.97)",
+          "oklch(0.264 0.0288 218.97)",
+          "oklch(0.379 0.0288 218.97)",
+          "oklch(0.493 0.0288 218.97)",
+          "oklch(0.607 0.0288 218.97)",
+          "oklch(0.721 0.0288 218.97)",
+          "oklch(0.836 0.0288 218.97)",
+          "oklch(0.95 0.0288 218.97)"
+        ]
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Portfolio Orange",
+        "canonical": "oklch(0.6823 0.176 46.72)",
+        "source": "portfolio app/globals.css; favicon.svg carries it as #f26f21",
+        "tonalRamp": [
+          "oklch(0.15 0.176 46.72)",
+          "oklch(0.264 0.176 46.72)",
+          "oklch(0.379 0.176 46.72)",
+          "oklch(0.493 0.176 46.72)",
+          "oklch(0.607 0.176 46.72)",
+          "oklch(0.721 0.176 46.72)",
+          "oklch(0.836 0.176 46.72)",
+          "oklch(0.95 0.176 46.72)"
+        ]
+      },
+      "primary-text": {
+        "role": "primary",
+        "displayName": "Readable Orange",
+        "canonical": "light-dark(oklch(0.55 0.15 46.72), oklch(0.6823 0.176 46.72))",
+        "grounds": { "light": "oklch(0.55 0.15 46.72)", "dark": "oklch(0.6823 0.176 46.72)" },
+        "source": "site addition: portfolio orange fails 4.5:1 as text on the light ground",
+        "tonalRamp": [
+          "oklch(0.15 0.15 46.72)",
+          "oklch(0.264 0.15 46.72)",
+          "oklch(0.379 0.15 46.72)",
+          "oklch(0.493 0.15 46.72)",
+          "oklch(0.607 0.15 46.72)",
+          "oklch(0.721 0.15 46.72)",
+          "oklch(0.836 0.15 46.72)",
+          "oklch(0.95 0.15 46.72)"
+        ]
+      },
+      "on-primary": {
+        "role": "primary",
+        "displayName": "On Orange",
+        "canonical": "oklch(0.21 0.004 318)",
+        "source": "site addition: text on an orange fill, the dark ground value on both grounds",
+        "tonalRamp": [
+          "oklch(0.15 0.004 318)",
+          "oklch(0.264 0.004 318)",
+          "oklch(0.379 0.004 318)",
+          "oklch(0.493 0.004 318)",
+          "oklch(0.607 0.004 318)",
+          "oklch(0.721 0.004 318)",
+          "oklch(0.836 0.004 318)",
+          "oklch(0.95 0.004 318)"
+        ]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Mauve",
+        "canonical": "light-dark(oklch(0.38 0.09 318.07), oklch(0.74 0.0909 318.07))",
+        "grounds": { "light": "oklch(0.38 0.09 318.07)", "dark": "oklch(0.74 0.0909 318.07)" },
+        "source": "portfolio app/globals.css",
+        "tonalRamp": [
+          "oklch(0.15 0.09 318.07)",
+          "oklch(0.264 0.09 318.07)",
+          "oklch(0.379 0.09 318.07)",
+          "oklch(0.493 0.09 318.07)",
+          "oklch(0.607 0.09 318.07)",
+          "oklch(0.721 0.09 318.07)",
+          "oklch(0.836 0.09 318.07)",
+          "oklch(0.95 0.09 318.07)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Ground",
+        "canonical": "light-dark(oklch(0.97 0.001 106.424), oklch(0.268 0.007 34.298))",
+        "grounds": { "light": "oklch(0.97 0.001 106.424)", "dark": "oklch(0.268 0.007 34.298)" },
+        "source": "portfolio app/globals.css",
+        "tonalRamp": [
+          "oklch(0.15 0.007 34.298)",
+          "oklch(0.264 0.007 34.298)",
+          "oklch(0.379 0.007 34.298)",
+          "oklch(0.493 0.007 34.298)",
+          "oklch(0.607 0.007 34.298)",
+          "oklch(0.721 0.007 34.298)",
+          "oklch(0.836 0.007 34.298)",
+          "oklch(0.95 0.007 34.298)"
+        ]
+      },
+      "muted-foreground": {
+        "role": "neutral",
+        "displayName": "Muted Ink",
+        "canonical": "light-dark(oklch(0.52 0.013 58.071), oklch(0.709 0.01 56.259))",
+        "grounds": { "light": "oklch(0.52 0.013 58.071)", "dark": "oklch(0.709 0.01 56.259)" },
+        "source": "portfolio app/globals.css",
+        "tonalRamp": [
+          "oklch(0.15 0.013 58.071)",
+          "oklch(0.264 0.013 58.071)",
+          "oklch(0.379 0.013 58.071)",
+          "oklch(0.493 0.013 58.071)",
+          "oklch(0.607 0.013 58.071)",
+          "oklch(0.721 0.013 58.071)",
+          "oklch(0.836 0.013 58.071)",
+          "oklch(0.95 0.013 58.071)"
+        ]
+      },
+      "border": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "light-dark(oklch(0.923 0.003 48.717), oklch(1 0 0 / 10%))",
+        "grounds": { "light": "oklch(0.923 0.003 48.717)", "dark": "oklch(1 0 0 / 10%)" },
+        "source": "portfolio app/globals.css",
+        "tonalRamp": [
+          "oklch(0.15 0.003 48.717)",
+          "oklch(0.264 0.003 48.717)",
+          "oklch(0.379 0.003 48.717)",
+          "oklch(0.493 0.003 48.717)",
+          "oklch(0.607 0.003 48.717)",
+          "oklch(0.721 0.003 48.717)",
+          "oklch(0.836 0.003 48.717)",
+          "oklch(0.95 0.003 48.717)"
+        ]
+      },
+      "canvas-dot": {
+        "role": "neutral",
+        "displayName": "Dot",
+        "canonical": "oklch(0.5579 0.0909 318.07 / 0.10)",
+        "source": "portfolio dot canvas; constant in src/components/background-fx.tsx",
+        "tonalRamp": [
+          "oklch(0.15 0.0909 318.07)",
+          "oklch(0.264 0.0909 318.07)",
+          "oklch(0.379 0.0909 318.07)",
+          "oklch(0.493 0.0909 318.07)",
+          "oklch(0.607 0.0909 318.07)",
+          "oklch(0.721 0.0909 318.07)",
+          "oklch(0.836 0.0909 318.07)",
+          "oklch(0.95 0.0909 318.07)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Landing h1 only; 2.25rem below 768px, 4rem from 768px."
+      },
+      "headline": { "displayName": "Headline", "purpose": "Landing section headings, two-tone." },
+      "page-title": { "displayName": "Page Title", "purpose": "Docs, changelog and 404 h1." },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Prose h2; h3 1.0625rem and h4 1rem at the same weight and tracking."
+      },
+      "name-block": {
+        "displayName": "Name Block",
+        "purpose": "Top bar home link, uppercase on two lines; 1.25rem, 1.5rem from 768px, 1.875rem from 1024px."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Landing lead (1.0625rem below 640px) and docs page descriptions."
+      },
+      "body": { "displayName": "Body", "purpose": "Prose at max 60ch; strong at 650." },
+      "transcript": {
+        "displayName": "Transcript",
+        "purpose": "Every transcript line, tree and output table."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Top bar nav, theme toggle, section nav, docs rail."
+      },
+      "code": { "displayName": "Code", "purpose": "Prose code blocks." },
+      "button-label": { "displayName": "Button Label", "purpose": "Copy button only, uppercase." }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "color-hover",
+        "value": "color 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Nav, rail and theme toggle hover colour shift (Tailwind transition-colors duration-150)."
+      },
+      {
+        "name": "cursor-blink",
+        "value": "cursor-blink 1.1s steps(1) infinite",
+        "purpose": "Block cursor on the active command line; none under reduced motion."
+      },
+      {
+        "name": "canvas-ease",
+        "value": "lerp 0.1 per frame, settle at 0.5px",
+        "purpose": "Pointer tracking of the dot canvas; 48px grid, 1.5px base radius, up to 2px rise within 140px, quadratic falloff. Static draw under reduced motion."
+      },
+      {
+        "name": "theme-switch",
+        "value": "transition: none for one frame",
+        "purpose": "Theme toggle suppresses all transitions while the ground changes."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "table-stack", "value": "40rem" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Copy Command",
+      "kind": "custom",
+      "refersTo": "button-copy",
+      "description": "The create command as a transcript line with the orange copy button at its end.",
+      "html": "<div class=\"ds-tx\"><div class=\"ds-tx-line\"><span class=\"ds-tx-glyph\" aria-hidden=\"true\">$</span><div class=\"ds-tx-body ds-tx-split\"><code class=\"ds-tx-cmd\">pnpm create @draekien/d9-app my-app</code><button type=\"button\" class=\"ds-btn-copy\">copy</button></div></div></div>",
+      "css": ".ds-tx { font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-size: clamp(0.8125rem, 0.75rem + 0.25vw, 0.9375rem); line-height: 1.65; font-variant-numeric: tabular-nums; } .ds-tx-line { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); align-items: baseline; } .ds-tx-glyph { color: var(--primary-text); } .ds-tx-body { display: flex; flex-wrap: wrap; column-gap: 0.9rem; min-width: 0; } .ds-tx-split { width: 100%; align-items: baseline; justify-content: space-between; column-gap: 1.5rem; row-gap: 0.25rem; } .ds-tx-cmd { color: var(--foreground); white-space: nowrap; font-family: inherit; } .ds-btn-copy { cursor: pointer; border: 0; border-radius: 0; background: var(--primary); color: var(--on-primary); padding: 0.25rem 0.625rem; font-family: inherit; font-size: 0.6875rem; line-height: 1; letter-spacing: 0.12em; text-transform: uppercase; } .ds-btn-copy:hover { background: var(--foreground); color: var(--background); } .ds-btn-copy:focus-visible { outline: 2px solid var(--primary-text); outline-offset: 3px; }"
+    },
+    {
+      "name": "Prompt Line",
+      "kind": "custom",
+      "refersTo": "transcript-answer",
+      "description": "A clack prompt: question in ink, answer in mauve, flag in muted ink.",
+      "html": "<div class=\"ds-tx\"><div class=\"ds-tx-line\"><span class=\"ds-tx-glyph\" aria-hidden=\"true\">◇</span><div class=\"ds-tx-body\"><span class=\"ds-q\">Install dependencies?</span><span class=\"ds-a\">Yes</span><span class=\"ds-f\">--no-install</span></div></div></div>",
+      "css": ".ds-tx { font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-size: clamp(0.8125rem, 0.75rem + 0.25vw, 0.9375rem); line-height: 1.65; } .ds-tx-line { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); align-items: baseline; } .ds-tx-glyph { color: var(--primary-text); } .ds-tx-body { display: flex; flex-wrap: wrap; column-gap: 0.9rem; min-width: 0; } .ds-q { color: var(--foreground); } .ds-a { color: var(--secondary); } .ds-f { color: var(--muted-foreground); }"
+    },
+    {
+      "name": "Active Command",
+      "kind": "custom",
+      "refersTo": "transcript-command",
+      "description": "The command for the section in view, carrying the blinking block cursor.",
+      "html": "<div class=\"ds-tx\"><div class=\"ds-tx-line\"><span class=\"ds-tx-glyph\" aria-hidden=\"true\">$</span><div class=\"ds-tx-body\"><code class=\"ds-tx-cmd\">pnpm dev<span class=\"ds-cursor\" aria-hidden=\"true\"></span></code></div></div></div>",
+      "css": ".ds-tx { font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-size: clamp(0.8125rem, 0.75rem + 0.25vw, 0.9375rem); line-height: 1.65; } .ds-tx-line { display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); align-items: baseline; } .ds-tx-glyph { color: var(--primary-text); } .ds-tx-body { display: flex; flex-wrap: wrap; column-gap: 0.9rem; } .ds-tx-cmd { color: var(--foreground); font-family: inherit; } .ds-cursor { display: inline-block; width: 0.6em; height: 1.15em; margin-left: 0.35em; vertical-align: -0.2em; background: var(--foreground); animation: ds-blink 1.1s steps(1) infinite; } @keyframes ds-blink { 50% { opacity: 0; } } @media (prefers-reduced-motion: reduce) { .ds-cursor { animation: none; } }"
+    },
+    {
+      "name": "Theme Toggle",
+      "kind": "button",
+      "refersTo": "theme-toggle",
+      "description": "Text-labelled theme switch with a hairline outline.",
+      "html": "<button type=\"button\" class=\"ds-theme-toggle\">theme: dark</button>",
+      "css": ".ds-theme-toggle { cursor: pointer; background: transparent; border: 1px solid var(--border); border-radius: 0; padding: 0.25rem 0.625rem; color: var(--muted-foreground); font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-size: 0.875rem; line-height: 1.43; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-theme-toggle:hover { color: var(--foreground); } .ds-theme-toggle:focus-visible { outline: 2px solid var(--primary-text); outline-offset: 3px; }"
+    },
+    {
+      "name": "Section Nav",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Mono label nav; the active item turns Readable Orange behind a Portfolio Orange BrandMark.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Sections\"><ul><li><a href=\"#run\" aria-current=\"true\"><svg class=\"ds-brandmark\" viewBox=\"0 0 53 54\" fill=\"currentColor\" aria-hidden=\"true\"><path d=\"M0,0 H6.012 L29.023,58 H22.911 Z\"/><path d=\"M22.852,0 H28.864 L51.875,58 H45.763 Z\"/></svg>Run</a></li><li><a href=\"#agent-setup\">Agent setup</a></li><li><a href=\"#pinned\">Pinned</a></li></ul></nav>",
+      "css": ".ds-nav { background: var(--background); padding: 1rem 0; font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-size: 0.875rem; } .ds-nav ul { display: flex; flex-wrap: wrap; column-gap: 1.75rem; row-gap: 0.5rem; list-style: none; margin: 0; padding: 0; } .ds-nav a { color: var(--muted-foreground); text-decoration: none; white-space: nowrap; transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1); } .ds-nav a:hover { color: var(--foreground); } .ds-nav a[aria-current] { color: var(--primary-text); } .ds-nav a:focus-visible { outline: 2px solid var(--primary-text); outline-offset: 3px; } .ds-brandmark { display: inline-block; height: 0.85em; width: auto; vertical-align: -0.1em; margin-right: 0.25rem; color: var(--primary); }"
+    },
+    {
+      "name": "Section Divider and Headline",
+      "kind": "custom",
+      "description": "BrandMark, hairline, BrandMark above a two-tone mono headline.",
+      "html": "<div class=\"ds-divider\" aria-hidden=\"true\"><svg class=\"ds-bm\" viewBox=\"0 0 53 54\" fill=\"currentColor\"><path d=\"M0,0 H6.012 L29.023,58 H22.911 Z\"/><path d=\"M22.852,0 H28.864 L51.875,58 H45.763 Z\"/></svg><hr><svg class=\"ds-bm\" viewBox=\"0 0 53 54\" fill=\"currentColor\"><path d=\"M0,0 H6.012 L29.023,58 H22.911 Z\"/><path d=\"M22.852,0 H28.864 L51.875,58 H45.763 Z\"/></svg></div><h2 class=\"ds-headline\">Pinned <em>and predictable</em></h2>",
+      "css": ".ds-divider { display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem; } .ds-divider hr { flex: 1; border: 0; border-top: 1px solid var(--border); margin: 0; } .ds-bm { flex-shrink: 0; height: 0.85em; width: auto; color: var(--primary); } .ds-headline { margin: 0; font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-weight: 500; font-size: clamp(1.5rem, 1.05rem + 1.7vw, 2.375rem); line-height: 1.1; letter-spacing: -0.025em; text-wrap: balance; color: var(--foreground); } .ds-headline em { font-style: normal; color: var(--secondary); }"
+    },
+    {
+      "name": "Output Table",
+      "kind": "custom",
+      "description": "Plain transcript table: no rules, muted header, ink first column.",
+      "html": "<table class=\"ds-out-table\"><thead><tr><th scope=\"col\">command</th><th scope=\"col\">runs</th></tr></thead><tbody><tr><td class=\"ds-k\">pnpm dev</td><td class=\"ds-v\">vite dev for apps/web</td></tr><tr><td class=\"ds-k\">pnpm test</td><td class=\"ds-v\">vitest run in every package</td></tr></tbody></table>",
+      "css": ".ds-out-table { border-collapse: collapse; width: 100%; font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-size: clamp(0.8125rem, 0.75rem + 0.25vw, 0.9375rem); line-height: 1.65; font-variant-numeric: tabular-nums; } .ds-out-table th, .ds-out-table td { text-align: left; vertical-align: baseline; padding: 0.15rem 1.5rem 0.15rem 0; } .ds-out-table th { font-weight: 400; color: var(--muted-foreground); } .ds-k { white-space: nowrap; color: var(--foreground); } .ds-v { color: var(--muted-foreground); }"
+    },
+    {
+      "name": "Prose Link and Inline Code",
+      "kind": "custom",
+      "refersTo": "link",
+      "description": "Docs prose: Figtree body, mauve underlined link, inline code on the muted ground.",
+      "html": "<p class=\"ds-prose\">Run <code>pnpm check</code> from the root; see <a href=\"#\">agent setup</a> for the hooks.</p>",
+      "css": ".ds-prose { font-family: var(--font-sans, 'Figtree Variable', system-ui, sans-serif); font-size: 1.0625rem; line-height: 1.7; color: var(--foreground); max-width: 60ch; } .ds-prose a { color: var(--secondary); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.22em; } .ds-prose a:hover { color: var(--foreground); } .ds-prose a:focus-visible { outline: 2px solid var(--primary-text); outline-offset: 3px; } .ds-prose code { font-family: var(--font-mono, 'JetBrains Mono Variable', ui-monospace, monospace); font-size: 0.84em; color: var(--foreground); background: var(--muted); padding: 0.1em 0.35em; border-radius: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Session Transcript",
+    "overview": "The site reads as the transcript of one real run of the CLI. Every section is the next command typed and its real output: a `$` command line, clack prompts with their answers and flags, the generated tree, then plain output tables. Proof is the session itself. The material around the transcript is the owner's portfolio: a near-white or near-black ground, a fixed field of faint mauve dots that rise toward the pointer, a two-tone JetBrains Mono headline (pale or ink, then mauve), Figtree prose, a bold uppercase Figtree name block, and the orange `\\\\>` mark.\n\nDensity is a terminal's: mono text at small sizes, generous vertical air between sections (6rem, 8rem from 640px), a single left inset on wide screens (15.3vw), and no cards, panels or boxes around anything. Colour is flat. Depth comes only from the dot canvas sitting under the content layer. Both grounds are first-class; every colour token is one `light-dark()` pair that follows the OS scheme or the text-labelled theme toggle.\n\nThe docs, changelog and 404 pages keep the same material in a reading shape: a mono rail on the left from 1024px, prose at 60ch, mono headings, and code on the muted ground. The 404 is itself a transcript (`cd <path>` and the shell's real error).",
+    "keyCharacteristics": [
+      "Transcript lines in a fixed 1.75rem glyph gutter: `$` commands, `◇` prompts, `│` output, all in the orange text tone.",
+      "Two-tone mono headlines: the lead in foreground, the rest in mauve, roman.",
+      "Orange is a mark and a fill; orange as text uses the darker text tone on the light ground.",
+      "Flat colour, square corners, hairline borders, no shadows, no gradients.",
+      "Two moving elements only: the blinking block cursor and the pointer-reactive dot canvas; reduced motion stills both."
+    ],
+    "rules": [
+      {
+        "name": "The Readable Orange Rule",
+        "body": "Orange text is always `primary-text`, never `primary`. `primary` appears only as a fill or as the mark.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Grounds Rule",
+        "body": "Every colour is one `light-dark()` pair (or a single value valid on both grounds). Check every new colour use on both the light and dark ground before shipping.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mauve Answer Rule",
+        "body": "Mauve marks what the run answered or links to: headline second halves, prompt answers, links, confirmations. It is never a fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Tone Headline Rule",
+        "body": "Every headline is a lead in foreground followed by an `em` in mauve, set roman (no italic). One split per headline.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mono Machine Rule",
+        "body": "Anything a terminal would print, or anything that navigates, is mono. Figtree is for sentences a person reads.",
+        "section": "typography"
+      },
+      {
+        "name": "The Gutter Rule",
+        "body": "Every transcript line puts its glyph in the 1.75rem gutter; anything that continues a line (pre output, trees) indents by the same 1.75rem.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Ground Rule",
+        "body": "Surfaces are flat colour. Separation comes from hairline borders, the muted ground for code, and whitespace; never from shadow or gradient.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do put every new landing section in transcript form: a `$` command, its real output, and a cursor command when the section is in view.",
+      "Do set orange text in `primary-text` and keep `primary` for fills and the mark (The Readable Orange Rule).",
+      "Do split every headline into an ink lead and a mauve roman `em` (The Two-Tone Headline Rule).",
+      "Do align continuation output to the 1.75rem gutter (The Gutter Rule).",
+      "Do use the BrandMark as the only marker for active and section states.",
+      "Do check every colour pair on both grounds; the theme toggle and OS scheme can show either.",
+      "Do still the cursor and the canvas under `prefers-reduced-motion: reduce`."
+    ],
+    "donts": [
+      "Don't add shadows, gradients, blur or tinted panels; the world is flat colour (The Flat Ground Rule).",
+      "Don't round corners; every bordered or filled element is square (0px).",
+      "Don't use `primary` orange as text on the light ground; it fails 4.5:1 there.",
+      "Don't italicise the headline `em`; the second tone is colour, not slant.",
+      "Don't add an icon set or icon font; markers are the BrandMark and the transcript's own glyphs (`$`, `◇`, `│`, tree rules).",
+      "Don't add a third moving element; motion is the cursor and the dot canvas only."
+    ]
+  }
+}
