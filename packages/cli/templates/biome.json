@@ -8,6 +8,7 @@
       "!**/.biome",
       "!**/.intent",
       "!**/.claude",
+      "!**/.agents",
       "!**/.codex"
     ]
   },

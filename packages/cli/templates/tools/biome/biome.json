@@ -6,7 +6,15 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!**/routeTree.gen.ts", "!.biome", "!.intent", "!.claude", "!.codex"]
+    "includes": [
+      "**",
+      "!**/routeTree.gen.ts",
+      "!.biome",
+      "!.intent",
+      "!.claude",
+      "!.agents",
+      "!.codex"
+    ]
   },
   "formatter": {
     "enabled": true,
