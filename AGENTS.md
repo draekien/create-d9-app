@@ -21,6 +21,13 @@ Public npm `create-*` CLI, published as `@draekien/create-d9-app`; personal proj
 - CLI: no Bun/Deno-only APIs. Bun/Deno = user-selectable targets only.
 - Published CLI: zero runtime dependencies. Libraries = devDependencies bundled at build. Reason: every create path downloads package each run.
 
+## Work tracking
+
+- Work tracked in GitHub issues: one PRD issue per feature; tracer-bullet sub-issues under it, ordered by blocked-by links.
+- Milestones: `v0` (`docs/contexts/v0.md` scope), `v1`.
+- Label `AFK`: agent may complete every task unsupervised. Label `HIL`: stop at each `[HIL]` task; owner completes it.
+- PRD breakdowns: sub-issues only. No `.draekien/` directory.
+
 ## Contexts
 
 - Before adding feature, tool, prompt, flag, or create path while v0 unreleased: read `docs/contexts/v0.md` (v0 scope limits).
