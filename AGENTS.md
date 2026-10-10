@@ -14,6 +14,7 @@ Public npm `create-*` CLI, published as `@draekien/create-d9-app`; personal proj
 
 - CLI repo built with its own stack. No tool the stack replaces.
 - Conventional commits: every commit message, every PR title.
+- Changesets: create only with `pnpm exec changeset add --patch|--minor|--major @draekien/create-d9-app -m "<summary>" < /dev/null`, or `--empty -m "<summary>"` for non-package changes. Never hand-write `.changeset/*.md`; CI rejects filenames not in CLI form.
 
 ## Constraints
 
