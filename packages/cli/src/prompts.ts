@@ -170,7 +170,7 @@ function integrationOptions(catalog: Catalog) {
   const files: { value: string; hint?: string }[] = []
   for (const [name, integration] of Object.entries(catalog)) {
     if (integration.kind === "overlay") {
-      files.push({ value: name, hint: name === "motion-cursor-rule" ? "Cursor only" : undefined })
+      files.push({ value: name, hint: integration.hint })
     } else {
       servers.push({
         value: name,

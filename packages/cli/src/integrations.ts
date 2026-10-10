@@ -4,7 +4,7 @@ import path from "node:path"
 export type Integration =
   | { kind: "stdio"; command: string; args: string[]; default: boolean }
   | { kind: "http"; url: string; login?: string; default: boolean }
-  | { kind: "overlay"; default: boolean }
+  | { kind: "overlay"; hint?: string; default: boolean }
 
 export type Catalog = Record<string, Integration>
 
