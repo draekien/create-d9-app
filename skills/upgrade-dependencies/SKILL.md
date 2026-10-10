@@ -1,15 +1,15 @@
 ---
 name: upgrade-dependencies
-description: Upgrades outdated patch and minor dependency pins in a pnpm, npm, yarn or bun workspace to exact versions, runs build, check, typecheck and test, and reports every change. Applies when asked to "upgrade dependencies", "update packages", "bump versions", or "update deps".
+description: Upgrades outdated patch and minor dependency pins in a pnpm, npm, yarn or bun workspace to exact versions, holds major upgrades until the developer confirms each one, runs build, check, typecheck and test, and reports every change. Applies when asked to "upgrade dependencies", "update packages", "bump versions", "update deps", or "confirm major upgrades".
 argument-hint: "[--accept]"
 allowed-tools: Bash(npm view *), Bash(gh release view *), Bash(gh api *), Bash(pnpm *), Bash(npm *), Bash(yarn *), Bash(bun *), Bash(git diff *), Bash(git status *)
 ---
 
 # Upgrade dependencies
 
-Arguments: `$ARGUMENTS`. `--accept` means the developer accepts the breaking-change list in advance; proceed at step 4 without stopping.
+Arguments: `$ARGUMENTS`. `--accept` means the developer accepts the patch and minor breaking-change list in advance; proceed at step 4 without stopping. `--accept` never confirms a major.
 
-Apply patch and minor upgrades only. Never apply a major; list it as `held: major`.
+Apply patch and minor upgrades without per-package confirmation. Apply a major only after the developer confirms that package in step 7.
 
 ## 1. Read the workspace
 
@@ -45,10 +45,11 @@ A package with one version returns `versions` as a string, not an array.
 Candidates: versions without a `-` prerelease suffix, with `time[version]` at least the minimum age before now.
 
 - Same major as the pin, newer than the pin: take the highest. Type is `minor` if the minor differs, else `patch`.
-- Higher major exists: record `held: major` with the highest eligible version. Do not apply it.
+- Higher major exists: record the highest eligible version as a pending major. Do not apply it before step 7.
 - No candidate newer than the pin: current.
+- A 0.x pin is compared by its first non-zero segment: 0.13 to 0.14 is a major, 0.13.0 to 0.13.1 is a patch.
 
-If every pin is current, change no files, report `all pins current`, and stop.
+A pin is current when it has no eligible patch or minor. If no pin has an eligible patch or minor, change no files and skip to step 7. If no major is pending either, report `all pins current` and stop.
 
 ## 3. Read release notes
 
@@ -64,7 +65,7 @@ gh release view v<version> --repo <owner>/<repo> --json body
 
 ## 4. Surface and stop
 
-Print one list: package, old version, new version, type, breaking changes and migrations (or `none found`). Then:
+Print one list of patch and minor upgrades: package, old version, new version, type, breaking changes and migrations (or `none found`). Then:
 
 - Without `--accept`: stop and ask the developer to accept or exclude packages. Edit nothing before the answer.
 - With `--accept`: continue.
@@ -84,16 +85,24 @@ For each failure:
 
 Repeat until `build`, `check`, `typecheck` and `test` all exit 0. Never finish with a failing check.
 
-## 7. Report
+## 7. Confirm and apply majors
 
-Print a table of changed packages:
+After the patch and minor list, print each pending major as its own entry: package, current version, newest eligible major, and a summary of the release notes for the range current to new, read as in step 3, with breaking changes and migration steps called out.
+
+- Ask the developer to confirm each major individually. Edit nothing before the answer. A major that is declined or not answered is held as `declined` or `not confirmed`.
+- Apply confirmed majors one at a time: set the exact pin, run `<pm> install`, run the four scripts, and handle a failure as in step 6. A reverted major is `held: check failed`.
+
+## 8. Report
+
+Print a table of changed packages, including applied majors:
 
 | Package | Old | New | Type |
 | --- | --- | --- | --- |
 | typescript | 5.9.2 | 5.9.3 | patch |
+| vite | 7.1.0 | 8.0.0 | major |
 
 Below it list:
 
-- `held: major`: package, current version, newest eligible major.
-- `held: check failed`: package, old version, attempted version, error text.
+- `held: major`: package, current version, newest eligible major, reason `declined` or `not confirmed`. List it even when every other pin is current; the no-change report is `all pins current` plus this list.
+- `held: check failed`: package, old version, attempted version, error text. For a major, the reason is `check failed` with the error text.
 - Migrations applied, with the file changed.
