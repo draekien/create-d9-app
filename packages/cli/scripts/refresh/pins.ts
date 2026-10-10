@@ -83,13 +83,19 @@ export async function findManifests(repoRoot: string): Promise<string[]> {
 
 const PACKAGE_NAME = /^(@[a-z0-9._~-]+\/)?[a-z0-9._~-]+$/
 
+export function publishedTimes(times: PublishTimes, versions: string[]): PublishTimes {
+  const published = new Set(versions)
+  return Object.fromEntries(Object.entries(times).filter(([version]) => published.has(version)))
+}
+
 async function lookupTimes(name: string): Promise<PublishTimes> {
   if (!PACKAGE_NAME.test(name)) throw new Error(`invalid package name ${name}`)
-  const { stdout } = await execFileAsync("npm", ["view", name, "time", "--json"], {
+  const { stdout } = await execFileAsync("npm", ["view", name, "versions", "time", "--json"], {
     maxBuffer: 64 * 1024 * 1024,
     shell: process.platform === "win32",
   })
-  return JSON.parse(stdout) as PublishTimes
+  const { versions, time } = JSON.parse(stdout) as { versions: string[]; time: PublishTimes }
+  return publishedTimes(time, versions)
 }
 
 async function mapLimited<T, R>(

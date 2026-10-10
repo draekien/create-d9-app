@@ -1,5 +1,16 @@
 import { describe, expect, it } from "vitest"
-import { classifyBump, pickVersion } from "../scripts/refresh/pins.ts"
+import { classifyBump, pickVersion, publishedTimes } from "../scripts/refresh/pins.ts"
+
+describe("publishedTimes", () => {
+  it("drops versions missing from the versions list", () => {
+    const times = {
+      created: "2023-01-01T00:00:00.000Z",
+      "1.33.5": "2026-09-01T00:00:00.000Z",
+      "4.0.2": "2023-04-26T05:47:53.947Z",
+    }
+    expect(publishedTimes(times, ["1.33.5"])).toEqual({ "1.33.5": "2026-09-01T00:00:00.000Z" })
+  })
+})
 
 const now = new Date("2026-10-10T12:00:00.000Z")
 
