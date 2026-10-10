@@ -10,7 +10,7 @@ Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0
 
 ## Goal
 
-`pnpm create @draekien/d9-app my-app` publishes from npm and produces the v0 default stack (`@tanstack/*`, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion) where install, build, lint, typecheck, and test pass. A daily workflow keeps template pins and generated template content current without manual work for patch and minor releases.
+`pnpm create @draekien/d9-app my-app` publishes from npm and produces the v0 default stack (`@tanstack/*`, Biome, TypeScript 7, pnpm, Lefthook, Turborepo, shadcn, Tailwind, Motion) where install, build, lint, typecheck, and test pass. A workflow running on the 1st and 15th of each month keeps template pins and generated template content current without manual work for patch and minor releases.
 
 ## Method
 
@@ -40,7 +40,7 @@ Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0
 | pnpm settings | `saveExact: true`, `allowBuilds` map; `minimumReleaseAge` and `trustPolicy` left at pnpm default (1440 min, `off`) | `F:\Dev\poly\src\Web\pnpm-workspace.yaml`; pnpm.io/settings/dependency-resolution |
 | Regression | e2e: built CLI → `pnpm install`, `build`, `check`, `typecheck`, `test` in output; snapshot of file tree + every `package.json` dependency map | `create-next-app` `test/production/create-next-app`; `sv` `src/cli/tests/snapshots` |
 | Release | changesets, changeset bot, `changesets/action`, npm trusted publishing with provenance; owner merges "chore: version packages" | `F:\Dev\membank\.github\workflows\publish.yml` |
-| Refresh | daily cron + `workflow_dispatch`; PR only when diff; auto-merge on `ci`; majors held | ADR 0003 |
+| Refresh | cron on the 1st and 15th of each month + `workflow_dispatch`; PR only when diff; auto-merge on `ci`; majors held | ADR 0003 |
 
 ## Repository layout
 
@@ -98,16 +98,16 @@ Done when: a version published by `publish.yml` through OIDC carries provenance,
 
 ## Slice 3 — refresh path
 
-Scope: `refresh-templates`, daily workflow, auto-merge.
+Scope: `refresh-templates`, scheduled workflow (1st and 15th of each month), auto-merge.
 
 Steps:
 
 1. `scripts/refresh-templates.ts`, pin step: for every dependency in `templates/**/package.json` and this repo's `package.json` files, take the newest version published more than 1440 minutes ago (`npm view <pkg> time --json`); write it exactly. Record each bump as patch, minor, or major.
 2. `refresh-templates`, generate step: scaffold `templates/` into a temp dir, run each registered generator (none until slice 4), copy each generator's declared output paths back into `templates/`. A generator declares each output as a path in one owning directory (`templates/base` or one overlay), or as a marker-delimited block inside a file; the script deletes and rewrites only those paths and blocks. Two generators declaring the same path or block is an error.
-3. `refresh-templates.yml`: `schedule` (daily cron) + `workflow_dispatch`; token from a GitHub App (`actions/create-github-app-token`); run `refresh-templates`, `pnpm install --no-frozen-lockfile`, update snapshots (`vitest run -u`); exit when `git diff --quiet`; otherwise write `.changeset/refresh-templates-<date>.md` (patch) and push branch `bot/refresh-templates`, open or update its PR, `gh pr merge --auto --squash`.
-4. Majors: excluded from the auto-merged PR; each major bump goes to its own PR on `bot/major-<package>` with no auto-merge.
+3. `refresh-templates.yml`: `schedule` (cron on the 1st and 15th of each month) + `workflow_dispatch`; token from a GitHub App (`actions/create-github-app-token`); run `refresh-templates`, `pnpm install --no-frozen-lockfile`, update snapshots (`vitest run -u`); exit when `git diff --quiet`; otherwise write `.changeset/refresh-templates-<date>.md` (patch) and push branch `bot/refresh-templates`, open or update its PR, `gh pr merge --auto --squash`.
+4. Majors: excluded from the auto-merged PR; each major bump goes to its own PR on `bot/major-<slug>` (`<slug>` = package name without leading `@`, `/` replaced by `-`) with no auto-merge.
 5. Owner setup: create the GitHub App with `contents: write` and `pull-requests: write`; store its ID and private key as repo secrets. A PR opened with the default `GITHUB_TOKEN` starts no workflow run (docs.github.com, "Triggering a workflow from a workflow"), so `ci` would never report.
-6. Same change: amend ADR 0001 (this repo's templates are upgraded by the daily refresh; generated projects still ship the upgrade-dependencies skill); update `docs/contexts/dependency-versions.md` (refresh pin rule, majors held, refresh replaces manual template upgrades).
+6. Same change: amend ADR 0001 (this repo's templates are upgraded by the refresh workflow; generated projects still ship the upgrade-dependencies skill); update `docs/contexts/dependency-versions.md` (refresh pin rule, majors held, refresh replaces manual template upgrades).
 
 Done when: a `workflow_dispatch` run opens a PR that bumps at least one pin, `ci` passes on it, and it merges without manual action; a second run with no upstream change opens no PR.
 
