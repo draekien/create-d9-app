@@ -28,6 +28,7 @@ it("templates/biome.json is the biome overlay config relocated to the templates 
         "!**/.biome",
         "!**/.intent",
         "!**/.claude",
+        "!**/.agents",
         "!**/.codex",
       ],
     },
