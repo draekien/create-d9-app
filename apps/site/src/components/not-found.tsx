@@ -18,7 +18,7 @@ export function NotFound() {
         No page <em>at this path</em>
       </h1>
       <div className="tx mt-10 max-w-[52rem]" role="status">
-        <Command active>cd {path ?? "…"}</Command>
+        <Command>cd {path ?? "…"}</Command>
         {path === undefined ? (
           <Line>
             <span className="text-muted-foreground">reading the path</span>
@@ -43,6 +43,7 @@ export function NotFound() {
             the docs index
           </Link>
         </Line>
+        <Command active />
       </div>
     </main>
   )

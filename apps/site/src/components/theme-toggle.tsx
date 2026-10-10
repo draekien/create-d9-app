@@ -29,7 +29,8 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       className="cursor-pointer border border-border px-2.5 py-1 text-muted-foreground transition-colors duration-150 hover:text-foreground"
     >
-      theme: <span className="theme-label-dark">dark</span>
+      <span className="sr-only">switch theme, current </span>theme:{" "}
+      <span className="theme-label-dark">dark</span>
       <span className="theme-label-light">light</span>
     </button>
   )
