@@ -1,5 +1,12 @@
 # @draekien/create-d9-app
 
+## 0.0.8
+
+### Patch Changes
+
+- 165f665: feat(templates): move the examples behind one removable /examples route and keep the home page minimal
+- f705767: fix(templates): disable noJsxPropsBind in the generated biome config because React Compiler handles memoization
+
 ## 0.0.7
 
 ### Patch Changes
