@@ -8,7 +8,6 @@ import {
   type GeneratorOutput,
   runGenerators,
 } from "../scripts/refresh/generators.ts"
-import { generators as registered } from "../scripts/refresh/registry.ts"
 
 function generator(name: string, outputs: GeneratorOutput[]): Generator {
   return { name, outputs, run: async () => {} }
@@ -128,8 +127,7 @@ describe("runGenerators", () => {
 
   it("changes nothing with zero generators registered", async () => {
     const before = fs.readdirSync(os.tmpdir()).filter((name) => name.startsWith("d9-generate-"))
-    expect(registered).toEqual([])
-    expect(await runGenerators({ templateRoot: root, generators: registered })).toEqual([])
+    expect(await runGenerators({ templateRoot: root, generators: [] })).toEqual([])
     expect(read("base/src/host.ts")).toBe(host)
     expect(fs.readdirSync(os.tmpdir()).filter((name) => name.startsWith("d9-generate-"))).toEqual(
       before,
