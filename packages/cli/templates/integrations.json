@@ -18,6 +18,5 @@
     "login": "Motion+ sign-in",
     "default": false
   },
-  "hugeicons-flutter-icons": { "kind": "overlay", "default": false },
   "motion-cursor-rule": { "kind": "overlay", "default": false }
 }
