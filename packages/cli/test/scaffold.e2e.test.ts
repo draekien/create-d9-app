@@ -76,3 +76,19 @@ test.each(["build", "typecheck", "test"])("pnpm %s exits 0 in the scaffolded pro
   const result = run("pnpm", [script], appDir)
   expect(result.status, result.output).toBe(0)
 }, 300_000)
+
+test("pnpm check exits 0 until a line comment is added to an apps/web source file", () => {
+  const clean = run("pnpm", ["check"], appDir)
+  expect(clean.status, clean.output).toBe(0)
+
+  const file = path.join(appDir, "apps", "web", "src", "home.tsx")
+  const original = fs.readFileSync(file, "utf8")
+  try {
+    fs.writeFileSync(file, `${original}\n// note\n`)
+    const dirty = run("pnpm", ["check"], appDir)
+    expect(dirty.status, dirty.output).not.toBe(0)
+    expect(dirty.output).toContain("apps/web/src/home.tsx")
+  } finally {
+    fs.writeFileSync(file, original)
+  }
+}, 300_000)
