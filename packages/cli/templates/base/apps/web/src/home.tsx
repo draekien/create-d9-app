@@ -1,5 +1,9 @@
 import { Button } from "@workspace/ui/components/button.tsx"
 import { motion } from "motion/react"
+import { FormExample } from "./examples/form.tsx"
+import { HotkeysExample } from "./examples/hotkeys.tsx"
+import { QueryExample } from "./examples/query.tsx"
+import { TableExample } from "./examples/table.tsx"
 
 export function Home() {
   return (
@@ -8,6 +12,10 @@ export function Home() {
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
         <Button>Get started</Button>
       </motion.div>
+      <QueryExample />
+      <FormExample />
+      <TableExample />
+      <HotkeysExample />
     </main>
   )
 }
