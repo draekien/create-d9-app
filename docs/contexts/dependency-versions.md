@@ -12,3 +12,4 @@ Read before adding dependency or changing pinned version (CLI or template).
 - Major bumps: each in own PR on branch `bot/major-<slug>`, never auto-merged; owner reviews.
 - `<slug>` = package name without leading `@`, `/` replaced by `-`.
 - New library bundled into CLI needs reason a few lines of code cannot meet. Build tooling + template dependencies: no limit.
+- Upstream-tool output under `templates/`: rewritten by refresh generators registered in `packages/cli/scripts/refresh/registry.ts`, each declaring owned paths or `d9:begin`/`d9:end` blocks. Never edit declared outputs by hand.
