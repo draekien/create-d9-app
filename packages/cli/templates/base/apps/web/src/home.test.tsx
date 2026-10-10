@@ -1,10 +1,13 @@
-import { QueryClientProvider } from "@tanstack/react-query"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { renderToString } from "react-dom/server"
 import { expect, it } from "vitest"
+import { greetingOptions } from "./examples/greeting.ts"
 import { Home } from "./home.tsx"
-import { queryClient } from "./query-client.ts"
 
-it("renders the greeting", () => {
+it("renders the greeting", async () => {
+  const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 60_000 } } })
+  await queryClient.prefetchQuery(greetingOptions)
+
   const html = renderToString(
     <QueryClientProvider client={queryClient}>
       <Home />

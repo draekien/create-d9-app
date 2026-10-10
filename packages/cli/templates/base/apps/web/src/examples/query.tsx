@@ -1,11 +1,8 @@
-import { useQuery } from "@tanstack/react-query"
-import { fetchGreeting, greetingKeys } from "./greeting.ts"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { greetingOptions } from "./greeting.ts"
 
 export function QueryExample() {
-  const { data = "Loading greeting" } = useQuery({
-    queryKey: greetingKeys.detail("query"),
-    queryFn: () => fetchGreeting("query"),
-  })
+  const { data } = useSuspenseQuery(greetingOptions)
 
   return <p>{data}</p>
 }
