@@ -52,4 +52,5 @@ function Button({
   )
 }
 
+// biome-ignore lint/style/useComponentExportOnlyModules: buttonVariants is the shadcn-generated companion export of Button
 export { Button, buttonVariants }
