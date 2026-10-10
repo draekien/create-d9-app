@@ -1,4 +1,5 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router"
+import appCss from "@workspace/ui/globals.css?url"
 
 export const Route = createRootRoute({
   head: () => ({
@@ -7,6 +8,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "App" },
     ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   component: () => (
     <html lang="en">
