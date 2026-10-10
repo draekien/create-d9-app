@@ -23,7 +23,7 @@ Apply patch and minor upgrades without per-package confirmation. Apply a major o
 Run once per distinct package name:
 
 ```sh
-npm view <pkg> versions time --json
+npm view <pkg> versions time dist-tags --json
 ```
 
 ```json
@@ -36,13 +36,14 @@ npm view <pkg> versions time --json
     "6.0.0-beta": "2026-02-11T18:26:37.557Z",
     "6.0.2": "2026-03-23T16:14:45.521Z",
     "6.0.3": "2026-04-16T23:38:27.905Z"
-  }
+  },
+  "dist-tags": { "latest": "6.0.2", "next": "6.0.3" }
 }
 ```
 
 A package with one version returns `versions` as a string, not an array.
 
-Candidates: versions without a `-` prerelease suffix, with `time[version]` at least the minimum age before now.
+Candidates: versions without a `-` prerelease suffix, at or below `dist-tags.latest`, with `time[version]` at least the minimum age before now. In the example, `6.0.3` is not a candidate: it is above `latest`.
 
 - Same major as the pin, newer than the pin: take the highest. Type is `minor` if the minor differs, else `patch`.
 - Higher major exists: record the highest eligible version as a pending major. Do not apply it before step 7.

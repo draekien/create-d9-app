@@ -86,19 +86,38 @@ export async function findManifests(repoRoot: string): Promise<string[]> {
 
 const PACKAGE_NAME = /^(@[a-z0-9._~-]+\/)?[a-z0-9._~-]+$/
 
-export function publishedTimes(times: PublishTimes, versions: string[]): PublishTimes {
+export function publishedTimes(
+  times: PublishTimes,
+  versions: string[],
+  latest?: string,
+): PublishTimes {
   const published = new Set(versions)
-  return Object.fromEntries(Object.entries(times).filter(([version]) => published.has(version)))
+  const ceiling = latest === undefined ? undefined : parseVersion(latest)
+  return Object.fromEntries(
+    Object.entries(times).filter(([version]) => {
+      if (!published.has(version)) return false
+      const parts = parseVersion(version)
+      return !ceiling || !parts || compareParts(parts, ceiling) <= 0
+    }),
+  )
 }
 
 async function lookupTimes(name: string): Promise<PublishTimes> {
   if (!PACKAGE_NAME.test(name)) throw new Error(`invalid package name ${name}`)
-  const { stdout } = await execFileAsync("npm", ["view", name, "versions", "time", "--json"], {
-    maxBuffer: 64 * 1024 * 1024,
-    shell: process.platform === "win32",
-  })
-  const { versions, time } = JSON.parse(stdout) as { versions: string[]; time: PublishTimes }
-  return publishedTimes(time, versions)
+  const { stdout } = await execFileAsync(
+    "npm",
+    ["view", name, "versions", "time", "dist-tags", "--json"],
+    {
+      maxBuffer: 64 * 1024 * 1024,
+      shell: process.platform === "win32",
+    },
+  )
+  const parsed = JSON.parse(stdout) as {
+    versions: string[]
+    time: PublishTimes
+    "dist-tags"?: Record<string, string>
+  }
+  return publishedTimes(parsed.time, parsed.versions, parsed["dist-tags"]?.latest)
 }
 
 async function mapLimited<T, R>(
