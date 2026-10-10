@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "turbo run build",
-    "check": "turbo run check lint:comments",
+    "check": "turbo run check lint:comments lint:biome",
     "lint:comments": "node scripts/check-comments.ts",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
