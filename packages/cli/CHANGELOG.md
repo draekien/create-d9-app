@@ -1,5 +1,11 @@
 # @draekien/create-d9-app
 
+## 0.0.7
+
+### Patch Changes
+
+- e3e1012: ignore env files, coverage, caches, OS files and Claude Code local settings in generated projects
+
 ## 0.0.6
 
 ### Patch Changes
