@@ -28,6 +28,9 @@
         "noReactPropAssignments": "error",
         "noUnresolvedImports": "off"
       },
+      "performance": {
+        "noJsxPropsBind": "off"
+      },
       "style": {
         "noInferrableTypes": "error",
         "noNonNullAssertion": "error",
