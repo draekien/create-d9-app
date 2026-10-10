@@ -3,8 +3,11 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
+import { initGit } from "./git.ts"
 import { isInteractive } from "./interactive.ts"
+import { buildNextSteps } from "./next-steps.ts"
 import { applyOverlays } from "./overlays.ts"
+import { isPnpm, unsupportedPackageManagerMessage } from "./package-manager.ts"
 import {
   missingValueMessage,
   printCommand,
@@ -12,12 +15,16 @@ import {
   resolveWithPrompts,
 } from "./prompts.ts"
 import { renameFiles } from "./rename-files.ts"
+import { packageNameFor, unexpectedEntries, validatePackageName } from "./target.ts"
 
 const helpText = `Usage: create-d9-app <dir> [options]
 
+Arguments:
+  <dir>          Directory to create the project in; "." uses the current directory
+
 Options:
-  --yes          Accept every default
-  --no-git       Do not initialise a git repository
+  --yes          Accept every default and skip all prompts
+  --no-git       Do not initialise a git repository or make the initial commit
   --no-install   Do not run pnpm install
   --help         Show this message
 `
@@ -38,14 +45,23 @@ function copyDir(from: string, to: string) {
   }
 }
 
-function setPackageName(targetDir: string) {
+function setPackageName(targetDir: string, name: string) {
   const file = path.join(targetDir, "package.json")
   const pkg = JSON.parse(fs.readFileSync(file, "utf8"))
-  pkg.name = path.basename(targetDir)
+  pkg.name = name
   fs.writeFileSync(file, `${JSON.stringify(pkg, null, 2)}\n`)
 }
 
+function fail(message: string): never {
+  process.stderr.write(`${message}\n`)
+  process.exit(1)
+}
+
 async function main() {
+  if (!isPnpm(process.env)) {
+    fail(unsupportedPackageManagerMessage())
+  }
+
   const { values, positionals } = parseArgs({
     allowPositionals: true,
     options: {
@@ -90,9 +106,21 @@ ${helpText}`)
     : resolveFromFlags(flags)
 
   const targetDir = path.resolve(options.dir)
+  const name = packageNameFor(targetDir)
+  const nameError = validatePackageName(name)
+  if (nameError) {
+    fail(`Invalid package name "${name}" derived from the directory: ${nameError}.`)
+  }
+
+  const unexpected = unexpectedEntries(targetDir)
+  if (unexpected.length > 0) {
+    const listed = unexpected.map((entry) => `  ${entry}`).join("\n")
+    fail(`${targetDir} is not empty. Remove these entries or choose another directory:\n${listed}`)
+  }
+
   copyDir(templateDir, targetDir)
   applyOverlays(templateRoot, targetDir)
-  setPackageName(targetDir)
+  setPackageName(targetDir, name)
 
   if (options.install) {
     const result = spawnSync("pnpm install", {
@@ -105,7 +133,15 @@ ${helpText}`)
     }
   }
 
+  if (options.git) {
+    const git = initGit(targetDir)
+    if (!git.ok) {
+      fail(`git initialisation failed:\n${git.output}`)
+    }
+  }
+
   process.stdout.write(`Created ${targetDir}\n`)
+  process.stdout.write(buildNextSteps({ targetDir, cwd: process.cwd(), install: options.install }))
 
   if (interactive) {
     printCommand(options, { input: process.stdin, output: process.stdout })
