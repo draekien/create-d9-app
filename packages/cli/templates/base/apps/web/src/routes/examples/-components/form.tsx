@@ -1,24 +1,5 @@
-import { type AnyFieldApi, useForm } from "@tanstack/react-form"
+import { useForm } from "@tanstack/react-form"
 import { useCallback, useState } from "react"
-
-function NameInput({ field }: { field: AnyFieldApi }) {
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => field.handleChange(event.target.value),
-    [field]
-  )
-
-  return (
-    <label className="flex gap-2">
-      Name
-      <input
-        name={field.name}
-        value={field.state.value}
-        onChange={handleChange}
-        className="border"
-      />
-    </label>
-  )
-}
 
 export function FormExample() {
   const [submitted, setSubmitted] = useState("")
@@ -37,7 +18,19 @@ export function FormExample() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
-      <form.Field name="name">{(field) => <NameInput field={field} />}</form.Field>
+      <form.Field name="name">
+        {(field) => (
+          <label className="flex gap-2">
+            Name
+            <input
+              name={field.name}
+              value={field.state.value}
+              onChange={(event) => field.handleChange(event.target.value)}
+              className="border"
+            />
+          </label>
+        )}
+      </form.Field>
       <button type="submit">Submit</button>
       {submitted ? <p>Submitted {submitted}</p> : null}
     </form>
