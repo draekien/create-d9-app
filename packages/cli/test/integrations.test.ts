@@ -2,7 +2,14 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
-import { defaultSelection, readCatalog, writeMcpConfig } from "../src/integrations.ts"
+import {
+  codexSection,
+  defaultSelection,
+  parseIntegrations,
+  readCatalog,
+  writeCodexDocs,
+  writeMcpConfig,
+} from "../src/integrations.ts"
 import { applyOverlays } from "../src/overlays.ts"
 
 const realTemplates = path.resolve(import.meta.dirname, "..", "templates")
@@ -79,5 +86,73 @@ describe("optional overlays", () => {
     expect(fs.existsSync(file)).toBe(false)
     applyOverlays(root, target, ["demo"])
     expect(fs.existsSync(file)).toBe(true)
+  })
+})
+
+describe("parseIntegrations", () => {
+  const catalog = readCatalog(realTemplates)
+
+  it("resolves none, a list and a single name", () => {
+    expect(parseIntegrations("none", catalog)).toEqual([])
+    expect(parseIntegrations("motion-plus,shadcn", catalog)).toEqual(["shadcn", "motion-plus"])
+    expect(parseIntegrations("motion-cursor-rule", catalog)).toEqual(["motion-cursor-rule"])
+  })
+
+  it("names the flag and every valid name for an unknown name", () => {
+    expect(() => parseIntegrations("bogus", catalog)).toThrow(
+      "Unknown --integrations value bogus. Valid names: shadcn, hugeicons, motion, motion-plus, motion-cursor-rule, or none.",
+    )
+    expect(() => parseIntegrations("none,shadcn", catalog)).toThrow(/--integrations.*none/)
+    expect(() => parseIntegrations("", catalog)).toThrow(/--integrations/)
+  })
+})
+
+describe("codexSection", () => {
+  const catalog = readCatalog(realTemplates)
+
+  it("gives a command and args table for a stdio server", () => {
+    const section = codexSection(catalog, ["shadcn"])
+    expect(section).toContain("~/.codex/config.toml")
+    expect(section).toContain(
+      '[mcp_servers.shadcn]\ncommand = "npx"\nargs = ["shadcn@4.21.4", "mcp"]',
+    )
+    expect(section).not.toContain("hugeicons")
+  })
+
+  it("gives a url table for an http server and notes its login", () => {
+    const section = codexSection(catalog, ["motion-plus"])
+    expect(section).toContain('[mcp_servers.motion-plus]\nurl = "https://mcp.motion.dev/plus"')
+    expect(section).toContain("Motion+ sign-in")
+    expect(section).not.toContain("[mcp_servers.motion]")
+  })
+
+  it("is empty for an empty selection or an overlay-only selection", () => {
+    expect(codexSection(catalog, [])).toBe("")
+    expect(codexSection(catalog, ["motion-cursor-rule"])).toBe("")
+  })
+})
+
+describe("writeCodexDocs", () => {
+  let dir: string
+
+  beforeEach(() => {
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), "d9-codex-"))
+    fs.writeFileSync(path.join(dir, "AGENTS.md"), "# Project\n")
+  })
+
+  afterEach(() => {
+    fs.rmSync(dir, { recursive: true, force: true })
+  })
+
+  it("appends the section after the existing content", () => {
+    writeCodexDocs(readCatalog(realTemplates), ["shadcn", "motion"], dir)
+    const text = fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8")
+    expect(text.startsWith("# Project\n\n## Codex MCP servers")).toBe(true)
+    expect(text).toContain("[mcp_servers.motion]")
+  })
+
+  it("leaves AGENTS.md untouched for an empty selection", () => {
+    writeCodexDocs(readCatalog(realTemplates), [], dir)
+    expect(fs.readFileSync(path.join(dir, "AGENTS.md"), "utf8")).toBe("# Project\n")
   })
 })
