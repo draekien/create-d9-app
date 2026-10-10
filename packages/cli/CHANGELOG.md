@@ -1,5 +1,11 @@
 # @draekien/create-d9-app
 
+## 0.0.5
+
+### Patch Changes
+
+- 80590c7: feat(templates): hold major upgrades for confirmation in upgrade skill
+
 ## 0.0.4
 
 ### Patch Changes
