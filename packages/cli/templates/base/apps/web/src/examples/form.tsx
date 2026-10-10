@@ -1,5 +1,5 @@
 import { useForm } from "@tanstack/react-form"
-import { useCallback, useState } from "react"
+import { useState } from "react"
 
 export function FormExample() {
   const [submitted, setSubmitted] = useState("")
@@ -8,13 +8,10 @@ export function FormExample() {
     onSubmit: ({ value }) => setSubmitted(value.name),
   })
 
-  const handleSubmit = useCallback(
-    (event: React.SubmitEvent<HTMLFormElement>) => {
-      event.preventDefault()
-      form.handleSubmit()
-    },
-    [form]
-  )
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    form.handleSubmit()
+  }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
