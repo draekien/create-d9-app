@@ -130,6 +130,9 @@ export type RefreshOptions = {
   now?: Date
   minAgeMinutes?: number
   includeMajor?: boolean
+  onlyMajor?: string
+  dryRun?: boolean
+  lookup?: (name: string) => Promise<PublishTimes>
   onChange?: (change: PinChange) => void
   onProgress?: (message: string) => void
 }
@@ -147,13 +150,14 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
     })),
   )
 
+  const lookup = options.lookup ?? lookupTimes
   const names = [...new Set(manifests.flatMap((m) => pinnedEntries(m.data).map((e) => e.name)))]
   const picks = new Map<string, string | undefined>()
   const failures: string[] = []
   await mapLimited(names, LOOKUP_CONCURRENCY, async (name) => {
     try {
       options.onProgress?.(`looking up ${name}`)
-      picks.set(name, pickVersion(await lookupTimes(name), now, minAge))
+      picks.set(name, pickVersion(await lookup(name), now, minAge))
     } catch (error) {
       failures.push(name)
       options.onProgress?.(
@@ -171,7 +175,10 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
       if (!to) continue
       const kind = classifyBump(version, to)
       if (kind === "none") continue
-      const applied = kind !== "major" || options.includeMajor === true
+      const applied =
+        options.onlyMajor !== undefined
+          ? kind === "major" && name === options.onlyMajor
+          : kind !== "major" || options.includeMajor === true
       if (applied) {
         ;(data[section] as Record<string, string>)[name] = to
         dirty = true
@@ -180,7 +187,7 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
       changes.push(change)
       options.onChange?.(change)
     }
-    if (dirty) {
+    if (dirty && options.dryRun !== true) {
       await writeFile(path, `${JSON.stringify(data, null, 2)}\n`)
     }
   }

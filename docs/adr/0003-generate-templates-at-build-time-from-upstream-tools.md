@@ -36,3 +36,4 @@ A scaffold works offline and installs exactly what the regression suite tested. 
 ## Amendments
 
 - 2026-10-10: Refresh schedule set to the 1st and 15th of each month instead of daily, to reduce pull request volume.
+- 2026-10-10: Each major bump opens its own pull request on branch `bot/major-<slug>` with auto-merge off, so the owner reviews breaking changes one at a time.
