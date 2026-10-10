@@ -48,16 +48,10 @@ jobs:
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
-      - name: Write changeset
+      - name: Add changeset
         if: steps.detect.outputs.changed == 'true'
         run: |
-          cat > ".changeset/refresh-templates-$(date -u +%F).md" <<'EOF'
-          ---
-          "@draekien/create-d9-app": patch
-          ---
-
-          chore(templates): refresh pinned versions
-          EOF
+          pnpm exec changeset add --patch @draekien/create-d9-app -m "chore(templates): refresh pinned versions" < /dev/null
       - name: Commit and push
         if: steps.detect.outputs.changed == 'true'
         env:
