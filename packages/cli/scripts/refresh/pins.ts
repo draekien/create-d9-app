@@ -131,6 +131,15 @@ function pinnedEntries(manifest: Manifest) {
       }
     }
   }
+  const manager = manifest.packageManager
+  if (typeof manager === "string") {
+    const at = manager.lastIndexOf("@")
+    const name = manager.slice(0, at)
+    const version = manager.slice(at + 1)
+    if (at > 0 && EXACT_VERSION.test(version)) {
+      entries.push({ section: "packageManager", name, version })
+    }
+  }
   return entries
 }
 
@@ -189,7 +198,11 @@ export async function refreshPins(options: RefreshOptions): Promise<RefreshResul
           ? kind === "major" && name === options.onlyMajor
           : kind !== "major" || options.includeMajor === true
       if (applied) {
-        ;(data[section] as Record<string, string>)[name] = to
+        if (section === "packageManager") {
+          data.packageManager = `${name}@${to}`
+        } else {
+          ;(data[section] as Record<string, string>)[name] = to
+        }
         dirty = true
       }
       const change = { file, name, from: version, to, kind, applied }
