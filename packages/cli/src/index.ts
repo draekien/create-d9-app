@@ -106,6 +106,10 @@ ${helpText}`)
   }
 
   process.stdout.write(`Created ${targetDir}\n`)
+
+  if (interactive) {
+    printCommand(options, { input: process.stdin, output: process.stdout })
+  }
 }
 
 await main()
