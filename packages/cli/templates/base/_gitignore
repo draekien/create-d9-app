@@ -1,7 +1,42 @@
+# Dependencies
 node_modules
+
+# Build output
 dist
-.turbo
 .output
 .nitro
 .tanstack
+.cache
+.vite
+vite.config.ts.timestamp-*
+*.tsbuildinfo
+
+# Task cache
+.turbo
+
+# Tests
+coverage
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Agents
+.claude/settings.local.json
+.claude/worktrees
+
+# Deploy
+.vercel
+
+# OS and editors
+.DS_Store
+Thumbs.db
+.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Logs and keys
 *.log
+*.pem
