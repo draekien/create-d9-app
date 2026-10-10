@@ -1,5 +1,5 @@
 ---
-"@draekien/create-d9-app": minor
+"@draekien/create-d9-app": patch
 ---
 
 feat(templates): ship upgrade-dependencies skill
