@@ -125,6 +125,22 @@ describe("runGenerators", () => {
     expect(read("base/_gitignore")).toBe("new\n")
   })
 
+  it("writes optional owners under the optional root", async () => {
+    const fixture: Generator = {
+      name: "fixture",
+      outputs: [{ kind: "path", owner: "optional/extra", path: ".cursor/rules/x.mdc" }],
+      async run(dir) {
+        fs.mkdirSync(path.join(dir, ".cursor/rules"), { recursive: true })
+        fs.writeFileSync(path.join(dir, ".cursor/rules/x.mdc"), "rule\n")
+      },
+    }
+
+    expect(await runGenerators({ templateRoot: root, generators: [fixture] })).toEqual([
+      "optional/extra/.cursor/rules/x.mdc",
+    ])
+    expect(read("optional/extra/.cursor/rules/x.mdc")).toBe("rule\n")
+  })
+
   it("changes nothing with zero generators registered", async () => {
     const before = fs.readdirSync(os.tmpdir()).filter((name) => name.startsWith("d9-generate-"))
     expect(await runGenerators({ templateRoot: root, generators: [] })).toEqual([])

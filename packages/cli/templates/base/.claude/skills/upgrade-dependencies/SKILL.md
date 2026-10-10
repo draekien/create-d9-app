@@ -2,7 +2,7 @@
 name: upgrade-dependencies
 description: Upgrades outdated patch and minor dependency pins in a pnpm, npm, yarn or bun workspace to exact versions, holds major upgrades until the developer confirms each one, runs build, check, typecheck and test, and reports every change. Applies when asked to "upgrade dependencies", "update packages", "bump versions", "update deps", or "confirm major upgrades".
 argument-hint: "[--accept]"
-allowed-tools: Bash(npm view *), Bash(gh release view *), Bash(gh api *), Bash(pnpm *), Bash(npm *), Bash(yarn *), Bash(bun *), Bash(git diff *), Bash(git status *)
+allowed-tools: Bash(npm view *), Bash(node *), Bash(gh release view *), Bash(gh api *), Bash(pnpm *), Bash(npm *), Bash(yarn *), Bash(bun *), Bash(git diff *), Bash(git status *)
 ---
 
 # Upgrade dependencies
@@ -15,16 +15,47 @@ Apply patch and minor upgrades without per-package confirmation. Apply a major o
 
 - Package manager: root `package.json` field `packageManager` (`pnpm@11.25.0` means `pnpm`). Call it `<pm>` below.
 - Manifests: root `package.json`, `apps/*/package.json`, `packages/*/package.json`.
-- Pins: entries in `dependencies`, `devDependencies`, `optionalDependencies`. Skip `workspace:*`, `link:`, `file:`, `git`, `npm:` alias and URL specs.
-- Minimum age in minutes: `minimumReleaseAge` in `pnpm-workspace.yaml` or `.npmrc`; if unset, `1440`.
+- Pins: entries in `dependencies`, `devDependencies`, `optionalDependencies`. Skip `catalog:`, `workspace:`, `link:`, `file:`, `git`, `npm:` alias and URL specs; record each skipped entry for the report.
+- Non-exact pins (`^7.1.0`, `~7.1.0`, `>=7`, `*`, `latest`): the old version is `version` in `node_modules/<pkg>/package.json`, searched from the manifest's directory up to the root. Run `<pm> install` first if it is missing. Step 5 writes every such pin as an exact version, the new version if upgraded, else the old version.
+- A package pinned in several manifests is one upgrade: one entry in every list, every pin set to the same new version, applied, held or reverted together. If the pins differ, the old version is the lowest.
+- Minimum age in minutes: `minimumReleaseAge` in `pnpm-workspace.yaml`; if unset, `1440`. pnpm reads no other source in the workspace: `.npmrc` holds only auth and registry settings, and the `pnpm` field of `package.json` is ignored.
 
 ## 2. Find upgrades
 
-Run once per distinct package name:
+Run once per distinct package name, with the old version and the minimum age:
 
 ```sh
-npm view <pkg> versions time --json
+npm view <pkg> versions time dist-tags --json | node -e '
+const [pin, minAge] = process.argv.slice(1)
+const { versions, time, "dist-tags": tags } = JSON.parse(require("fs").readFileSync(0, "utf8"))
+const parse = (v) => v.split(".").map(Number)
+const line = ([a, b, c]) => (a ? [a] : b ? [0, b] : [0, 0, c]).join(".")
+const newer = (a, b) => { const i = a.findIndex((n, j) => n !== b[j]); return i >= 0 && a[i] > b[i] }
+const cutoff = Date.now() - minAge * 60000
+const latest = parse(tags.latest)
+const old = parse(pin)
+let upgrade = null
+let major = null
+for (const v of [versions].flat()) {
+  if (v.includes("-") || Date.parse(time[v]) > cutoff) continue
+  const p = parse(v)
+  if (newer(p, latest) || !newer(p, old)) continue
+  if (line(p) === line(old)) {
+    if (!upgrade || newer(p, parse(upgrade))) upgrade = v
+  } else if (!major || newer(p, parse(major))) major = v
+}
+const type = upgrade && (parse(upgrade)[1] !== old[1] ? "minor" : "patch")
+console.log(JSON.stringify({ upgrade, type, major }))
+' <old-version> <minimum-age>
 ```
+
+```json
+{"upgrade":"5.9.3","type":"patch","major":"7.0.2"}
+```
+
+`upgrade` is the patch or minor to apply, `major` the pending major; `null` means none. The snippet applies the rules below. Use it unchanged.
+
+`npm view <pkg> versions time dist-tags --json` returns:
 
 ```json
 {
@@ -36,20 +67,21 @@ npm view <pkg> versions time --json
     "6.0.0-beta": "2026-02-11T18:26:37.557Z",
     "6.0.2": "2026-03-23T16:14:45.521Z",
     "6.0.3": "2026-04-16T23:38:27.905Z"
-  }
+  },
+  "dist-tags": { "latest": "6.0.2", "next": "6.0.3" }
 }
 ```
 
 A package with one version returns `versions` as a string, not an array.
 
-Candidates: versions without a `-` prerelease suffix, with `time[version]` at least the minimum age before now.
+Candidates: versions without a `-` prerelease suffix, at or below `dist-tags.latest`, with `time[version]` at least the minimum age before now. In the example, `6.0.3` is not a candidate: it is above `latest`. Now is the system clock; `time` values are UTC.
 
 - Same major as the pin, newer than the pin: take the highest. Type is `minor` if the minor differs, else `patch`.
 - Higher major exists: record the highest eligible version as a pending major. Do not apply it before step 7.
 - No candidate newer than the pin: current.
 - A 0.x pin is compared by its first non-zero segment: 0.13 to 0.14 is a major, 0.13.0 to 0.13.1 is a patch.
 
-A pin is current when it has no eligible patch or minor. If no pin has an eligible patch or minor, change no files and skip to step 7. If no major is pending either, report `all pins current` and stop.
+A pin is current when it has no eligible patch or minor. If no pin has an eligible patch or minor and every pin is exact, change no files and skip to step 7. If no major is pending either, report as in step 8 and stop.
 
 ## 3. Read release notes
 
@@ -61,6 +93,7 @@ gh release view v<version> --repo <owner>/<repo> --json body
 
 - Repository: `npm view <pkg> repository.url`.
 - No GitHub release for the tag: read `CHANGELOG.md` in the repository for the same range.
+- `@types/*` packages publish no GitHub releases and no changelog; record `no release notes`. For `@types/node`, also show the old and new versions against the `engines.node` floor in the root `package.json` and the output of `node -v`, and state that a newer major may type APIs the `engines.node` floor lacks.
 - Record each breaking change, deprecation and migration step per package.
 
 ## 4. Surface and stop
@@ -72,7 +105,7 @@ Print one list of patch and minor upgrades: package, old version, new version, t
 
 ## 5. Apply
 
-- Set each upgraded pin to the exact new version: no `^`, no `~`, no `latest`.
+- Set each upgraded pin to the exact new version: no `^`, no `~`, no `latest`. Set each non-exact pin that is not upgraded to its exact old version.
 - Run `<pm> install`.
 - Run each project script with `<pm> run <script>` in this order: `build`, `check`, `typecheck`, `test`. Skip a script the root `package.json` does not define.
 
@@ -94,7 +127,7 @@ After the patch and minor list, print each pending major as its own entry: packa
 
 ## 8. Report
 
-Print a table of changed packages, including applied majors:
+Print a table of changed packages, including applied majors and non-exact pins written as exact. With no changed package, print `all pins current` instead of the table.
 
 | Package | Old | New | Type |
 | --- | --- | --- | --- |
@@ -103,6 +136,7 @@ Print a table of changed packages, including applied majors:
 
 Below it list:
 
-- `held: major`: package, current version, newest eligible major, reason `declined` or `not confirmed`. List it even when every other pin is current; the no-change report is `all pins current` plus this list.
+- `held: major`: package, current version, newest eligible major, reason `declined` or `not confirmed`. List it even when every other pin is current.
+- `skipped`: package, manifest, spec, for every entry step 1 skipped.
 - `held: check failed`: package, old version, attempted version, error text. For a major, the reason is `check failed` with the error text.
 - Migrations applied, with the file changed.

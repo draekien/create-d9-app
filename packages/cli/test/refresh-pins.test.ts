@@ -19,6 +19,17 @@ describe("publishedTimes", () => {
     }
     expect(publishedTimes(times, ["1.33.5"])).toEqual({ "1.33.5": "2026-09-01T00:00:00.000Z" })
   })
+
+  it("drops versions above the latest dist-tag", () => {
+    const times = {
+      "12.10.1": "2026-09-01T00:00:00.000Z",
+      "12.11.0": "2026-09-15T00:00:00.000Z",
+      "12.11.2": "2026-09-20T00:00:00.000Z",
+    }
+    expect(publishedTimes(times, Object.keys(times), "12.10.1")).toEqual({
+      "12.10.1": "2026-09-01T00:00:00.000Z",
+    })
+  })
 })
 
 describe("pickVersion with a major ceiling", () => {

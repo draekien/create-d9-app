@@ -4,7 +4,7 @@ import path from "node:path"
 import { applyOverlays } from "../../src/overlays.ts"
 import { renameFiles } from "../../src/rename-files.ts"
 
-export type Owner = "base" | `tools/${string}`
+export type Owner = "base" | `tools/${string}` | `optional/${string}`
 export type OwnedPath = { kind: "path"; owner: Owner; path: string }
 export type OwnedBlock = { kind: "block"; owner: Owner; path: string; marker: string }
 export type GeneratorOutput = OwnedPath | OwnedBlock

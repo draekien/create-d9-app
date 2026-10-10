@@ -2,7 +2,23 @@
 
 ## Development setup
 
-<!-- TODO: add install, build, test and local-run commands once package.json exists. -->
+```sh
+pnpm install
+pnpm build
+pnpm test
+pnpm check
+pnpm typecheck
+```
+
+Run the local build of the CLI through pnpm, so the pnpm-only check passes:
+
+```sh
+pnpm node packages/cli/index.js ../demo --yes --no-install
+```
+
+`index.js` loads `packages/cli/dist`, so rebuild after a source change. Running `node packages/cli/index.js` without pnpm exits with `create-d9-app must be run with pnpm`.
+
+The CLI README is the same file as the repository README, byte for byte. Edit `README.md` and copy it to `packages/cli/README.md`; `packages/cli/test/readme.test.ts` fails when they differ.
 
 ## Commits and pull requests
 
@@ -13,6 +29,14 @@ feat: add --yes flag
 fix: reject non-empty target directory
 docs: document v0 scope
 ```
+
+Every pull request that changes `packages/cli` adds a changeset. Create it with the CLI, never by hand; CI rejects a filename that the CLI did not generate:
+
+```sh
+pnpm exec changeset add --patch @draekien/create-d9-app -m "fix: reject non-empty target directory"
+```
+
+While the version is `0.0.x`, every changeset is `--patch`.
 
 ## Constraints
 
@@ -34,10 +58,11 @@ docs: document v0 scope
 
 - Templates pin exact versions. Never `latest`.
 - Look up the current version on the npm registry before pinning.
+- The scheduled refresh workflow bumps template pins and the `packageManager` field; see [`docs/contexts/dependency-versions.md`](docs/contexts/dependency-versions.md) before changing a pin by hand.
 
 ## v0 scope
 
-Until v0 is released, the CLI scaffolds the default stack through `pnpm create @draekien/d9-app` only. Do not add tool alternatives or other create paths. See [`docs/contexts/v0.md`](docs/contexts/v0.md).
+v0 scaffolds the default stack through `pnpm create @draekien/d9-app` only. Tool alternatives and the `npm`, `yarn` and `bun` create paths are v1 work. See [`docs/contexts/v0.md`](docs/contexts/v0.md).
 
 ## Design documents
 
