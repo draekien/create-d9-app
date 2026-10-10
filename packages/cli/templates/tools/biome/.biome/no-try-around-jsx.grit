@@ -2,8 +2,12 @@ language js
 
 JsTryStatement(body = $block) as $try where {
   $block <: contains or { JsxElement(), JsxSelfClosingElement(), JsxFragment() },
-  $try <: within JsFunctionDeclaration(id = $component) where { $component <: r"[A-Z]\w*" },
-  $try <: not within JsArrowFunctionExpression(),
+  $try <: within or {
+    JsFunctionDeclaration(id = $component),
+    JsVariableDeclarator(id = $component, initializer = JsInitializerClause(expression = or { JsArrowFunctionExpression(), JsFunctionExpression() }))
+  } where { $component <: r"[A-Z]\w*" },
+  $try <: not within or { `useEffect($...)`, `useLayoutEffect($...)`, `useMemo($...)`, `useCallback($...)`, `useState($...)` },
   $try <: not within JsFunctionDeclaration(id = $handler) where { $handler <: r"handle[A-Z]\w*" },
+  $try <: not within JsVariableDeclarator(id = $assigned) where { $assigned <: r"handle[A-Z]\w*" },
   register_diagnostic(span = $try, message = "try/catch cannot catch render errors; wrap the subtree in an ErrorBoundary.")
 }

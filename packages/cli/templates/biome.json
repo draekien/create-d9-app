@@ -30,7 +30,13 @@
       },
       "style": {
         "noInferrableTypes": "error",
-        "useReadonlyClassProperties": "error",
+        "noNonNullAssertion": "error",
+        "useReadonlyClassProperties": {
+          "level": "error",
+          "options": {
+            "checkAllProperties": true
+          }
+        },
         "useThrowOnlyError": "error",
         "useConsistentTypeDefinitions": {
           "level": "error",
@@ -46,6 +52,7 @@
         }
       },
       "suspicious": {
+        "noExplicitAny": "error",
         "noVar": "error",
         "noUndeclaredEnvVars": "off"
       },
@@ -64,7 +71,12 @@
         "useArraySome": "error",
         "useAwaitThenable": "error",
         "useConsistentTestIt": "error",
-        "useExhaustiveSwitchCases": "error",
+        "useExhaustiveSwitchCases": {
+          "level": "error",
+          "options": {
+            "requireExplicitCase": true
+          }
+        },
         "useExpect": "error",
         "useIncludes": "error",
         "useNullishCoalescing": "error",
@@ -129,6 +141,24 @@
     },
     {
       "path": "./tools/biome/.biome/no-impure-render.grit",
+      "includes": ["**/*.tsx"]
+    },
+    "./tools/biome/.biome/catch-binding-unknown.grit",
+    "./tools/biome/.biome/use-assert-never.grit",
+    {
+      "path": "./tools/biome/.biome/no-direct-component-call.grit",
+      "includes": ["**/*.tsx"]
+    },
+    {
+      "path": "./tools/biome/.biome/no-state-mutation.grit",
+      "includes": ["**/*.tsx"]
+    },
+    {
+      "path": "./tools/biome/.biome/no-class-error-boundary.grit",
+      "includes": ["**/*.tsx"]
+    },
+    {
+      "path": "./tools/biome/.biome/no-fetch-in-handler.grit",
       "includes": ["**/*.tsx"]
     }
   ],

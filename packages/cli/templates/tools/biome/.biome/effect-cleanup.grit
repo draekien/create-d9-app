@@ -1,8 +1,11 @@
 language js
 
-`useEffect($callback, $deps)` as $effect where {
+or { `useEffect($callback, $...)`, `useLayoutEffect($callback, $...)` } as $effect where {
   $callback <: contains or { `$_.addEventListener($_, $_)`, `setInterval($_, $_)`, `setTimeout($_, $_)`, `$_.subscribe($_)` },
-  $callback <: JsArrowFunctionExpression(body = JsFunctionBody(statements = $statements)),
+  or {
+    $callback <: JsArrowFunctionExpression(body = JsFunctionBody(statements = $statements)),
+    $callback <: JsFunctionExpression(body = JsFunctionBody(statements = $statements))
+  },
   $statements <: not some `return $cleanup`,
   register_diagnostic(span = $effect, message = "Return a cleanup function from an effect that sets up a listener, timer, or subscription.")
 }

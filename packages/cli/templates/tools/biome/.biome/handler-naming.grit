@@ -1,9 +1,22 @@
 language js
 
-JsxAttribute() as $attr where {
-  $attr <: r"on[A-Z]\w*=\{\w+\}",
-  $attr <: not r"on[A-Z]\w*=\{handle[A-Z]\w*\}",
-  $attr <: not r"on[A-Z]\w*=\{on[A-Z]\w*\}",
-  $attr <: not r"on[A-Z]\w*=\{set[A-Z]\w*\}",
-  register_diagnostic(span = $attr, message = "Name the function passed to an on<Event> prop handle<Action>.", severity = "error")
+or {
+  JsxAttribute() as $attr where {
+    $attr <: r"on[A-Z]\w*=\{\w+\}",
+    $attr <: not r"on[A-Z]\w*=\{handle[A-Z]\w*\}",
+    $attr <: not r"on[A-Z]\w*=\{on[A-Z]\w*\}",
+    $attr <: not r"on[A-Z]\w*=\{set[A-Z]\w*\}",
+    register_diagnostic(span = $attr, message = "Name the function passed to an on<Event> prop handle<Action>.", severity = "error")
+  },
+  or {
+    JsFunctionDeclaration(id = $name),
+    JsVariableDeclarator(id = $name, initializer = JsInitializerClause(expression = or { JsArrowFunctionExpression(), JsFunctionExpression() }))
+  } as $local where {
+    $name <: r"on[A-Z]\w*",
+    $local <: within or {
+      JsFunctionDeclaration(id = $component),
+      JsVariableDeclarator(id = $component, initializer = JsInitializerClause(expression = or { JsArrowFunctionExpression(), JsFunctionExpression() }))
+    } where { $component <: r"[A-Z]\w*" },
+    register_diagnostic(span = $name, message = "Name a locally declared handler handle<Action>; on<Event> is for props.", severity = "error")
+  }
 }
