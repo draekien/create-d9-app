@@ -5,7 +5,12 @@ import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
 import { isInteractive } from "./interactive.ts"
 import { applyOverlays } from "./overlays.ts"
-import { resolveFromFlags, resolveWithPrompts } from "./prompts.ts"
+import {
+  missingValueMessage,
+  printCommand,
+  resolveFromFlags,
+  resolveWithPrompts,
+} from "./prompts.ts"
 import { renameFiles } from "./rename-files.ts"
 
 const helpText = `Usage: create-d9-app <dir> [options]
@@ -70,9 +75,9 @@ async function main() {
     yes: Boolean(values.yes),
   })
 
-  if (!interactive && !flags.dir) {
-    process.stderr.write(`Missing project directory.
-
+  const missing = interactive ? undefined : missingValueMessage(flags)
+  if (missing) {
+    process.stderr.write(`${missing}
 ${helpText}`)
     process.exit(1)
   }
