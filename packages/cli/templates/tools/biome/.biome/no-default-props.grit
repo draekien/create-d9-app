@@ -1,0 +1,5 @@
+language js
+
+`$component.defaultProps = $props` where {
+  register_diagnostic(span = $component, message = "Use default parameter values instead of defaultProps.")
+}

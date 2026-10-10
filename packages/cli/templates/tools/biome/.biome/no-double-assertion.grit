@@ -1,0 +1,5 @@
+language js
+
+`$value as unknown as $type` as $cast where {
+  register_diagnostic(span = $cast, message = "Double assertion through unknown; fix the types instead of forcing the cast.")
+}

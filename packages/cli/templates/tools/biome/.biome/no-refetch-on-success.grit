@@ -1,0 +1,7 @@
+language js
+
+JsPropertyObjectMember(name = $name, value = $callback) as $member where {
+  $name <: or { `onSuccess`, `onSettled` },
+  $callback <: contains or { `refetch()`, `$_.refetch()` },
+  register_diagnostic(span = $member, message = "Invalidate the affected queries with queryClient.invalidateQueries instead of calling refetch.")
+}

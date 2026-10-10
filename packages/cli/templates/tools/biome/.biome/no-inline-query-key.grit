@@ -1,0 +1,7 @@
+language js
+
+`queryKey: $key` as $property where {
+  $key <: JsArrayExpression(),
+  $key <: not r"^\[\s*\.\.\.[\s\S]*",
+  register_diagnostic(span = $property, message = "Build query keys with a key factory such as assetKeys instead of an inline array.")
+}
