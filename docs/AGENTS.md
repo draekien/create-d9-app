@@ -48,3 +48,4 @@ Applies to explorations and plans.
 - Stale `active` doc worse than missing: agent acts on it.
 - Work ships → `done`. Later doc replaces → `superseded`; name replacement in both. Same change that finishes the work.
 - Never delete.
+
