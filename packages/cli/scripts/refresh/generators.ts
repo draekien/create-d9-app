@@ -117,7 +117,7 @@ export function findGeneratorConflicts(generators: Generator[]): string[] {
       }
     }
   }
-  return conflicts.sort()
+  return conflicts.sort((a, b) => a.localeCompare(b))
 }
 
 /**
@@ -177,7 +177,7 @@ export async function runGenerators(options: {
         rewritten.add(relativeTemplatePath(output.owner, output.path))
       }
     }
-    return [...rewritten].sort()
+    return [...rewritten].sort((a, b) => a.localeCompare(b))
   } finally {
     fs.rmSync(scaffoldDir, { recursive: true, force: true })
   }
