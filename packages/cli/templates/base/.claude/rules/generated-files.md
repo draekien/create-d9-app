@@ -6,6 +6,6 @@ paths:
   - "packages/*/src/**/*.g.*"
 ---
 
-# Generated File Rules
+# Generated files
 
-- Never manually edit generated files. Run the tool that generated the file instead, or ask the user to run the tool if you don't know which one was used.
+- Never edit by hand. Rerun the generator; if the generator is unknown, ask which one.
