@@ -137,7 +137,7 @@ function OutputTable({
   rows: readonly (readonly [string, string])[]
 }) {
   return (
-    <div className="overflow-x-auto pl-7">
+    <div className="overflow-x-auto">
       <table className="out-table">
         <thead>
           <tr>
@@ -219,9 +219,9 @@ export function Landing() {
           </Line>
           <Command active={active === "agent-setup"} />
         </Output>
-        <Output>
+        <div className="tx mt-10 max-w-[58rem]">
           <OutputTable head={["file", "purpose"]} rows={agentFiles} />
-        </Output>
+        </div>
       </Step>
 
       <Step id="pinned" lead="Pinned" rest="and predictable">
@@ -280,9 +280,9 @@ held: major
           </Line>
           <Command active={active === "minimal"} />
         </Output>
-        <Output>
+        <div className="tx mt-10 max-w-[58rem]">
           <OutputTable head={["command", "runs"]} rows={rootCommands} />
-        </Output>
+        </div>
       </Step>
 
       <section aria-label="Start" className="max-w-[52rem] pt-28 sm:pt-36">
