@@ -39,7 +39,7 @@ The repository also hosts a static GitHub Pages site: a landing page that presen
 
 ## Capabilities and Constraints
 
-- v0 create path: `pnpm create` only. `npm create`, `yarn create`, `bun create` come after v0; the package manager will default to the invoker.
+- v0 create paths: `npm create`, `pnpm create`, `yarn create`, `bun create` all run the CLI; the generated project always uses pnpm. Choosing the package manager, defaulting to the invoker, comes after v0.
 - v0 scaffolds the default stack only; tool alternatives come later, and the code must allow adding them without a rewrite.
 - CLI runs on the oldest Node LTS major in maintenance and every newer major; no Bun- or Deno-only APIs.
 - Published CLI has zero runtime dependencies.
