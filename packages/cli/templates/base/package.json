@@ -14,8 +14,14 @@
     "test": "turbo run test",
     "dev": "turbo run dev"
   },
+  "intent": {
+    "skills": [
+      "*"
+    ]
+  },
   "devDependencies": {
     "@babel/parser": "8.0.7",
+    "@tanstack/intent": "0.5.5",
     "turbo": "2.11.7",
     "typescript": "7.0.2"
   }

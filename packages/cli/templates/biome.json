@@ -2,7 +2,14 @@
   "$schema": "https://biomejs.dev/schemas/2.5.15/schema.json",
   "root": false,
   "files": {
-    "includes": ["**", "!**/routeTree.gen.ts", "!**/.biome"]
+    "includes": [
+      "**",
+      "!**/routeTree.gen.ts",
+      "!**/.biome",
+      "!**/.intent",
+      "!**/.claude",
+      "!**/.codex"
+    ]
   },
   "formatter": {
     "enabled": true,

@@ -21,7 +21,16 @@ it("templates/biome.json is the biome overlay config relocated to the templates 
   const expected = {
     ...overlay,
     root: false,
-    files: { includes: ["**", "!**/routeTree.gen.ts", "!**/.biome"] },
+    files: {
+      includes: [
+        "**",
+        "!**/routeTree.gen.ts",
+        "!**/.biome",
+        "!**/.intent",
+        "!**/.claude",
+        "!**/.codex",
+      ],
+    },
     linter: {
       ...(overlay.linter as object),
       rules: {

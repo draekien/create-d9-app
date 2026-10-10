@@ -81,6 +81,13 @@ test.each(["build", "typecheck", "test", "check"])(
   300_000,
 )
 
+test("pnpm exec intent list lists TanStack skills", () => {
+  const result = run("pnpm", ["exec", "intent", "list", "--no-notices"], appDir)
+  expect(result.status, result.output).toBe(0)
+  expect(result.output).toContain("@tanstack/react-start")
+  expect(result.output).toContain("pnpm exec intent load @tanstack/")
+})
+
 test("pnpm check exits 0 until a line comment is added to an apps/web source file", () => {
   const clean = run("pnpm", ["check"], appDir)
   expect(clean.status, clean.output).toBe(0)
