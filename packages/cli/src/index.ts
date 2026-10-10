@@ -8,7 +8,6 @@ import { readCatalog, writeCodexDocs, writeMcpConfig } from "./integrations.ts"
 import { isInteractive } from "./interactive.ts"
 import { buildNextSteps } from "./next-steps.ts"
 import { applyOverlays } from "./overlays.ts"
-import { isPnpm, unsupportedPackageManagerMessage } from "./package-manager.ts"
 import {
   missingValueMessage,
   printCommand,
@@ -76,10 +75,6 @@ async function main() {
   if (values.help) {
     process.stdout.write(helpText)
     return
-  }
-
-  if (!isPnpm(process.env)) {
-    fail(unsupportedPackageManagerMessage())
   }
 
   const flags = {

@@ -35,7 +35,7 @@ Follows ADR 0001 (pinned template versions), ADR 0002 (always a monorepo), ADR 0
 | Git | `git init` + one commit at the end; skipped inside an existing repo; `--no-git` | `create-turbo` `src/utils/git.ts` |
 | Install | `pnpm install` by default; `--no-install` | `@tanstack/cli`, `create-t3-app` |
 | Dotfiles | `_gitignore` → `.gitignore` via one rename record; tests reuse the record | `create-vite` `renameFiles` |
-| Package manager | v0: `npm_config_user_agent` must start with `pnpm/`; otherwise exit 1 naming `pnpm create @draekien/d9-app` | `docs/contexts/v0.md` |
+| Package manager | v0: any invoker (`npm_config_user_agent` not checked); generated project + install always pnpm | `docs/contexts/v0.md` |
 | Git hooks | Lefthook | membank, parasol, mashay |
 | pnpm settings | `saveExact: true`, `allowBuilds` map; `minimumReleaseAge` and `trustPolicy` left at pnpm default (1440 min, `off`) | `F:\Dev\poly\src\Web\pnpm-workspace.yaml`; pnpm.io/settings/dependency-resolution |
 | Regression | e2e: built CLI → `pnpm install`, `build`, `check`, `typecheck`, `test` in output; snapshot of file tree + every `package.json` dependency map | `create-next-app` `test/production/create-next-app`; `sv` `src/cli/tests/snapshots` |
@@ -179,5 +179,5 @@ Done when: a test drives the prompt layer through mock streams, accepting every 
 ## Not covered
 
 - The upgrade-dependencies skill shipped in generated projects (required by ADR 0001). Needs its own plan; ships before v1.
-- `npm create`, `yarn create`, `bun create`, and tool alternatives (after v0, `docs/contexts/v0.md`).
+- Package manager choice for the generated project, and tool alternatives (after v0, `docs/contexts/v0.md`).
 - AST edits to files shared between tools; the overlap guard in slice 1 forbids overlap until an alternative needs it.

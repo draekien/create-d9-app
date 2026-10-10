@@ -50,13 +50,20 @@ describe("offline scaffold", () => {
     expect(fs.existsSync(path.join(dir, ".git"))).toBe(false)
   }, 60_000)
 
-  it("refuses a non-pnpm invocation", () => {
-    const dir = path.join(tmpRoot, "npm-app")
-    const result = scaffold(dir, { npm_config_user_agent: "npm/10.0.0 node/v22.0.0" })
-    expect(result.status).toBe(1)
-    expect(result.stderr).toContain("pnpm create @draekien/d9-app")
-    expect(fs.existsSync(dir)).toBe(false)
-  })
+  it.each([
+    "npm/10.0.0 node/v22.0.0",
+    "yarn/4.0.0 npm/? node/v22.0.0",
+    "bun/1.2.0 npm/? node/v22.0.0",
+  ])(
+    "scaffolds when invoked by %s",
+    (agent) => {
+      const dir = path.join(tmpRoot, `${agent.split("/")[0]}-app`)
+      const result = scaffold(dir, { npm_config_user_agent: agent })
+      expect(result.status, `${result.stdout}${result.stderr}`).toBe(0)
+      expect(fs.existsSync(path.join(dir, "package.json"))).toBe(true)
+    },
+    60_000,
+  )
 
   it("refuses an invalid package name before writing", () => {
     const dir = path.join(tmpRoot, "Bad_Name")

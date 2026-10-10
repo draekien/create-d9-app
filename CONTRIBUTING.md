@@ -10,13 +10,13 @@ pnpm check
 pnpm typecheck
 ```
 
-Run the local build of the CLI through pnpm, so the pnpm-only check passes:
+Run the local build of the CLI:
 
 ```sh
 pnpm node packages/cli/index.js ../demo --yes --no-install
 ```
 
-`index.js` loads `packages/cli/dist`, so rebuild after a source change. Running `node packages/cli/index.js` without pnpm exits with `create-d9-app must be run with pnpm`.
+`index.js` loads `packages/cli/dist`, so rebuild after a source change.
 
 The CLI README is the same file as the repository README, byte for byte. Edit `README.md` and copy it to `packages/cli/README.md`; `packages/cli/test/readme.test.ts` fails when they differ.
 
@@ -62,7 +62,7 @@ While the version is `0.0.x`, every changeset is `--patch`.
 
 ## v0 scope
 
-v0 scaffolds the default stack through `pnpm create @draekien/d9-app` only. Tool alternatives and the `npm`, `yarn` and `bun` create paths are v1 work. See [`docs/contexts/v0.md`](docs/contexts/v0.md).
+v0 scaffolds the default stack through any of `npm create`, `pnpm create`, `yarn create` or `bun create`; the generated project always uses pnpm. Tool alternatives and a package manager choice are v1 work. See [`docs/contexts/v0.md`](docs/contexts/v0.md).
 
 ## Design documents
 
