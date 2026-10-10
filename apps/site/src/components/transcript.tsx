@@ -26,7 +26,7 @@ export function Command({
 }: {
   active?: boolean
   action?: ReactNode
-  children: ReactNode
+  children?: ReactNode
 }) {
   return (
     <Line glyph="$">

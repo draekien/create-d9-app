@@ -13,17 +13,22 @@ const sections = [
 
 type SectionId = (typeof sections)[number]["id"]
 
-const tree = `my-app/
-├── apps/web/            TanStack Start on Vite
-├── packages/ui/         shadcn, exported as @workspace/ui
-├── .agents/skills/      upgrade-dependencies skill
-├── .claude/             rules, skills and hooks for Claude Code
-├── .intent/             TanStack Intent gate
-├── AGENTS.md            project rules for coding agents
-└── biome.json           GritQL plugins for React and TanStack`
+const tree = [
+  ["├── apps/web/", "TanStack Start on Vite"],
+  ["├── packages/ui/", "shadcn, exported as @workspace/ui"],
+  ["├── .agents/skills/", "agent skills, upgrade-dependencies among them"],
+  ["├── .claude/", "rules, skills and hooks for Claude Code"],
+  ["├── .intent/", "TanStack Intent gate"],
+  ["├── AGENTS.md", "project rules for coding agents"],
+  ["└── biome.json", "GritQL plugins for React and TanStack"],
+] as const
+
+const treeText = ["my-app/", ...tree.map(([path, about]) => `${path.padEnd(25)}${about}`)].join(
+  "\n",
+)
 
 const listing =
-  ".agents  .biome  .claude  .codex  .cursor  .gitignore  .intent  .mcp.json  AGENTS.md  CLAUDE.md  apps  biome.json  lefthook.yml  package.json  packages  pnpm-workspace.yaml  scripts  skills-lock.json  tsconfig.json  turbo.json"
+  ".agents  .biome  .claude  .codex  .cursor  .git  .gitignore  .intent  .mcp.json  AGENTS.md  CLAUDE.md  apps  biome.json  lefthook.yml  node_modules  package.json  packages  pnpm-lock.yaml  pnpm-workspace.yaml  scripts  skills-lock.json  tsconfig.json  turbo.json"
 
 const agentFiles = [
   ["AGENTS.md, CLAUDE.md", "project rules: run tasks from the root, exact pins only"],
@@ -104,9 +109,6 @@ function Step({
       <div className="mb-12 flex max-w-[58rem] items-center gap-4" aria-hidden="true">
         <BrandMark className="shrink-0 text-primary" />
         <hr className="flex-1 border-border" />
-        <span className="shrink-0 font-mono text-sm tracking-wider text-secondary">
-          {sections.find((section) => section.id === id)?.label.toLowerCase()}
-        </span>
         <BrandMark className="shrink-0 text-primary" />
       </div>
       <Heading id={id} lead={lead} rest={rest} />
@@ -161,18 +163,18 @@ export function Landing() {
 
   return (
     <main className="px-5 pb-10 sm:px-10 lg:pl-[15.3vw]">
-      <section id="run" aria-labelledby="run-title" className="max-w-[62.5rem] pt-12 sm:pt-16">
+      <section id="run" aria-labelledby="run-title" className="max-w-[62.5rem] pt-12 sm:pt-10">
         <Mark className="h-8 w-auto text-primary md:h-12" />
-        <h1 id="run-title" className="headline mt-4 text-[2.25rem] md:mt-6 md:text-[4.5rem]">
+        <h1 id="run-title" className="headline mt-4 text-[2.25rem] md:mt-6 md:text-[4rem]">
           <span className="whitespace-nowrap">Agent-ready</span>{" "}
           <em className="sm:inline-block">at the first commit</em>
         </h1>
-        <p className="mt-6 max-w-[35rem] text-[1.0625rem] leading-relaxed text-foreground sm:text-lg">
+        <p className="mt-5 max-w-[35rem] text-[1.0625rem] leading-relaxed text-foreground sm:text-lg">
           A Turborepo monorepo with a TanStack Start app, every dependency pinned, and the rules
           your coding agent reads already written.
         </p>
-        <div className="tx mt-9 max-w-[58rem]">
-          <CopyCommand active={active === "run"} />
+        <div className="tx mt-7 max-w-[58rem]">
+          <CopyCommand />
           <Prompt question="Initialise a git repository?" answer="Yes" flag="--no-git" />
           <Prompt question="Install dependencies?" answer="Yes" flag="--no-install" />
           <Prompt
@@ -183,14 +185,22 @@ export function Landing() {
           <Line>
             <span className="text-muted-foreground">my-app/</span>
             <span className="text-muted-foreground">(empty)</span>
-            <span className="text-muted-foreground" aria-hidden="true">
-              →
+            <span className="whitespace-nowrap text-muted-foreground">
+              <span aria-hidden="true">→ </span>143 files · 2 workspace packages
             </span>
-            <span className="text-muted-foreground">142 files · 2 workspace packages</span>
           </Line>
-          <pre className="tx-pre mt-1">{tree}</pre>
+          <pre className="tx-pre hidden sm:block">{treeText}</pre>
+          <ul className="tx-tree mt-1 sm:hidden">
+            <li className="text-muted-foreground">my-app/</li>
+            {tree.map(([path, about]) => (
+              <li key={path}>
+                <span className="text-muted-foreground">{path}</span>
+                <span className="tx-tree-about">{about}</span>
+              </li>
+            ))}
+          </ul>
           <Command>cd my-app</Command>
-          <Command>pnpm dev</Command>
+          <Command active={active === "run"}>pnpm dev</Command>
         </div>
       </section>
 
@@ -203,11 +213,13 @@ export function Landing() {
           the rules and the skills without extra setup.
         </Prose>
         <Output>
-          <Command active={active === "agent-setup"}>ls -A my-app</Command>
+          <Command>ls -A my-app</Command>
           <Line glyph=" ">
             <span className="text-muted-foreground">{listing}</span>
           </Line>
-          <Command>{"# what each agent file does"}</Command>
+          <Command active={active === "agent-setup"} />
+        </Output>
+        <Output>
           <OutputTable head={["file", "purpose"]} rows={agentFiles} />
         </Output>
       </Step>
@@ -223,7 +235,7 @@ export function Landing() {
           <Line glyph=" ">
             <span className="text-muted-foreground">saveExact: true</span>
           </Line>
-          <Command active={active === "pinned"}>/upgrade-dependencies</Command>
+          <Command>/upgrade-dependencies</Command>
           <pre className="tx-pre">{`| Package        | Old   | New   | Type  |
 | -------------- | ----- | ----- | ----- |
 | @base-ui/react | 1.8.0 | 1.9.0 | minor |
@@ -240,13 +252,13 @@ held: major
               how the skill decides what to upgrade
             </Link>
           </Line>
+          <Command active={active === "pinned"} />
         </Output>
       </Step>
 
       <Step id="what-you-get" lead="What you" rest="get">
         <Prose>One tool per concern, the default stack preselected.</Prose>
         <Output>
-          <Command active={active === "what-you-get"}>{"# one tool per concern"}</Command>
           <OutputTable head={["concern", "tool"]} rows={tools} />
         </Output>
       </Step>
@@ -260,15 +272,16 @@ held: major
           without it.
         </Prose>
         <Output>
-          <Command active={active === "minimal"}>rm -r apps/web/src/routes/examples</Command>
+          <Command>rm -r apps/web/src/routes/examples</Command>
           <Command>pnpm build</Command>
           <Line>
             <span className="text-muted-foreground">apps/web/src/routeTree.gen.ts</span>
             <span className="text-muted-foreground">regenerated without /examples</span>
           </Line>
-          <div className="mt-6">
-            <OutputTable head={["command", "runs"]} rows={rootCommands} />
-          </div>
+          <Command active={active === "minimal"} />
+        </Output>
+        <Output>
+          <OutputTable head={["command", "runs"]} rows={rootCommands} />
         </Output>
       </Step>
 
@@ -291,11 +304,11 @@ held: major
 
       <nav
         aria-label="Sections"
-        className="sticky bottom-0 mt-24 -mx-5 overflow-x-auto bg-background px-5 py-4 font-mono text-sm sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
+        className="sticky bottom-0 mt-24 -mx-5 bg-background px-5 py-4 font-mono text-sm sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
       >
-        <ul className="flex gap-7 whitespace-nowrap">
+        <ul className="flex flex-wrap gap-x-7 gap-y-2">
           {sections.map(({ id, label }) => (
-            <li key={id}>
+            <li key={id} className="whitespace-nowrap">
               <a
                 href={`#${id}`}
                 aria-current={active === id ? "true" : undefined}

@@ -92,7 +92,7 @@ a {
   font-family: var(--font-mono);
   font-weight: 500;
   letter-spacing: -0.025em;
-  line-height: 1.25;
+  line-height: 1.1;
   text-wrap: balance;
   color: var(--foreground);
 }
@@ -105,7 +105,7 @@ a {
 .tx {
   font-family: var(--font-mono);
   font-size: clamp(0.8125rem, 0.75rem + 0.25vw, 0.9375rem);
-  line-height: 1.75;
+  line-height: 1.65;
   font-variant-numeric: tabular-nums;
 }
 
@@ -136,6 +136,20 @@ a {
   color: var(--muted-foreground);
   padding-left: 1.75rem;
   scrollbar-width: thin;
+}
+
+.tx-tree {
+  padding-left: 1.75rem;
+}
+
+.tx-tree li + li {
+  margin-top: 0.35rem;
+}
+
+.tx-tree-about {
+  display: block;
+  padding-left: 4ch;
+  color: var(--muted-foreground);
 }
 
 .cursor {
