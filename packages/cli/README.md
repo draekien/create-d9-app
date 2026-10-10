@@ -50,7 +50,7 @@ Every dependency is pinned to an exact version. The project never receives an up
 | pnpm | The CLI runs through `pnpm create` only. The generated project pins `pnpm@12.11.0` in `packageManager`; pnpm downloads and runs that version inside the project ([`pmOnFail`](https://pnpm.io/settings/cli#pmonfail), default `download`). |
 | git | Optional. Used for the initial commit unless you pass `--no-git`. |
 
-On Windows, install pnpm as the standalone executable, not with `npm install -g pnpm`. The npm install puts a `pnpm.CMD` batch file on PATH, and cmd.exe stops that batch file at `Terminate batch job (Y/N)?` when you press Ctrl+C in `pnpm dev`, so Turborepo waits and then force-kills the dev server. The installer pnpm.io recommends for Windows installs the executable:
+On Windows, do not run pnpm through Corepack. `corepack enable` puts a `pnpm.CMD` batch file on PATH, and cmd.exe stops that batch file at `Terminate batch job (Y/N)?` when you press Ctrl+C in `pnpm dev`, so Turborepo waits and then force-kills the dev server. Run `corepack disable pnpm` and install pnpm with the installer pnpm.io recommends for Windows:
 
 ```powershell
 npx get-pnpm
@@ -197,7 +197,7 @@ npx skills add draekien/create-d9-app --skill upgrade-dependencies
 | `<dir> is not empty. Remove these entries or choose another directory:` | Target has files other than the allowed set above. The listed entries are the ones that block. |
 | `Invalid package name "<name>" derived from the directory:` | Directory name is not a valid npm package name. Rename it or scaffold elsewhere. |
 | `Missing required <dir>.` | Non-interactive run without `<dir>` or `--yes`. |
-| `Terminate batch job (Y/N)?` after Ctrl+C in `pnpm dev` | Windows, with pnpm installed through npm. Install the standalone executable; see Requirements. |
+| `Terminate batch job (Y/N)?` after Ctrl+C in `pnpm dev` | Windows, with pnpm run through a Corepack shim. Disable it and install pnpm directly; see Requirements. |
 
 ## Versioning
 
