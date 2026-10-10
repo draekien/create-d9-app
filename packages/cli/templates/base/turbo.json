@@ -6,6 +6,7 @@
       "outputs": ["dist/**"]
     },
     "check": {},
+    "//#lint:biome": {},
     "//#lint:comments": {
       "inputs": ["apps/**", "packages/**", "scripts/check-comments.ts"]
     },

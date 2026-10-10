@@ -4,6 +4,7 @@ import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
 import { isInteractive } from "./interactive.ts"
+import { applyOverlays } from "./overlays.ts"
 import { resolveFromFlags, resolveWithPrompts } from "./prompts.ts"
 import { renameFiles } from "./rename-files.ts"
 
@@ -16,7 +17,8 @@ Options:
   --help         Show this message
 `
 
-const templateDir = fileURLToPath(new URL("../templates/base", import.meta.url))
+const templateRoot = fileURLToPath(new URL("../templates", import.meta.url))
+const templateDir = path.join(templateRoot, "base")
 
 function copyDir(from: string, to: string) {
   fs.mkdirSync(to, { recursive: true })
@@ -84,6 +86,7 @@ ${helpText}`)
 
   const targetDir = path.resolve(options.dir)
   copyDir(templateDir, targetDir)
+  applyOverlays(templateRoot, targetDir)
   setPackageName(targetDir)
 
   if (options.install) {
