@@ -93,6 +93,7 @@ jobs:
           git config user.name "${APP_SLUG}[bot]"
           git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
           git fetch origin main:refs/remotes/origin/main
+          failed=0
           while read -r entry <&3; do
             branch="$(jq -r '.branch' <<< "$entry")"
             name="$(jq -r '.packages[0]' <<< "$entry")"
@@ -103,9 +104,11 @@ jobs:
               echo "no changes for $name"
               continue
             fi
-            pnpm install --no-frozen-lockfile
-            pnpm build
-            pnpm --filter @draekien/create-d9-app exec vitest run -u
+            if ! pnpm install --no-frozen-lockfile || ! pnpm build || ! pnpm --filter @draekien/create-d9-app exec vitest run -u; then
+              echo "::error::$name $to fails install, build or test; no pull request opened"
+              failed=1
+              continue
+            fi
             pnpm exec changeset add --patch @draekien/create-d9-app -m "chore(templates): bump $name to $to" < /dev/null
             title="chore(templates)!: bump $name to $to"
             git add -A
@@ -125,3 +128,4 @@ jobs:
               gh pr edit "$number" --title "$title" --body-file "$RUNNER_TEMP/major-body.md"
             fi
           done 3< <(jq -c '.[] | select(.autoMerge | not)' "$RUNNER_TEMP/plan.json")
+          exit "$failed"
