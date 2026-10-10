@@ -92,6 +92,7 @@ jobs:
       - run: git fetch origin main:refs/remotes/origin/main
       - run: pnpm exec changeset status --since=origin/main
       - run: git diff --name-only --diff-filter=A origin/main...HEAD -- '.changeset/*.md' | grep .
+      - run: git diff --name-only --diff-filter=A origin/main...HEAD -- '.changeset/*.md' | grep -v -E '^\.changeset/[a-z]+-[a-z]+-[a-z]+\.md$' | grep . && exit 1 || true
 
   ci:
     name: ci
