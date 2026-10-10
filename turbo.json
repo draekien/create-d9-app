@@ -10,6 +10,7 @@
     },
     "test": {
       "dependsOn": ["build"]
-    }
+    },
+    "//#check": {}
   }
 }
