@@ -1,0 +1,89 @@
+name: Refresh templates
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    name: refresh
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/create-github-app-token@v3.2.0
+        id: app-token
+        with:
+          app-id: ${{ secrets.REFRESH_APP_ID }}
+          private-key: ${{ secrets.REFRESH_APP_PRIVATE_KEY }}
+      - uses: actions/checkout@v7.0.1
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+      - uses: pnpm/action-setup@v6.1.0
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: pnpm install --frozen-lockfile
+      - run: |
+          pnpm --filter @draekien/create-d9-app refresh-templates > "$RUNNER_TEMP/bumps.jsonl"
+          cat "$RUNNER_TEMP/bumps.jsonl"
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm build
+      - run: pnpm --filter @draekien/create-d9-app exec vitest run -u
+      - name: Detect changes
+        id: detect
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "no changes"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write changeset
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          cat > ".changeset/refresh-templates-$(date -u +%F).md" <<'EOF'
+          ---
+          "@draekien/create-d9-app": patch
+          ---
+
+          chore(templates): refresh pinned versions
+          EOF
+      - name: Commit and push
+        if: steps.detect.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(templates): refresh pinned versions"
+          git push --force origin HEAD:refs/heads/bot/refresh-templates
+      - name: Open or update pull request
+        if: steps.detect.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          {
+            echo "Bumped template pins:"
+            echo
+            echo '```json'
+            cat "$RUNNER_TEMP/bumps.jsonl"
+            echo '```'
+          } > "$RUNNER_TEMP/pr-body.md"
+          number="$(gh pr list --head bot/refresh-templates --state open --json number --jq '.[0].number // empty')"
+          if [ -z "$number" ]; then
+            gh pr create --base main --head bot/refresh-templates --title "chore(templates): refresh pinned versions" --body-file "$RUNNER_TEMP/pr-body.md"
+            number="$(gh pr list --head bot/refresh-templates --state open --json number --jq '.[0].number')"
+          else
+            gh pr edit "$number" --body-file "$RUNNER_TEMP/pr-body.md"
+          fi
+          gh pr merge "$number" --auto --squash
