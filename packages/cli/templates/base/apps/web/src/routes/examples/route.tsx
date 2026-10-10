@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router"
 import { FormExample } from "./-components/form.tsx"
 import { greetingOptions } from "./-components/greeting.ts"
 import { HotkeysExample } from "./-components/hotkeys.tsx"
+import { MotionExample } from "./-components/motion.tsx"
 import { QueryExample } from "./-components/query.tsx"
 import { TableExample } from "./-components/table.tsx"
 
@@ -12,6 +13,7 @@ function Examples() {
       <FormExample />
       <TableExample />
       <HotkeysExample />
+      <MotionExample />
     </main>
   )
 }
