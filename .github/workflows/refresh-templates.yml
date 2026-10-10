@@ -34,7 +34,7 @@ jobs:
           package-manager-cache: false
       - run: pnpm install --frozen-lockfile
       - run: |
-          pnpm --filter @draekien/create-d9-app refresh-templates > "$RUNNER_TEMP/bumps.jsonl"
+          pnpm --filter @draekien/create-d9-app refresh-templates --plan "$RUNNER_TEMP/plan.json" > "$RUNNER_TEMP/bumps.jsonl"
           cat "$RUNNER_TEMP/bumps.jsonl"
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm build
@@ -84,3 +84,44 @@ jobs:
             gh pr edit "$number" --body-file "$RUNNER_TEMP/pr-body.md"
           fi
           gh pr merge "$number" --auto --squash
+      - name: Open major bump pull requests
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: |
+          user_id="$(gh api "/users/${APP_SLUG}[bot]" --jq .id)"
+          git config user.name "${APP_SLUG}[bot]"
+          git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
+          git fetch origin main:refs/remotes/origin/main
+          while read -r entry <&3; do
+            branch="$(jq -r '.branch' <<< "$entry")"
+            name="$(jq -r '.packages[0]' <<< "$entry")"
+            to="$(jq -r '.changes[0].to' <<< "$entry")"
+            git checkout -f -B "$branch" origin/main
+            pnpm --filter @draekien/create-d9-app refresh-templates --only-major "$name" > "$RUNNER_TEMP/major.jsonl"
+            if [ -z "$(git status --porcelain)" ]; then
+              echo "no changes for $name"
+              continue
+            fi
+            pnpm install --no-frozen-lockfile
+            pnpm build
+            pnpm --filter @draekien/create-d9-app exec vitest run -u
+            pnpm exec changeset add --patch @draekien/create-d9-app -m "chore(templates): bump $name to $to" < /dev/null
+            title="chore(templates)!: bump $name to $to"
+            git add -A
+            git commit -m "$title"
+            git push --force origin "HEAD:refs/heads/$branch"
+            {
+              echo "Bumped template pins:"
+              echo
+              echo '```json'
+              jq -c '.changes[]' <<< "$entry"
+              echo '```'
+            } > "$RUNNER_TEMP/major-body.md"
+            number="$(gh pr list --head "$branch" --state open --json number --jq '.[0].number // empty')"
+            if [ -z "$number" ]; then
+              gh pr create --base main --head "$branch" --title "$title" --body-file "$RUNNER_TEMP/major-body.md"
+            else
+              gh pr edit "$number" --title "$title" --body-file "$RUNNER_TEMP/major-body.md"
+            fi
+          done 3< <(jq -c '.[] | select(.autoMerge | not)' "$RUNNER_TEMP/plan.json")
