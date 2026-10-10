@@ -58,10 +58,6 @@ function fail(message: string): never {
 }
 
 async function main() {
-  if (!isPnpm(process.env)) {
-    fail(unsupportedPackageManagerMessage())
-  }
-
   const { values, positionals } = parseArgs({
     allowPositionals: true,
     options: {
@@ -75,6 +71,10 @@ async function main() {
   if (values.help) {
     process.stdout.write(helpText)
     return
+  }
+
+  if (!isPnpm(process.env)) {
+    fail(unsupportedPackageManagerMessage())
   }
 
   const flags = {
