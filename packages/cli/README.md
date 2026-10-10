@@ -13,7 +13,7 @@ pnpm dev
 ```text
 my-app/
 ├── apps/
-│   └── web/                    TanStack Start app on Vite, with example routes and tests
+│   └── web/                    TanStack Start app on Vite; `/` is a minimal page, `/examples` holds the examples
 ├── packages/
 │   └── ui/                     shadcn components, exported as @workspace/ui
 ├── .agents/skills/             upgrade-dependencies skill (Codex, Cursor, Agent Skills)
@@ -125,6 +125,8 @@ Run every task from the repository root. Turborepo runs it in each workspace pac
 | `pnpm check` | Biome lint and format check, the comment check, and every package `check` task |
 | `pnpm typecheck` | `tsc --noEmit` in every package |
 | `pnpm test` | `vitest run` in every package |
+
+The query, form, table and hotkeys examples render at `/examples` and live in `apps/web/src/routes/examples/`: the route file `route.tsx` plus the components and their tests in `-components/`. TanStack Router ignores paths prefixed with `-`. Delete that one directory to remove every example; the next `pnpm dev` or `pnpm build` regenerates `apps/web/src/routeTree.gen.ts` without the route.
 
 The pre-commit hook runs the comment check and `biome check --write` on staged files, then re-stages what it fixed.
 
