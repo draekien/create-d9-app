@@ -7,7 +7,7 @@ export class MockWritable extends Writable {
   public rows = 20
 
   _write(
-    chunk: any,
+    chunk: Buffer | string,
     _encoding: BufferEncoding,
     callback: (error?: Error | null | undefined) => void,
   ): void {
