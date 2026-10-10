@@ -126,7 +126,7 @@ Run every task from the repository root. Turborepo runs it in each workspace pac
 | `pnpm typecheck` | `tsc --noEmit` in every package |
 | `pnpm test` | `vitest run` in every package |
 
-The query, form, table and hotkeys examples render at `/examples` and live in `apps/web/src/routes/examples/`: the route file `route.tsx` plus the components and their tests in `-components/`. TanStack Router ignores paths prefixed with `-`. Delete that one directory to remove every example; the next `pnpm dev` or `pnpm build` regenerates `apps/web/src/routeTree.gen.ts` without the route.
+The query, form, table, hotkeys and motion examples render at `/examples` and live in `apps/web/src/routes/examples/`: the route file `route.tsx` plus the components and their tests in `-components/`. TanStack Router ignores paths prefixed with `-`. Delete that one directory to remove every example; the next `pnpm dev` or `pnpm build` regenerates `apps/web/src/routeTree.gen.ts` without the route.
 
 The pre-commit hook runs the comment check and `biome check --write` on staged files, then re-stages what it fixed.
 

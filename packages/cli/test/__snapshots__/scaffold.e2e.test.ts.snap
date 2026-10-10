@@ -240,6 +240,8 @@ exports[`scaffolded project has the expected files and dependencies > files 1`] 
   "apps/web/src/routes/examples/-components/greeting.ts",
   "apps/web/src/routes/examples/-components/hotkeys.test.tsx",
   "apps/web/src/routes/examples/-components/hotkeys.tsx",
+  "apps/web/src/routes/examples/-components/motion.test.tsx",
+  "apps/web/src/routes/examples/-components/motion.tsx",
   "apps/web/src/routes/examples/-components/query.test.tsx",
   "apps/web/src/routes/examples/-components/query.tsx",
   "apps/web/src/routes/examples/-components/table.test.tsx",
