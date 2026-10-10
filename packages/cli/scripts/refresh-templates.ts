@@ -33,13 +33,11 @@ if (!process.argv.includes("--dry-run")) {
   const generated = await runGenerators({
     templateRoot: path.join(repoRoot, "packages", "cli", "templates"),
     generators,
-    onProgress: (message) =>
-      process.stderr.write(`${message}
-`),
+    onProgress: (message) => process.stderr.write(`${message}\n`),
   })
-  for (const file of generated)
-    process.stdout.write(`${JSON.stringify({ generated: file })}
-`)
+  for (const file of generated) {
+    process.stdout.write(`${JSON.stringify({ generated: file })}\n`)
+  }
 }
 
 if (planPath) {
