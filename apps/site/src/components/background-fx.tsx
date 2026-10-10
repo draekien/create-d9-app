@@ -71,8 +71,13 @@ export function BackgroundFx() {
     }
 
     const onPointerMove = (event: PointerEvent) => {
+      const entering = target.x === away && target.y === away
       target.x = event.clientX
       target.y = event.clientY
+      if (entering) {
+        current.x = target.x
+        current.y = target.y
+      }
       start()
     }
 
