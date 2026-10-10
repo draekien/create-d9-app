@@ -7,7 +7,7 @@ Read before adding dependency or changing pinned version (CLI or template).
 - Every generated project ships upgrade-dependencies skill; agent uses it to upgrade pinned versions systematically.
 - upgrade-dependencies skill source: `skills/upgrade-dependencies/SKILL.md`. Template copies under `templates/base/.agents/skills/` + `templates/base/.claude/skills/` stay byte-identical; test `template-upgrade-skill.test.ts` enforces.
 - This repo's pins (templates, root `package.json`, `packages/cli/package.json`): upgraded by `pnpm --filter @draekien/create-d9-app refresh-templates`, run by workflow `refresh-templates.yml` on 1st + 15th each month and on dispatch. No manual upgrades.
-- Refresh picks newest non-prerelease version published more than 1440 minutes earlier.
+- Refresh picks newest non-prerelease version at or below `dist-tags.latest`, published more than 1440 minutes earlier.
 - `packageManager` field in every `package.json`: refreshed like a dependency pin when `<name>@<exact version>`.
 - `templates/integrations.json` stdio `args` entries `<package>@<exact version>`: refreshed like `package.json` pins.
 - Patch + minor bumps: written, auto-merged once `ci` check passes.
