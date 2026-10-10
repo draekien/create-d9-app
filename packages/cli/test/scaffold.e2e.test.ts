@@ -72,10 +72,14 @@ test("scaffolded project has the expected files and dependencies", () => {
   expect(dependencyMaps(files)).toMatchSnapshot("dependencies")
 })
 
-test.each(["build", "typecheck", "test"])("pnpm %s exits 0 in the scaffolded project", (script) => {
-  const result = run("pnpm", [script], appDir)
-  expect(result.status, result.output).toBe(0)
-}, 300_000)
+test.each(["build", "typecheck", "test", "check"])(
+  "pnpm %s exits 0 in the scaffolded project",
+  (script) => {
+    const result = run("pnpm", [script], appDir)
+    expect(result.status, result.output).toBe(0)
+  },
+  300_000,
+)
 
 test("pnpm check exits 0 until a line comment is added to an apps/web source file", () => {
   const clean = run("pnpm", ["check"], appDir)
