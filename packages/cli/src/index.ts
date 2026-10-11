@@ -3,7 +3,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
-import { initGit } from "./git.ts"
+import { commitAll, initRepo } from "./git.ts"
 import { readCatalog, writeCodexDocs, writeMcpConfig } from "./integrations.ts"
 import { isInteractive } from "./interactive.ts"
 import { buildNextSteps } from "./next-steps.ts"
@@ -130,6 +130,11 @@ ${helpText}`)
   writeCodexDocs(catalog, selection, targetDir)
   setPackageName(targetDir, name)
 
+  const repo = options.git ? initRepo(targetDir) : undefined
+  if (repo && !repo.ok) {
+    fail(`git initialisation failed:\n${repo.output}`)
+  }
+
   if (options.install) {
     const result = spawnSync("pnpm install", {
       cwd: targetDir,
@@ -141,10 +146,10 @@ ${helpText}`)
     }
   }
 
-  if (options.git) {
-    const git = initGit(targetDir)
-    if (!git.ok) {
-      fail(`git initialisation failed:\n${git.output}`)
+  if (repo && !repo.skipped) {
+    const commit = commitAll(targetDir)
+    if (!commit.ok) {
+      fail(`git initialisation failed:\n${commit.output}`)
     }
   }
 
