@@ -14,7 +14,7 @@ A pnpm workspace with a TanStack Start app and a shadcn `ui` package, Biome, Lef
 
 ## Documentation
 
-Full documentation: [draekien.github.io/create-d9-app](https://draekien.github.io/create-d9-app/)
+Full documentation: [create-d9-app.wpei.me](https://create-d9-app.wpei.me/)
 
 - [Getting started](apps/site/content/docs/getting-started.md): the generated tree and the tool table.
 - [Requirements](apps/site/content/docs/requirements.md): Node.js, pnpm and git.
