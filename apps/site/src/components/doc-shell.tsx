@@ -1,42 +1,61 @@
 import type { MarkdownHeading } from "@tanstack/markdown"
 import { Link } from "@tanstack/react-router"
+import * as m from "motion/react-m"
 import type { ReactNode } from "react"
 import { docs } from "../content.ts"
 import { BrandMark } from "./mark.tsx"
 
 const railLink =
-  "group flex gap-2 py-1 text-muted-foreground transition-colors duration-150 hover:text-foreground data-[status=active]:text-primary-text"
+  "flex gap-2 py-1 text-muted-foreground transition-colors duration-150 hover:text-foreground data-[status=active]:text-primary-text"
 
-function Marker() {
+const markerTravel = { layout: { duration: 0.24, ease: [0.16, 1, 0.3, 1] } } as const
+
+function Marker({ id, active }: { id: string; active: boolean }) {
   return (
-    <span className="invisible w-[2ch] shrink-0 group-data-[status=active]:visible">
-      <BrandMark className="text-primary" />
+    <span className="w-[2ch] shrink-0">
+      {active ? (
+        <m.span layoutId={id} transition={markerTravel} className="inline-block">
+          <BrandMark className="text-primary" />
+        </m.span>
+      ) : null}
     </span>
   )
 }
 
-function RailLinks({ headings }: { headings: MarkdownHeading[] }) {
+function RailLinks({ marker, headings }: { marker: string; headings: MarkdownHeading[] }) {
   return (
     <>
       <ul>
         <li>
           <Link to="/docs" activeOptions={{ exact: true }} className={railLink}>
-            <Marker />
-            index
+            {({ isActive }) => (
+              <>
+                <Marker id={marker} active={isActive} />
+                index
+              </>
+            )}
           </Link>
         </li>
         {docs.map((doc) => (
           <li key={doc.slug}>
             <Link to="/docs/$slug" params={{ slug: doc.slug }} className={railLink}>
-              <Marker />
-              {doc.title}
+              {({ isActive }) => (
+                <>
+                  <Marker id={marker} active={isActive} />
+                  {doc.title}
+                </>
+              )}
             </Link>
           </li>
         ))}
         <li>
           <Link to="/changelog" className={railLink}>
-            <Marker />
-            Changelog
+            {({ isActive }) => (
+              <>
+                <Marker id={marker} active={isActive} />
+                Changelog
+              </>
+            )}
           </Link>
         </li>
       </ul>
@@ -81,14 +100,14 @@ export function DocShell({
           pages
         </summary>
         <nav aria-label="Docs" className="mt-3">
-          <RailLinks headings={contents} />
+          <RailLinks marker="pages-marker" headings={contents} />
         </nav>
       </details>
       <nav
         aria-label="Docs"
         className="hidden font-mono text-sm lg:sticky lg:top-8 lg:block lg:self-start"
       >
-        <RailLinks headings={contents} />
+        <RailLinks marker="rail-marker" headings={contents} />
       </nav>
       <article className="min-w-0">
         <h1 className="headline text-[clamp(1.875rem,1.4rem+1.9vw,2.75rem)]">{title}</h1>

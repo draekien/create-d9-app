@@ -153,7 +153,7 @@ The docs, changelog and 404 pages keep the same material in a reading shape: a m
 - Two-tone mono headlines: the lead in foreground, the rest in mauve, roman.
 - Orange is a mark and a fill; orange as text uses the darker text tone on the light ground.
 - Flat colour, square corners, hairline borders, no shadows, no gradients.
-- Two moving elements only: the blinking block cursor and the pointer-reactive dot canvas; reduced motion stills both.
+- Motion acts out the transcript: lines print, the cursor and markers travel, copying ripples the dots, the theme clears top to bottom. Five moments, listed under Motion; reduced motion stills all of them.
 
 ### Provenance
 
@@ -180,7 +180,7 @@ Two flat grounds, one ink, one mauve, one orange; nothing else carries colour.
 - **Muted Ground** (`muted`): code blocks and inline code only.
 - **Muted Ink** (`muted-foreground`): flags, output text, the tree, table headers and second columns, inactive nav, landing prose paragraphs, list markers, older changelog releases.
 - **Hairline** (`border`): 1px rules: section divider line, theme toggle outline, table row rules, code block outline, docs rail separators.
-- **Dot** (`canvas-dot`): the canvas dots only, 10% alpha mauve on both grounds.
+- **Dot** (`canvas-dot`): the canvas dots only, 10% alpha mauve on both grounds; up to 60% inside a copy ripple.
 
 ### Named Rules
 **The Readable Orange Rule.** Orange text is always `primary-text`, never `primary`. `primary` appears only as a fill or as the mark.
@@ -235,10 +235,27 @@ Responsive behaviour observed in the build:
 
 ## Elevation & Depth
 
-The system is flat. There are no shadows, no gradients, no blur and no tonal surface stacking. The only depth is structural: a fixed full-viewport canvas at z-index 0 draws a 48px grid of 1.5px dots in `canvas-dot`; within 140px of the pointer each dot's radius grows by up to 2px (quadratic falloff), the tracked point eased at 0.1 per frame and the loop stopping once settled. All content sits on a z-index 10 layer above it. With reduced motion the canvas draws once and does not track the pointer.
+The system is flat. There are no shadows, no gradients, no blur and no tonal surface stacking. The only depth is structural: a fixed full-viewport canvas at z-index 0 draws a 48px grid of 1.5px dots in `canvas-dot`; within 140px of the pointer each dot's radius grows by up to 2px (quadratic falloff), the tracked point eased at 0.1 per frame and the loop stopping once settled. All content sits on a z-index 10 layer above it. A successful copy sends one ring from the copy button through the same dots over 1000ms (radius eased out to the farthest viewport corner; dots within 64px of the ring grow by up to 3px and rise from 10% to up to 60% alpha, both fading as the ring travels); it adds no dots and the loop stops when it ends. With reduced motion the canvas draws once, does not track the pointer and does not ripple.
 
 ### Named Rules
 **The Flat Ground Rule.** Surfaces are flat colour. Separation comes from hairline borders, the muted ground for code, and whitespace; never from shadow or gradient.
+
+## Motion
+
+Motion shows the session advancing; it never decorates. Content is in the DOM and visible by default, and every moment below is stilled by `prefers-reduced-motion: reduce`.
+
+| Moment | Where | Trigger | Behaviour |
+|---|---|---|---|
+| Tree prints | landing first section | page load | tree lines, then `cd my-app` and `pnpm dev`, appear 40ms apart in one hard step each (no fade, no slide), rows holding their space; the file count runs 0 to 143 over 280ms. CSS only. |
+| Copy ripple | landing copy buttons | clipboard write succeeds | one ring through the existing dot canvas, 1000ms (see Elevation & Depth). |
+| Marker travel | section nav, docs rail | active section or route changes | the BrandMark moves by transform, 240ms, `cubic-bezier(0.16, 1, 0.3, 1)`; page content swaps instantly. |
+| Cursor travel | transcript commands | active section changes | one block cursor moves between `$` lines, 300ms, same curve; the blink restarts on arrival. |
+| Theme `clear` | every page | theme toggle | view transition: the old page stays, the new theme is revealed top to bottom by `clip-path: inset()` in 12 hard steps over 400ms; instant where view transitions are unsupported. |
+
+Marker and cursor travel use Motion `layoutId` under `LazyMotion` with `domMax` loaded as a separate chunk, inside `MotionConfig reducedMotion="user"`.
+
+### Named Rules
+**The Hard Step Rule.** Terminal-native motion moves in hard steps (printing, the cursor blink, the theme clear); only things that travel (markers, the cursor, the ripple) ease, and they ease out.
 
 ## Shapes
 
@@ -250,17 +267,17 @@ Every corner is square (0px). Borders are 1px hairlines in `border`; the only ot
 Two buttons exist, both small, square and mono.
 - **Shape:** square corners (0px).
 - **Copy:** Portfolio Orange fill, On Orange text, uppercase button label, 0.25rem by 0.625rem padding, sitting at the end of the create command's line; hover inverts to ink fill with ground text over 150ms. Clicking writes the command to the clipboard and adds a status line below: `copied` in mauve, or `copy failed` in orange text with the fallback instruction in muted ink.
-- **Theme toggle:** no fill, 1px hairline outline, muted ink label text `theme: dark` / `theme: light`, 0.25rem by 0.625rem padding; hover shifts to ink over 150ms. Switching the theme suppresses all transitions for one frame.
+- **Theme toggle:** no fill, 1px hairline outline, muted ink label text `theme: dark` / `theme: light`, 0.25rem by 0.625rem padding; hover shifts to ink over 150ms. Switching the theme runs the `clear` view transition (see Motion) and suppresses all other transitions for one frame.
 - **Focus:** global 2px Readable Orange outline at 3px offset.
 
 ### Navigation
 - **Top bar:** name block left, mono label nav right (`docs`, `changelog`, `github`, `npm`, theme toggle) with 1.5rem gaps; wraps under the name block on phones. Links are muted ink, ink on hover (150ms), Readable Orange when active.
-- **Section nav (landing):** sticky at the viewport bottom on the ground colour, mono label links with 1.75rem gaps. The active section's label turns Readable Orange and gains a BrandMark in Portfolio Orange before it.
-- **Docs rail:** mono label list; every item reserves a 2ch marker slot that shows the BrandMark only on the active page, label in Readable Orange. An `on this page` group below a hairline lists the page's h2 headings in muted ink.
+- **Section nav (landing):** sticky at the viewport bottom on the ground colour, mono label links with 1.75rem gaps. The active section's label turns Readable Orange; one BrandMark in Portfolio Orange sits in the gap before it and travels between labels, so labels never shift.
+- **Docs rail:** mono label list; every item reserves a 2ch marker slot; one BrandMark travels to the active page's slot, label in Readable Orange. An `on this page` group below a hairline lists the page's h2 headings in muted ink.
 
 ### Transcript (signature component)
 - **Line:** two-column grid, glyph in Readable Orange in the 1.75rem gutter, body parts wrapping at 0.9rem gaps. Default glyph `│`.
-- **Command:** glyph `$`, command text in ink, inline code that does not wrap. The command matching the section in view carries a block cursor: 0.6em by 1.15em, ink fill, blinking at 1.1s with a hard step; still under reduced motion.
+- **Command:** glyph `$`, command text in ink, inline code that does not wrap. The command matching the section in view carries a block cursor: 0.6em by 1.15em, ink fill, blinking at 1.1s with a hard step; one cursor travels between commands as the section changes; still under reduced motion.
 - **Prompt:** glyph `◇`, the question in ink, the answer in mauve, the flag in muted ink.
 - **Output:** muted ink text; preformatted output and trees scroll horizontally rather than wrap.
 - **Output table:** collapsed, left-aligned, baseline-aligned cells with 1.5rem right padding and no rules; header in muted ink at 400; first column in ink and unwrapped, second in muted ink.
@@ -285,7 +302,7 @@ BrandMark, hairline rule, BrandMark across the 58rem column, decorative and hidd
 - **Do** align continuation output to the 1.75rem gutter (The Gutter Rule).
 - **Do** use the BrandMark as the only marker for active and section states.
 - **Do** check every colour pair on both grounds; the theme toggle and OS scheme can show either.
-- **Do** still the cursor and the canvas under `prefers-reduced-motion: reduce`.
+- **Do** still every Motion moment under `prefers-reduced-motion: reduce`; content and state stay visible.
 
 ### Don't:
 - **Don't** add shadows, gradients, blur or tinted panels; the world is flat colour (The Flat Ground Rule).
@@ -293,4 +310,4 @@ BrandMark, hairline rule, BrandMark across the 58rem column, decorative and hidd
 - **Don't** use `primary` orange as text on the light ground; it fails 4.5:1 there.
 - **Don't** italicise the headline `em`; the second tone is colour, not slant.
 - **Don't** add an icon set or icon font; markers are the BrandMark and the transcript's own glyphs (`$`, `◇`, `│`, tree rules).
-- **Don't** add a third moving element; motion is the cursor and the dot canvas only.
+- **Don't** add motion outside the Motion inventory: no fade-and-rise reveals, no typing effects, no springs or bounces, no motion in docs prose.

@@ -180,6 +180,70 @@ a {
   }
 }
 
+@property --tally {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 143;
+}
+
+@keyframes print-wait {
+  from,
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes tally-count {
+  from {
+    --tally: 0;
+  }
+}
+
+@keyframes theme-clear {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .print {
+    animation: print-wait calc(var(--i) * 40ms) linear;
+  }
+
+  .tally-value {
+    display: none;
+  }
+
+  .print .cursor {
+    animation-delay: calc(var(--i) * 40ms);
+  }
+
+  .tally::before {
+    display: inline-block;
+    min-width: 3ch;
+    counter-reset: tally var(--tally);
+    content: counter(tally);
+    animation: tally-count 280ms linear;
+  }
+
+  ::view-transition-image-pair(root) {
+    isolation: auto;
+  }
+
+  ::view-transition-old(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(root) {
+    animation: theme-clear 400ms steps(12, end) both;
+    mix-blend-mode: normal;
+  }
+}
+
 .out-table {
   border-collapse: collapse;
   width: 100%;
