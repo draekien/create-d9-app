@@ -20,6 +20,7 @@ jobs:
       pull-requests: read
     outputs:
       code: ${{ steps.filter.outputs.code }}
+      site: ${{ steps.filter.outputs.site }}
     steps:
       - uses: dorny/paths-filter@v4.0.3
         id: filter
@@ -33,6 +34,17 @@ jobs:
               - '!.changeset/**'
               - '!.draekien/**'
               - '!LICENSE'
+              - '!apps/site/**'
+              - '!.github/workflows/pages.yml'
+            site:
+              - 'apps/site/**'
+              - 'packages/cli/CHANGELOG.md'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+              - 'biome.json'
+              - '.github/workflows/pr.yml'
+              - '.github/workflows/pages.yml'
 
   lint:
     name: lint
@@ -75,6 +87,26 @@ jobs:
       - run: pnpm build
       - run: pnpm test
 
+  site:
+    name: site
+    needs: changes
+    if: needs.changes.outputs.site == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6.1.0
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm --filter site typecheck
+      - run: pnpm --filter site build
+        env:
+          SITE_BASE_PATH: /
+      - run: pnpm --filter site test
+
   release-note:
     name: release note
     if: github.head_ref != 'changeset-release/main'
@@ -97,17 +129,20 @@ jobs:
   ci:
     name: ci
     runs-on: ubuntu-latest
-    needs: [changes, lint, test, release-note]
+    needs: [changes, lint, test, site, release-note]
     if: always()
     env:
       CODE: ${{ needs.changes.outputs.code }}
+      SITE_CHANGED: ${{ needs.changes.outputs.site }}
       CHANGES: ${{ needs.changes.result }}
       LINT: ${{ needs.lint.result }}
       TEST: ${{ needs.test.result }}
+      SITE: ${{ needs.site.result }}
       RELEASE_NOTE: ${{ needs.release-note.result }}
     steps:
       - run: |
           test "$CHANGES" = success || exit 1
           test "$RELEASE_NOTE" = success -o "$RELEASE_NOTE" = skipped || exit 1
+          test "$SITE_CHANGED" = false -o "$SITE" = success || exit 1
           test "$CODE" = false && exit 0
           test "$LINT" = success -a "$TEST" = success

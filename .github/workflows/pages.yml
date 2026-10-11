@@ -5,6 +5,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - apps/site/**
+      - packages/cli/CHANGELOG.md
+      - pnpm-lock.yaml
+      - pnpm-workspace.yaml
+      - turbo.json
+      - .github/workflows/pages.yml
 
 permissions:
   contents: read
