@@ -287,7 +287,7 @@ a {
   max-width: 60ch;
 }
 
-.prose > .table-scroll {
+.prose > :is(.table-scroll, pre) {
   max-width: 58rem;
 }
 
