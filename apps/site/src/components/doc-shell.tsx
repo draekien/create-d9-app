@@ -76,8 +76,8 @@ export function DocShell({
 
   return (
     <div className="grid gap-x-16 gap-y-8 px-5 pt-10 pb-24 sm:px-10 sm:pt-16 lg:grid-cols-[14rem_minmax(0,1fr)]">
-      <details className="border-y border-border py-3 font-mono text-sm lg:hidden">
-        <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
+      <details className="group border-y border-border py-3 font-mono text-sm lg:hidden">
+        <summary className="grid cursor-pointer list-none grid-cols-[1.75rem_minmax(0,1fr)] text-muted-foreground before:text-primary-text before:content-['◇'] group-open:before:content-['│'] hover:text-foreground marker:content-[''] [&::-webkit-details-marker]:hidden">
           pages
         </summary>
         <nav aria-label="Docs" className="mt-3">
