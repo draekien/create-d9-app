@@ -236,7 +236,7 @@ export function Landing() {
             <span className="text-muted-foreground">saveExact: true</span>
           </Line>
           <Command>/upgrade-dependencies</Command>
-          <pre className="tx-pre">{`| Package        | Old   | New   | Type  |
+          <pre className="tx-pre tx-pre-wrap">{`| Package        | Old   | New   | Type  |
 | -------------- | ----- | ----- | ----- |
 | @base-ui/react | 1.8.0 | 1.9.0 | minor |
 
