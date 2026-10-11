@@ -138,6 +138,12 @@ a {
   scrollbar-width: thin;
 }
 
+@media (max-width: 40rem) {
+  .tx-pre-wrap {
+    white-space: pre-wrap;
+  }
+}
+
 .tx-tree {
   padding-left: 1.75rem;
 }
