@@ -1,5 +1,11 @@
 # @draekien/create-d9-app
 
+## 0.0.10
+
+### Patch Changes
+
+- 0749add: fix: initialise git before install so lefthook's postinstall finds the repository
+
 ## 0.0.9
 
 ### Patch Changes
