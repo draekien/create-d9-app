@@ -286,7 +286,7 @@ Two buttons exist, both small, square and mono.
 - **Links:** mauve, underlined (1px, 0.22em offset), ink on hover.
 - **Headings:** mono with a muted `#` anchor that turns Readable Orange on heading hover.
 - **Code:** inline code on the muted ground, 0.1em by 0.35em padding; blocks on the muted ground with a hairline outline, highlighted with the site theme (keywords and tags in Readable Orange; strings, numbers and attributes in mauve; comments in muted ink).
-- **Tables:** 0.9375rem, tabular numerals, hairline row rules, mono 0.8125rem headers in muted ink; wide tables scroll.
+- **Tables:** 0.9375rem, tabular numerals, hairline row rules, mono 0.8125rem headers in muted ink. Tables take the 58rem output width, not the 60ch prose measure. Code in a cell never wraps, so flags stay whole; wide tables scroll. Below 40rem two-column tables drop their header and stack each row (code, then text), as the landing output tables do.
 - **Quotes and alerts:** 1px Readable Orange left rule, 1rem indent, muted ink text, mono alert title in Readable Orange.
 - **Changelog:** the newest release in full colour, every older release in muted ink.
 

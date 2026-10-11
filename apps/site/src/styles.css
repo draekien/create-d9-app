@@ -281,7 +281,14 @@ a {
   font-size: 1.0625rem;
   line-height: 1.7;
   color: var(--foreground);
+}
+
+.prose > * {
   max-width: 60ch;
+}
+
+.prose > .table-scroll {
+  max-width: 58rem;
 }
 
 .prose > * + * {
@@ -375,6 +382,11 @@ a {
   overflow-wrap: anywhere;
 }
 
+.prose td code {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+
 .prose .faded,
 .prose .faded strong,
 .prose .faded a,
@@ -450,7 +462,26 @@ a {
   padding-left: 0;
 }
 
-.prose td:first-child code {
-  overflow-wrap: normal;
-  white-space: nowrap;
+@media (max-width: 40rem) {
+  .prose table:not(:has(th:nth-child(3))) thead {
+    display: none;
+  }
+
+  .prose table:not(:has(th:nth-child(3))) :is(tr, td) {
+    display: block;
+    padding-right: 0;
+  }
+
+  .prose table:not(:has(th:nth-child(3))) td:first-child {
+    border-bottom: 0;
+    padding-bottom: 0.2rem;
+  }
+
+  .prose table:not(:has(th:nth-child(3))) td + td {
+    padding-top: 0;
+  }
+
+  .prose table:not(:has(th:nth-child(3))) td:first-child code {
+    white-space: normal;
+  }
 }
