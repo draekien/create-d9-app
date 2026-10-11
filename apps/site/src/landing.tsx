@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router"
 import * as m from "motion/react-m"
-import { type CSSProperties, type ReactNode, useEffect, useState } from "react"
+import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react"
 import { BrandMark, Mark } from "./components/mark.tsx"
 import { Command, CopyCommand, Line, Prompt } from "./components/transcript.tsx"
 import { CursorTravel } from "./cursor-travel.ts"
@@ -173,6 +173,17 @@ function OutputTable({
 
 export function Landing() {
   const { active, travels } = useActiveSection()
+  const sectionNav = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    const nav = sectionNav.current
+    const item = nav?.querySelector<HTMLElement>(`a[href="#${active}"]`)
+    if (!nav || !item || nav.scrollWidth <= nav.clientWidth) return
+    nav.scrollTo({
+      left: item.offsetLeft - (nav.clientWidth - item.offsetWidth) / 2,
+      behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    })
+  }, [active])
 
   return (
     <CursorTravel value={travels}>
@@ -333,23 +344,25 @@ held: major
           </div>
         </section>
 
-        <nav
+        <m.nav
+          ref={sectionNav}
+          layoutScroll
           aria-label="Sections"
-          className="sticky bottom-0 mt-24 -mx-5 bg-background px-5 py-4 font-mono text-sm sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
+          className="sticky bottom-0 mt-24 -mx-5 overflow-x-auto bg-background px-5 py-4 font-mono text-sm [scrollbar-width:none] pointer-coarse:py-0 sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
         >
-          <ul className="flex flex-wrap gap-x-7 gap-y-2">
+          <ul className="flex w-max gap-x-7 sm:w-auto sm:flex-wrap sm:gap-y-2">
             {sections.map(({ id, label }) => (
               <li key={id} className="whitespace-nowrap">
                 <a
                   href={`#${id}`}
                   aria-current={active === id ? "true" : undefined}
-                  className="relative text-muted-foreground transition-colors duration-150 hover:text-foreground aria-[current]:text-primary-text"
+                  className="relative inline-block text-muted-foreground transition-colors pointer-coarse:py-3 duration-150 hover:text-foreground aria-[current]:text-primary-text"
                 >
                   {active === id ? (
                     <m.span
                       layoutId="section-marker"
                       transition={travels ? markerTravel : markerJump}
-                      className="absolute top-0 right-full mr-1.5"
+                      className="absolute inset-y-0 right-full mr-1.5 flex items-center"
                     >
                       <BrandMark className="text-primary" />
                     </m.span>
@@ -359,7 +372,7 @@ held: major
               </li>
             ))}
           </ul>
-        </nav>
+        </m.nav>
       </main>
     </CursorTravel>
   )

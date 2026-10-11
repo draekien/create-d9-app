@@ -100,7 +100,7 @@ export function CopyCommand({ active = false }: { active?: boolean }) {
           <button
             type="button"
             onClick={copy}
-            className="cursor-pointer bg-primary px-2.5 py-1 text-[0.6875rem] uppercase leading-none tracking-[0.12em] text-on-primary hover:bg-foreground hover:text-background"
+            className="relative cursor-pointer bg-primary px-2.5 py-1 pointer-coarse:after:absolute pointer-coarse:after:-inset-3 pointer-coarse:after:content-[''] text-[0.6875rem] uppercase leading-none tracking-[0.12em] text-on-primary hover:bg-foreground hover:text-background"
           >
             copy
           </button>

@@ -227,6 +227,7 @@ Docs pages use a two-column grid from 1024px (14rem rail, flexible article, 4rem
 
 Responsive behaviour observed in the build:
 - Below 640px the tree renders as a list (path, then description beneath) instead of a padded preformatted block; prompt answers and flags wrap onto their own lines; the copy button wraps under the command.
+- On touch (`pointer: coarse`) every nav link has a 44px tap height from padding, the section nav loses its vertical padding to stay 44px tall, and the copy button and theme toggle extend their tap area with an invisible `::after` rather than growing the drawn button.
 - Below 40rem the output tables drop their header row and stack each row as two lines.
 - On phones the first viewport is the still headline, the command and the prompts. The blinking cursor waits at the live prompt below the fold, and the canvas has no pointer to answer on touch, so neither moving element is in the phone first viewport.
 
@@ -271,8 +272,8 @@ Two buttons exist, both small, square and mono.
 - **Focus:** global 2px Readable Orange outline at 3px offset.
 
 ### Navigation
-- **Top bar:** name block left, mono label nav right (`docs`, `changelog`, `github`, `npm`, theme toggle) with 1.5rem gaps; wraps under the name block on phones. Links are muted ink, ink on hover (150ms), Readable Orange when active.
-- **Section nav (landing):** sticky at the viewport bottom on the ground colour, mono label links with 1.75rem gaps. The active section's label turns Readable Orange; one BrandMark in Portfolio Orange sits in the gap before it and travels between labels, so labels never shift.
+- **Top bar:** name block left, mono label nav right (`docs`, `changelog`, `github`, `npm`, theme toggle) with 1.5rem gaps; below 640px the nav stays beside the name block, right-aligned with 1rem gaps, wrapping onto a second row instead of under the name block. Links are muted ink, ink on hover (150ms), Readable Orange when active.
+- **Section nav (landing):** sticky at the viewport bottom on the ground colour, mono label links with 1.75rem gaps. The active section's label turns Readable Orange; one BrandMark in Portfolio Orange sits in the gap before it and travels between labels, so labels never shift. Below 640px it is one row that scrolls horizontally (no scrollbar) and keeps the active label centred.
 - **Docs rail:** mono label list; every item reserves a 2ch marker slot; one BrandMark travels to the active page's slot, label in Readable Orange. An `on this page` group below a hairline lists the page's h2 headings in muted ink.
 
 ### Transcript (signature component)
