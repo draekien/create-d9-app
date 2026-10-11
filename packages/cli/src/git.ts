@@ -17,13 +17,9 @@ function identityArgs(cwd: string): string[] {
   return args
 }
 
-export function initGit(cwd: string): { ok: boolean; skipped: boolean; output: string } {
-  if (isInsideRepo(cwd)) return { ok: true, skipped: true, output: "" }
-  const steps = [
-    ["init"],
-    ["add", "-A"],
-    [...identityArgs(cwd), "commit", "-m", "chore: initial commit"],
-  ]
+type GitResult = { ok: boolean; skipped: boolean; output: string }
+
+function run(cwd: string, steps: string[][]): GitResult {
   for (const step of steps) {
     const result = git(cwd, step)
     if (result.status !== 0) {
@@ -31,4 +27,16 @@ export function initGit(cwd: string): { ok: boolean; skipped: boolean; output: s
     }
   }
   return { ok: true, skipped: false, output: "" }
+}
+
+export function initRepo(cwd: string): GitResult {
+  if (isInsideRepo(cwd)) return { ok: true, skipped: true, output: "" }
+  return run(cwd, [["init"]])
+}
+
+export function commitAll(cwd: string): GitResult {
+  return run(cwd, [
+    ["add", "-A"],
+    [...identityArgs(cwd), "commit", "-m", "chore: initial commit"],
+  ])
 }

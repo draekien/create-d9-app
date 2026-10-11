@@ -3,7 +3,7 @@ import fs from "node:fs"
 import os from "node:os"
 import path from "node:path"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { initGit } from "../src/git.ts"
+import { commitAll, initRepo } from "../src/git.ts"
 
 const roots: string[] = []
 
@@ -26,12 +26,18 @@ afterEach(() => {
   }
 })
 
-describe("initGit", { timeout: 30_000 }, () => {
+describe("git", { timeout: 30_000 }, () => {
   it("creates a repository with exactly one commit", () => {
     const dir = tempDir()
-    const result = initGit(dir)
+    const result = initRepo(dir)
     expect(result).toMatchObject({ ok: true, skipped: false })
+    expect(fs.existsSync(path.join(dir, ".git"))).toBe(true)
+    fs.writeFileSync(path.join(dir, "pnpm-lock.yaml"), "lock\n")
+    expect(commitAll(dir)).toMatchObject({ ok: true })
     expect(git(dir, "rev-list", "--count", "HEAD").stdout).toBe("1")
+    expect(git(dir, "ls-tree", "-r", "--name-only", "HEAD").stdout.split("\n")).toContain(
+      "pnpm-lock.yaml",
+    )
     expect(git(dir, "log", "-1", "--format=%s").stdout).toBe("chore: initial commit")
     expect(git(dir, "status", "--porcelain").stdout).toBe("")
   })
@@ -42,7 +48,7 @@ describe("initGit", { timeout: 30_000 }, () => {
     const child = path.join(parent, "child")
     fs.mkdirSync(child)
     fs.writeFileSync(path.join(child, "file.txt"), "content\n")
-    const result = initGit(child)
+    const result = initRepo(child)
     expect(result).toMatchObject({ ok: true, skipped: true })
     expect(fs.existsSync(path.join(child, ".git"))).toBe(false)
     expect(git(parent, "rev-list", "--all", "--count").stdout).toBe("0")
@@ -57,9 +63,9 @@ describe("initGit", { timeout: 30_000 }, () => {
     vi.stubEnv("GIT_AUTHOR_EMAIL", undefined)
     vi.stubEnv("GIT_COMMITTER_NAME", undefined)
     vi.stubEnv("GIT_COMMITTER_EMAIL", undefined)
-    const result = initGit(dir)
+    expect(initRepo(dir).ok).toBe(true)
+    const result = commitAll(dir)
     expect(result.ok, result.output).toBe(true)
-    expect(result.skipped).toBe(false)
     expect(git(dir, "rev-list", "--count", "HEAD").stdout).toBe("1")
   })
 })
