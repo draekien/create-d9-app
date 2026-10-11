@@ -8,168 +8,89 @@
         "role": "neutral",
         "displayName": "Ground",
         "canonical": "light-dark(oklch(0.9911 0.0055 211.04), oklch(0.21 0.004 318))",
-        "grounds": { "light": "oklch(0.9911 0.0055 211.04)", "dark": "oklch(0.21 0.004 318)" },
-        "source": "portfolio app/globals.css",
-        "tonalRamp": [
-          "oklch(0.15 0.0055 211.04)",
-          "oklch(0.264 0.0055 211.04)",
-          "oklch(0.379 0.0055 211.04)",
-          "oklch(0.493 0.0055 211.04)",
-          "oklch(0.607 0.0055 211.04)",
-          "oklch(0.721 0.0055 211.04)",
-          "oklch(0.836 0.0055 211.04)",
-          "oklch(0.95 0.0055 211.04)"
-        ]
+        "grounds": {
+          "light": "oklch(0.9911 0.0055 211.04)",
+          "dark": "oklch(0.21 0.004 318)"
+        },
+        "source": "portfolio app/globals.css"
       },
       "foreground": {
         "role": "neutral",
         "displayName": "Ink",
         "canonical": "light-dark(oklch(0.2178 0 0), oklch(0.8877 0.0288 218.97))",
-        "grounds": { "light": "oklch(0.2178 0 0)", "dark": "oklch(0.8877 0.0288 218.97)" },
-        "source": "portfolio app/globals.css",
-        "tonalRamp": [
-          "oklch(0.15 0.0288 218.97)",
-          "oklch(0.264 0.0288 218.97)",
-          "oklch(0.379 0.0288 218.97)",
-          "oklch(0.493 0.0288 218.97)",
-          "oklch(0.607 0.0288 218.97)",
-          "oklch(0.721 0.0288 218.97)",
-          "oklch(0.836 0.0288 218.97)",
-          "oklch(0.95 0.0288 218.97)"
-        ]
+        "grounds": {
+          "light": "oklch(0.2178 0 0)",
+          "dark": "oklch(0.8877 0.0288 218.97)"
+        },
+        "source": "portfolio app/globals.css"
       },
       "primary": {
         "role": "primary",
         "displayName": "Portfolio Orange",
         "canonical": "oklch(0.6823 0.176 46.72)",
-        "source": "portfolio app/globals.css; favicon.svg carries it as #f26f21",
-        "tonalRamp": [
-          "oklch(0.15 0.176 46.72)",
-          "oklch(0.264 0.176 46.72)",
-          "oklch(0.379 0.176 46.72)",
-          "oklch(0.493 0.176 46.72)",
-          "oklch(0.607 0.176 46.72)",
-          "oklch(0.721 0.176 46.72)",
-          "oklch(0.836 0.176 46.72)",
-          "oklch(0.95 0.176 46.72)"
-        ]
+        "source": "portfolio app/globals.css; favicon.svg carries it as #f26f21"
       },
       "primary-text": {
         "role": "primary",
         "displayName": "Readable Orange",
         "canonical": "light-dark(oklch(0.55 0.15 46.72), oklch(0.6823 0.176 46.72))",
-        "grounds": { "light": "oklch(0.55 0.15 46.72)", "dark": "oklch(0.6823 0.176 46.72)" },
-        "source": "site addition: portfolio orange fails 4.5:1 as text on the light ground",
-        "tonalRamp": [
-          "oklch(0.15 0.15 46.72)",
-          "oklch(0.264 0.15 46.72)",
-          "oklch(0.379 0.15 46.72)",
-          "oklch(0.493 0.15 46.72)",
-          "oklch(0.607 0.15 46.72)",
-          "oklch(0.721 0.15 46.72)",
-          "oklch(0.836 0.15 46.72)",
-          "oklch(0.95 0.15 46.72)"
-        ]
+        "grounds": {
+          "light": "oklch(0.55 0.15 46.72)",
+          "dark": "oklch(0.6823 0.176 46.72)"
+        },
+        "source": "site addition: portfolio orange fails 4.5:1 as text on the light ground"
       },
       "on-primary": {
         "role": "primary",
         "displayName": "On Orange",
         "canonical": "oklch(0.21 0.004 318)",
-        "source": "site addition: text on an orange fill, the dark ground value on both grounds",
-        "tonalRamp": [
-          "oklch(0.15 0.004 318)",
-          "oklch(0.264 0.004 318)",
-          "oklch(0.379 0.004 318)",
-          "oklch(0.493 0.004 318)",
-          "oklch(0.607 0.004 318)",
-          "oklch(0.721 0.004 318)",
-          "oklch(0.836 0.004 318)",
-          "oklch(0.95 0.004 318)"
-        ]
+        "source": "site addition: text on an orange fill, the dark ground value on both grounds"
       },
       "secondary": {
         "role": "secondary",
         "displayName": "Mauve",
         "canonical": "light-dark(oklch(0.38 0.09 318.07), oklch(0.74 0.0909 318.07))",
-        "grounds": { "light": "oklch(0.38 0.09 318.07)", "dark": "oklch(0.74 0.0909 318.07)" },
-        "source": "portfolio app/globals.css",
-        "tonalRamp": [
-          "oklch(0.15 0.09 318.07)",
-          "oklch(0.264 0.09 318.07)",
-          "oklch(0.379 0.09 318.07)",
-          "oklch(0.493 0.09 318.07)",
-          "oklch(0.607 0.09 318.07)",
-          "oklch(0.721 0.09 318.07)",
-          "oklch(0.836 0.09 318.07)",
-          "oklch(0.95 0.09 318.07)"
-        ]
+        "grounds": {
+          "light": "oklch(0.38 0.09 318.07)",
+          "dark": "oklch(0.74 0.0909 318.07)"
+        },
+        "source": "portfolio app/globals.css"
       },
       "muted": {
         "role": "neutral",
         "displayName": "Muted Ground",
         "canonical": "light-dark(oklch(0.97 0.001 106.424), oklch(0.268 0.007 34.298))",
-        "grounds": { "light": "oklch(0.97 0.001 106.424)", "dark": "oklch(0.268 0.007 34.298)" },
-        "source": "portfolio app/globals.css",
-        "tonalRamp": [
-          "oklch(0.15 0.007 34.298)",
-          "oklch(0.264 0.007 34.298)",
-          "oklch(0.379 0.007 34.298)",
-          "oklch(0.493 0.007 34.298)",
-          "oklch(0.607 0.007 34.298)",
-          "oklch(0.721 0.007 34.298)",
-          "oklch(0.836 0.007 34.298)",
-          "oklch(0.95 0.007 34.298)"
-        ]
+        "grounds": {
+          "light": "oklch(0.97 0.001 106.424)",
+          "dark": "oklch(0.268 0.007 34.298)"
+        },
+        "source": "portfolio app/globals.css"
       },
       "muted-foreground": {
         "role": "neutral",
         "displayName": "Muted Ink",
         "canonical": "light-dark(oklch(0.52 0.013 58.071), oklch(0.709 0.01 56.259))",
-        "grounds": { "light": "oklch(0.52 0.013 58.071)", "dark": "oklch(0.709 0.01 56.259)" },
-        "source": "portfolio app/globals.css",
-        "tonalRamp": [
-          "oklch(0.15 0.013 58.071)",
-          "oklch(0.264 0.013 58.071)",
-          "oklch(0.379 0.013 58.071)",
-          "oklch(0.493 0.013 58.071)",
-          "oklch(0.607 0.013 58.071)",
-          "oklch(0.721 0.013 58.071)",
-          "oklch(0.836 0.013 58.071)",
-          "oklch(0.95 0.013 58.071)"
-        ]
+        "grounds": {
+          "light": "oklch(0.52 0.013 58.071)",
+          "dark": "oklch(0.709 0.01 56.259)"
+        },
+        "source": "portfolio app/globals.css"
       },
       "border": {
         "role": "neutral",
         "displayName": "Hairline",
         "canonical": "light-dark(oklch(0.923 0.003 48.717), oklch(1 0 0 / 10%))",
-        "grounds": { "light": "oklch(0.923 0.003 48.717)", "dark": "oklch(1 0 0 / 10%)" },
-        "source": "portfolio app/globals.css",
-        "tonalRamp": [
-          "oklch(0.15 0.003 48.717)",
-          "oklch(0.264 0.003 48.717)",
-          "oklch(0.379 0.003 48.717)",
-          "oklch(0.493 0.003 48.717)",
-          "oklch(0.607 0.003 48.717)",
-          "oklch(0.721 0.003 48.717)",
-          "oklch(0.836 0.003 48.717)",
-          "oklch(0.95 0.003 48.717)"
-        ]
+        "grounds": {
+          "light": "oklch(0.923 0.003 48.717)",
+          "dark": "oklch(1 0 0 / 10%)"
+        },
+        "source": "portfolio app/globals.css"
       },
       "canvas-dot": {
         "role": "neutral",
         "displayName": "Dot",
         "canonical": "oklch(0.5579 0.0909 318.07 / 0.10)",
-        "source": "portfolio dot canvas; constant in src/components/background-fx.tsx",
-        "tonalRamp": [
-          "oklch(0.15 0.0909 318.07)",
-          "oklch(0.264 0.0909 318.07)",
-          "oklch(0.379 0.0909 318.07)",
-          "oklch(0.493 0.0909 318.07)",
-          "oklch(0.607 0.0909 318.07)",
-          "oklch(0.721 0.0909 318.07)",
-          "oklch(0.836 0.0909 318.07)",
-          "oklch(0.95 0.0909 318.07)"
-        ]
+        "source": "portfolio dot canvas; constant in src/components/background-fx.tsx"
       }
     },
     "typographyMeta": {
@@ -177,8 +98,14 @@
         "displayName": "Display",
         "purpose": "Landing h1 only; 2.25rem below 768px, 4rem from 768px."
       },
-      "headline": { "displayName": "Headline", "purpose": "Landing section headings, two-tone." },
-      "page-title": { "displayName": "Page Title", "purpose": "Docs, changelog and 404 h1." },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Landing section headings, two-tone."
+      },
+      "page-title": {
+        "displayName": "Page Title",
+        "purpose": "Docs, changelog and 404 h1."
+      },
       "title": {
         "displayName": "Title",
         "purpose": "Prose h2; h3 1.0625rem and h4 1rem at the same weight and tracking."
@@ -191,7 +118,10 @@
         "displayName": "Lead",
         "purpose": "Landing lead (1.0625rem below 640px) and docs page descriptions."
       },
-      "body": { "displayName": "Body", "purpose": "Prose at max 60ch; strong at 650." },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose at max 60ch; strong at 650."
+      },
       "transcript": {
         "displayName": "Transcript",
         "purpose": "Every transcript line, tree and output table."
@@ -200,8 +130,14 @@
         "displayName": "Label",
         "purpose": "Top bar nav, theme toggle, section nav, docs rail."
       },
-      "code": { "displayName": "Code", "purpose": "Prose code blocks." },
-      "button-label": { "displayName": "Button Label", "purpose": "Copy button only, uppercase." }
+      "code": {
+        "displayName": "Code",
+        "purpose": "Prose code blocks."
+      },
+      "button-label": {
+        "displayName": "Button Label",
+        "purpose": "Copy button only, uppercase."
+      }
     },
     "shadows": [],
     "motion": [
@@ -227,10 +163,22 @@
       }
     ],
     "breakpoints": [
-      { "name": "sm", "value": "640px" },
-      { "name": "table-stack", "value": "40rem" },
-      { "name": "md", "value": "768px" },
-      { "name": "lg", "value": "1024px" }
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "table-stack",
+        "value": "40rem"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
     ]
   },
   "components": [
