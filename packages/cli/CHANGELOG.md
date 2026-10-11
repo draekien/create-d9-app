@@ -1,5 +1,12 @@
 # @draekien/create-d9-app
 
+## 0.0.9
+
+### Patch Changes
+
+- 5687258: docs: move reference content into the site docs and trim the README
+- 9ee921c: docs: point the documentation link at create-d9-app.wpei.me
+
 ## 0.0.8
 
 ### Patch Changes
