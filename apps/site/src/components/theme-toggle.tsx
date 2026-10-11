@@ -9,7 +9,7 @@ function withoutTransitions(change: () => void) {
   requestAnimationFrame(() => style.remove())
 }
 
-function toggleTheme() {
+function switchTheme() {
   const root = document.documentElement
   const current =
     root.dataset.theme ?? (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
@@ -20,6 +20,14 @@ function toggleTheme() {
   try {
     localStorage.setItem(themeKey, next)
   } catch {}
+}
+
+function toggleTheme() {
+  if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.startViewTransition(switchTheme)
+  } else {
+    switchTheme()
+  }
 }
 
 export function ThemeToggle() {

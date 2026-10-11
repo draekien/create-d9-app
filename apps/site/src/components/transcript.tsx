@@ -1,4 +1,10 @@
-import { type ReactNode, useState } from "react"
+import * as m from "motion/react-m"
+import { type MouseEvent, type ReactNode, use, useState } from "react"
+import { CursorTravel } from "../cursor-travel.ts"
+import { ripple } from "../ripple.ts"
+
+const travel = { layout: { duration: 0.3, ease: [0.16, 1, 0.3, 1] } } as const
+const jump = { layout: { duration: 0 } } as const
 
 export function Line({
   glyph = "│",
@@ -28,12 +34,21 @@ export function Command({
   action?: ReactNode
   children?: ReactNode
 }) {
+  const travels = use(CursorTravel)
+
   return (
     <Line glyph="$">
       <span className="flex w-full flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
         <code className="text-foreground">
           {children}
-          {active ? <span className="cursor" aria-hidden="true" /> : null}
+          {active ? (
+            <m.span
+              layoutId="cursor"
+              transition={travels ? travel : jump}
+              className="cursor"
+              aria-hidden="true"
+            />
+          ) : null}
         </code>
         {action}
       </span>
@@ -66,10 +81,12 @@ type CopyStatus = "idle" | "copied" | "failed"
 export function CopyCommand({ active = false }: { active?: boolean }) {
   const [status, setStatus] = useState<CopyStatus>("idle")
 
-  async function copy() {
+  async function copy(event: MouseEvent<HTMLButtonElement>) {
+    const button = event.currentTarget.getBoundingClientRect()
     try {
       await navigator.clipboard.writeText(createCommand)
       setStatus("copied")
+      ripple(button.left + button.width / 2, button.top + button.height / 2)
     } catch {
       setStatus("failed")
     }

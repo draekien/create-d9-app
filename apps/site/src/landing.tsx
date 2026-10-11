@@ -1,7 +1,9 @@
 import { Link } from "@tanstack/react-router"
-import { type ReactNode, useEffect, useState } from "react"
+import * as m from "motion/react-m"
+import { type CSSProperties, type ReactNode, useEffect, useState } from "react"
 import { BrandMark, Mark } from "./components/mark.tsx"
 import { Command, CopyCommand, Line, Prompt } from "./components/transcript.tsx"
+import { CursorTravel } from "./cursor-travel.ts"
 
 const sections = [
   { id: "run", label: "Run" },
@@ -10,6 +12,9 @@ const sections = [
   { id: "what-you-get", label: "What you get" },
   { id: "minimal", label: "Minimal" },
 ] as const
+
+const markerTravel = { layout: { duration: 0.24, ease: [0.16, 1, 0.3, 1] } } as const
+const markerJump = { layout: { duration: 0 } } as const
 
 type SectionId = (typeof sections)[number]["id"]
 
@@ -23,9 +28,11 @@ const tree = [
   ["└── biome.json", "GritQL plugins for React and TanStack"],
 ] as const
 
-const treeText = ["my-app/", ...tree.map(([path, about]) => `${path.padEnd(25)}${about}`)].join(
-  "\n",
-)
+const treeLines = ["my-app/", ...tree.map(([path, about]) => `${path.padEnd(25)}${about}`)]
+
+function printOrder(index: number) {
+  return { "--i": index } as CSSProperties
+}
 
 const listing =
   ".agents  .biome  .claude  .codex  .cursor  .git  .gitignore  .intent  .mcp.json  AGENTS.md  CLAUDE.md  apps  biome.json  lefthook.yml  node_modules  package.json  packages  pnpm-lock.yaml  pnpm-workspace.yaml  scripts  skills-lock.json  tsconfig.json  turbo.json"
@@ -61,10 +68,12 @@ const rootCommands = [
   ["pnpm test", "vitest run in every package"],
 ] as const
 
-function useActiveSection(): SectionId {
+function useActiveSection() {
   const [active, setActive] = useState<SectionId>("run")
+  const [travels, setTravels] = useState(false)
 
   useEffect(() => {
+    let frame = 0
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -72,6 +81,7 @@ function useActiveSection(): SectionId {
             setActive(entry.target.id as SectionId)
           }
         }
+        if (frame === 0) frame = requestAnimationFrame(() => setTravels(true))
       },
       { rootMargin: "-45% 0px -50% 0px" },
     )
@@ -79,10 +89,13 @@ function useActiveSection(): SectionId {
       const element = document.getElementById(id)
       if (element) observer.observe(element)
     }
-    return () => observer.disconnect()
+    return () => {
+      cancelAnimationFrame(frame)
+      observer.disconnect()
+    }
   }, [])
 
-  return active
+  return { active, travels }
 }
 
 function Heading({ id, lead, rest }: { id: string; lead: string; rest: string }) {
@@ -159,168 +172,195 @@ function OutputTable({
 }
 
 export function Landing() {
-  const active = useActiveSection()
+  const { active, travels } = useActiveSection()
 
   return (
-    <main className="px-5 pb-10 sm:px-10 lg:pl-[15.3vw]">
-      <section id="run" aria-labelledby="run-title" className="max-w-[62.5rem] pt-12 sm:pt-10">
-        <Mark className="h-8 w-auto text-primary md:h-12" />
-        <h1 id="run-title" className="headline mt-4 text-[2.25rem] md:mt-6 md:text-[4rem]">
-          <span className="whitespace-nowrap">Agent-ready</span>{" "}
-          <em className="sm:inline-block">at the first commit</em>
-        </h1>
-        <p className="mt-5 max-w-[35rem] text-[1.0625rem] leading-relaxed text-foreground sm:text-lg">
-          A Turborepo monorepo with a TanStack Start app, every dependency pinned, and the rules
-          your coding agent reads already written.
-        </p>
-        <div className="tx mt-7 max-w-[58rem]">
-          <CopyCommand />
-          <Prompt question="Initialise a git repository?" answer="Yes" flag="--no-git" />
-          <Prompt question="Install dependencies?" answer="Yes" flag="--no-install" />
-          <Prompt
-            question="Which agent integrations do you want?"
-            answer="shadcn, hugeicons, motion"
-            flag="--integrations <names>"
-          />
-          <Line>
-            <span className="text-muted-foreground">my-app/</span>
-            <span className="text-muted-foreground">(empty)</span>
-            <span className="whitespace-nowrap text-muted-foreground">
-              <span aria-hidden="true">→ </span>143 files · 2 workspace packages
-            </span>
-          </Line>
-          <pre className="tx-pre hidden sm:block">{treeText}</pre>
-          <ul className="tx-tree mt-1 sm:hidden">
-            <li className="text-muted-foreground">my-app/</li>
-            {tree.map(([path, about]) => (
-              <li key={path}>
-                <span className="text-muted-foreground">{path}</span>
-                <span className="tx-tree-about">{about}</span>
+    <CursorTravel value={travels}>
+      <main className="px-5 pb-10 sm:px-10 lg:pl-[15.3vw]">
+        <section id="run" aria-labelledby="run-title" className="max-w-[62.5rem] pt-12 sm:pt-10">
+          <Mark className="h-8 w-auto text-primary md:h-12" />
+          <h1 id="run-title" className="headline mt-4 text-[2.25rem] md:mt-6 md:text-[4rem]">
+            <span className="whitespace-nowrap">Agent-ready</span>{" "}
+            <em className="sm:inline-block">at the first commit</em>
+          </h1>
+          <p className="mt-5 max-w-[35rem] text-[1.0625rem] leading-relaxed text-foreground sm:text-lg">
+            A Turborepo monorepo with a TanStack Start app, every dependency pinned, and the rules
+            your coding agent reads already written.
+          </p>
+          <div className="tx mt-7 max-w-[58rem]">
+            <CopyCommand />
+            <Prompt question="Initialise a git repository?" answer="Yes" flag="--no-git" />
+            <Prompt question="Install dependencies?" answer="Yes" flag="--no-install" />
+            <Prompt
+              question="Which agent integrations do you want?"
+              answer="shadcn, hugeicons, motion"
+              flag="--integrations <names>"
+            />
+            <Line>
+              <span className="text-muted-foreground">my-app/</span>
+              <span className="text-muted-foreground">(empty)</span>
+              <span className="whitespace-nowrap text-muted-foreground">
+                <span aria-hidden="true">→ </span>
+                <span className="tally" aria-hidden="true">
+                  <span className="tally-value">143</span>
+                </span>
+                <span className="sr-only">143</span> files · 2 workspace packages
+              </span>
+            </Line>
+            <pre className="tx-pre hidden sm:block">
+              {treeLines.map((line, index) => (
+                <span key={line} className="print block" style={printOrder(index)}>
+                  {line}
+                </span>
+              ))}
+            </pre>
+            <ul className="tx-tree mt-1 sm:hidden">
+              <li className="print text-muted-foreground" style={printOrder(0)}>
+                my-app/
               </li>
-            ))}
-          </ul>
-          <Command>cd my-app</Command>
-          <Command active={active === "run"}>pnpm dev</Command>
-        </div>
-      </section>
+              {tree.map(([path, about], index) => (
+                <li key={path} className="print" style={printOrder(index + 1)}>
+                  <span className="text-muted-foreground">{path}</span>
+                  <span className="tx-tree-about">{about}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="print" style={printOrder(treeLines.length)}>
+              <Command>cd my-app</Command>
+            </div>
+            <div className="print" style={printOrder(treeLines.length + 1)}>
+              <Command active={active === "run"}>pnpm dev</Command>
+            </div>
+          </div>
+        </section>
 
-      <Step id="agent-setup" lead="Agent setup" rest="ships in the scaffold">
-        <Prose>
-          The generated project configures Claude Code and Codex, and Cursor reads{" "}
-          <code className="font-mono text-[0.9em] text-foreground">.cursor/mcp.json</code>. Other
-          agents that read <code className="font-mono text-[0.9em] text-foreground">AGENTS.md</code>{" "}
-          and <code className="font-mono text-[0.9em] text-foreground">.agents/skills/</code> get
-          the rules and the skills without extra setup.
-        </Prose>
-        <Output>
-          <Command>ls -A my-app</Command>
-          <Line glyph=" ">
-            <span className="text-muted-foreground">{listing}</span>
-          </Line>
-          <Command active={active === "agent-setup"} />
-        </Output>
-        <div className="tx mt-10 max-w-[58rem]">
-          <OutputTable head={["file", "purpose"]} rows={agentFiles} />
-        </div>
-      </Step>
+        <Step id="agent-setup" lead="Agent setup" rest="ships in the scaffold">
+          <Prose>
+            The generated project configures Claude Code and Codex, and Cursor reads{" "}
+            <code className="font-mono text-[0.9em] text-foreground">.cursor/mcp.json</code>. Other
+            agents that read{" "}
+            <code className="font-mono text-[0.9em] text-foreground">AGENTS.md</code> and{" "}
+            <code className="font-mono text-[0.9em] text-foreground">.agents/skills/</code> get the
+            rules and the skills without extra setup.
+          </Prose>
+          <Output>
+            <Command>ls -A my-app</Command>
+            <Line glyph=" ">
+              <span className="text-muted-foreground">{listing}</span>
+            </Line>
+            <Command active={active === "agent-setup"} />
+          </Output>
+          <div className="tx mt-10 max-w-[58rem]">
+            <OutputTable head={["file", "purpose"]} rows={agentFiles} />
+          </div>
+        </Step>
 
-      <Step id="pinned" lead="Pinned" rest="and predictable">
-        <Prose>
-          Every dependency is pinned to an exact version. The project never receives an upstream
-          release until you run the bundled upgrade-dependencies skill or change a pin yourself.
-          Template pins refresh from the npm registry on the 1st and 15th of each month.
-        </Prose>
-        <Output>
-          <Command>grep saveExact pnpm-workspace.yaml</Command>
-          <Line glyph=" ">
-            <span className="text-muted-foreground">saveExact: true</span>
-          </Line>
-          <Command>/upgrade-dependencies</Command>
-          <pre className="tx-pre tx-pre-wrap">{`| Package        | Old   | New   | Type  |
+        <Step id="pinned" lead="Pinned" rest="and predictable">
+          <Prose>
+            Every dependency is pinned to an exact version. The project never receives an upstream
+            release until you run the bundled upgrade-dependencies skill or change a pin yourself.
+            Template pins refresh from the npm registry on the 1st and 15th of each month.
+          </Prose>
+          <Output>
+            <Command>grep saveExact pnpm-workspace.yaml</Command>
+            <Line glyph=" ">
+              <span className="text-muted-foreground">saveExact: true</span>
+            </Line>
+            <Command>/upgrade-dependencies</Command>
+            <pre className="tx-pre tx-pre-wrap">{`| Package        | Old   | New   | Type  |
 | -------------- | ----- | ----- | ----- |
 | @base-ui/react | 1.8.0 | 1.9.0 | minor |
 
 held: major
 - @types/node 22.20.5 -> 26.6.4 (apps/web, packages/ui): declined`}</pre>
-          <Line>
-            <Link
-              to="/docs/$slug"
-              params={{ slug: "agent-setup" }}
-              hash="upgrade-dependencies"
-              className="text-secondary underline underline-offset-4 hover:text-foreground"
-            >
-              how the skill decides what to upgrade
-            </Link>
-          </Line>
-          <Command active={active === "pinned"} />
-        </Output>
-      </Step>
-
-      <Step id="what-you-get" lead="What you" rest="get">
-        <Prose>One tool per concern, the default stack preselected.</Prose>
-        <Output>
-          <OutputTable head={["concern", "tool"]} rows={tools} />
-        </Output>
-      </Step>
-
-      <Step id="minimal" lead="Minimal" rest="by default">
-        <Prose>
-          <code className="font-mono text-[0.9em] text-foreground">/</code> is a minimal page. The
-          query, form, table, hotkeys and motion examples render at{" "}
-          <code className="font-mono text-[0.9em] text-foreground">/examples</code> and live in one
-          directory. Delete it to remove every example; the next build regenerates the route tree
-          without it.
-        </Prose>
-        <Output>
-          <Command>rm -r apps/web/src/routes/examples</Command>
-          <Command>pnpm build</Command>
-          <Line>
-            <span className="text-muted-foreground">apps/web/src/routeTree.gen.ts</span>
-            <span className="text-muted-foreground">regenerated without /examples</span>
-          </Line>
-          <Command active={active === "minimal"} />
-        </Output>
-        <div className="tx mt-10 max-w-[58rem]">
-          <OutputTable head={["command", "runs"]} rows={rootCommands} />
-        </div>
-      </Step>
-
-      <section aria-label="Start" className="max-w-[52rem] pt-28 sm:pt-36">
-        <div className="tx">
-          <CopyCommand />
-          <Line>
-            <Link
-              to="/docs"
-              className="text-secondary underline underline-offset-4 hover:text-foreground"
-            >
-              read the docs
-            </Link>
-            <span className="text-muted-foreground">
-              prompts, flags, errors and the generated project
-            </span>
-          </Line>
-        </div>
-      </section>
-
-      <nav
-        aria-label="Sections"
-        className="sticky bottom-0 mt-24 -mx-5 bg-background px-5 py-4 font-mono text-sm sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
-      >
-        <ul className="flex flex-wrap gap-x-7 gap-y-2">
-          {sections.map(({ id, label }) => (
-            <li key={id} className="whitespace-nowrap">
-              <a
-                href={`#${id}`}
-                aria-current={active === id ? "true" : undefined}
-                className="text-muted-foreground transition-colors duration-150 hover:text-foreground aria-[current]:text-primary-text"
+            <Line>
+              <Link
+                to="/docs/$slug"
+                params={{ slug: "agent-setup" }}
+                hash="upgrade-dependencies"
+                className="text-secondary underline underline-offset-4 hover:text-foreground"
               >
-                {active === id ? <BrandMark className="mr-1 text-primary" /> : null}
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </main>
+                how the skill decides what to upgrade
+              </Link>
+            </Line>
+            <Command active={active === "pinned"} />
+          </Output>
+        </Step>
+
+        <Step id="what-you-get" lead="What you" rest="get">
+          <Prose>One tool per concern, the default stack preselected.</Prose>
+          <Output>
+            <OutputTable head={["concern", "tool"]} rows={tools} />
+          </Output>
+        </Step>
+
+        <Step id="minimal" lead="Minimal" rest="by default">
+          <Prose>
+            <code className="font-mono text-[0.9em] text-foreground">/</code> is a minimal page. The
+            query, form, table, hotkeys and motion examples render at{" "}
+            <code className="font-mono text-[0.9em] text-foreground">/examples</code> and live in
+            one directory. Delete it to remove every example; the next build regenerates the route
+            tree without it.
+          </Prose>
+          <Output>
+            <Command>rm -r apps/web/src/routes/examples</Command>
+            <Command>pnpm build</Command>
+            <Line>
+              <span className="text-muted-foreground">apps/web/src/routeTree.gen.ts</span>
+              <span className="text-muted-foreground">regenerated without /examples</span>
+            </Line>
+            <Command active={active === "minimal"} />
+          </Output>
+          <div className="tx mt-10 max-w-[58rem]">
+            <OutputTable head={["command", "runs"]} rows={rootCommands} />
+          </div>
+        </Step>
+
+        <section aria-label="Start" className="max-w-[52rem] pt-28 sm:pt-36">
+          <div className="tx">
+            <CopyCommand />
+            <Line>
+              <Link
+                to="/docs"
+                className="text-secondary underline underline-offset-4 hover:text-foreground"
+              >
+                read the docs
+              </Link>
+              <span className="text-muted-foreground">
+                prompts, flags, errors and the generated project
+              </span>
+            </Line>
+          </div>
+        </section>
+
+        <nav
+          aria-label="Sections"
+          className="sticky bottom-0 mt-24 -mx-5 bg-background px-5 py-4 font-mono text-sm sm:-mx-10 sm:px-10 lg:ml-[-15.3vw] lg:pl-[15.3vw]"
+        >
+          <ul className="flex flex-wrap gap-x-7 gap-y-2">
+            {sections.map(({ id, label }) => (
+              <li key={id} className="whitespace-nowrap">
+                <a
+                  href={`#${id}`}
+                  aria-current={active === id ? "true" : undefined}
+                  className="relative text-muted-foreground transition-colors duration-150 hover:text-foreground aria-[current]:text-primary-text"
+                >
+                  {active === id ? (
+                    <m.span
+                      layoutId="section-marker"
+                      transition={travels ? markerTravel : markerJump}
+                      className="absolute top-0 right-full mr-1.5"
+                    >
+                      <BrandMark className="text-primary" />
+                    </m.span>
+                  ) : null}
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </main>
+    </CursorTravel>
   )
 }

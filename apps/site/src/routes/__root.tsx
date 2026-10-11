@@ -1,10 +1,13 @@
 import { createRootRoute, HeadContent, Outlet, ScriptOnce, Scripts } from "@tanstack/react-router"
+import { LazyMotion, MotionConfig } from "motion/react"
 import { BackgroundFx } from "../components/background-fx.tsx"
 import { HighlightStyles } from "../components/markdown.tsx"
 import { TopBar } from "../components/top-bar.tsx"
 // biome-ignore lint/correctness/noUnresolvedImports: vite ?url query resolves to the stylesheet url, which Biome cannot resolve
 import appCss from "../styles.css?url"
 import { themeScript } from "../theme-script.ts"
+
+const loadMotionFeatures = () => import("../motion-features.ts").then((module) => module.default)
 
 const description =
   "Scaffold a Turborepo monorepo with TanStack Start, React, TypeScript, Biome, Tailwind, shadcn and pnpm, set up for AI coding agents from the first commit."
@@ -47,12 +50,16 @@ export const Route = createRootRoute({
           Skip to content
         </a>
         <BackgroundFx />
-        <div className="relative z-10">
-          <TopBar />
-          <div id="content">
-            <Outlet />
-          </div>
-        </div>
+        <LazyMotion features={loadMotionFeatures} strict>
+          <MotionConfig reducedMotion="user">
+            <div className="relative z-10">
+              <TopBar />
+              <div id="content">
+                <Outlet />
+              </div>
+            </div>
+          </MotionConfig>
+        </LazyMotion>
         <Scripts />
       </body>
     </html>
