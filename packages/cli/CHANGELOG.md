@@ -1,5 +1,18 @@
 # @draekien/create-d9-app
 
+## 0.0.11
+
+### Patch Changes
+
+- 0b2c6ee: Generated apps/web tsconfig no longer includes the missing vitest.config.ts
+- 0b2c6ee: Generated web app fails in dev, not only at build time, when client code imports a server-only module
+- 0b2c6ee: Generated Biome config adds route-option-order, zod-validators, use-cn-for-class-names, use-cva-for-variants, query-naming and mutation-naming plugins
+- 0b2c6ee: Generated projects run typecheck and test before each push and check files out with lf line endings
+- 0b2c6ee: Generated Biome config enables noFloatingPromises and useComponentExportOnlyModules
+- 0b2c6ee: Generated root route renders the document from shellComponent and mounts TanStack Devtools with Router, Query and Form panels
+- 0b2c6ee: Generated web tests run in a jsdom unit project whose setup stubs ResizeObserver, matchMedia and pointer capture for Base UI
+- b4044c3: Add a --data-files prompt and flag that scopes the query-naming and mutation-naming lint rules to suffixed files or to queries/ and mutations/ directories
+
 ## 0.0.10
 
 ### Patch Changes

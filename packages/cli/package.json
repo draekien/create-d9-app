@@ -1,6 +1,6 @@
 {
   "name": "@draekien/create-d9-app",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "type": "module",
   "description": "Scaffold a Turborepo monorepo with TanStack Start, React, TypeScript, Biome, Tailwind, shadcn and pnpm, set up for AI coding agents",
   "keywords": [
