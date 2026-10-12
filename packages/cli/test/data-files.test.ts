@@ -69,3 +69,15 @@ it("rewrites every import of the greeting queries to the moved module", () => {
     fs.readFileSync(path.join(sourceDir, "routes", "examples", "route.tsx"), "utf8"),
   ).toContain('from "./-components/queries/greeting.ts"')
 })
+
+it("keeps the rewritten imports sorted by source", () => {
+  applyDataFiles(targetDir, "directory")
+
+  const route = fs.readFileSync(
+    path.join(targetDir, "apps", "web", "src", "routes", "examples", "route.tsx"),
+    "utf8",
+  )
+  const sources = [...route.matchAll(/from "(\.\/[^"]+)"/g)].map((match) => match[1] as string)
+  expect(sources).toEqual([...sources].sort())
+  expect(sources).toContain("./-components/queries/greeting.ts")
+})

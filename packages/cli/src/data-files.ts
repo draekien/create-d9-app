@@ -52,6 +52,26 @@ export function applyDataFiles(targetDir: string, layout: DataFileLayout) {
     const file = path.join(sourceDir, entry)
     const source = fs.readFileSync(file, "utf8")
     const updated = source.replaceAll('greeting.queries.ts"', 'queries/greeting.ts"')
-    if (updated !== source) fs.writeFileSync(file, updated)
+    if (updated !== source) fs.writeFileSync(file, sortRelativeImports(updated))
   }
+}
+
+const relativeImport = /^import .* from "(\.{1,2}\/[^"]+)"$/
+
+function sortRelativeImports(source: string) {
+  const lines = source.split("\n")
+  let start = 0
+  while (start < lines.length) {
+    let end = start
+    while (end < lines.length && relativeImport.test(lines[end] ?? "")) end++
+    if (end - start > 1) {
+      const sourceOf = (line: string) => relativeImport.exec(line)?.[1] ?? ""
+      const sorted = lines
+        .slice(start, end)
+        .sort((a, b) => (sourceOf(a) < sourceOf(b) ? -1 : sourceOf(a) > sourceOf(b) ? 1 : 0))
+      lines.splice(start, end - start, ...sorted)
+    }
+    start = end + 1
+  }
+  return lines.join("\n")
 }
