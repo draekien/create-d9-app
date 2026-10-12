@@ -26,7 +26,8 @@ my-app/
 ├── .intent/                    TanStack Intent gate that loads skills before edits
 ├── AGENTS.md                   project rules for coding agents (CLAUDE.md includes it)
 ├── biome.json                  lint and format, plus GritQL plugins for React and TanStack rules
-├── lefthook.yml                pre-commit: comment check and biome --write on staged files
+├── lefthook.yml                pre-commit: comment check and biome --write on staged files; pre-push: typecheck and test
+├── .gitattributes              lf line endings for every text file
 ├── pnpm-workspace.yaml         saveExact: true
 ├── turbo.json
 └── package.json                packageManager: pnpm@12.11.0, engines.node >=22.18.0
