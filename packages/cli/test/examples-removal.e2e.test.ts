@@ -1,8 +1,8 @@
 import { execSync, spawnSync } from "node:child_process"
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
 import { afterAll, beforeAll, expect, test } from "vitest"
+import { scratchRoot } from "./scratch-root.ts"
 
 const cliEntry = path.resolve(import.meta.dirname, "..", "index.js")
 
@@ -20,7 +20,7 @@ function run(command: string, args: string[], cwd: string, env?: NodeJS.ProcessE
 }
 
 beforeAll(() => {
-  tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "d9-examples-"))
+  tmpRoot = fs.mkdtempSync(path.join(scratchRoot(), "d9-examples-"))
   appDir = path.join(tmpRoot, "app")
   const pnpmVersion = execSync("pnpm --version", { encoding: "utf8" }).trim()
 
