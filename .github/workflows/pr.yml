@@ -72,10 +72,13 @@ jobs:
         include:
           - os: ubuntu-latest
             node: 22
+            e2e: true
           - os: ubuntu-latest
             node: 24
+            e2e: true
           - os: windows-latest
             node: 24
+            e2e: false
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: pnpm/action-setup@v6.1.0
@@ -86,6 +89,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm test
+        if: matrix.e2e
+      - run: pnpm exec turbo run test -- --exclude "**/*.e2e.test.ts"
+        if: ${{ !matrix.e2e }}
 
   site:
     name: site

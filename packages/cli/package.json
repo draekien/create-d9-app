@@ -44,7 +44,8 @@
     "build": "rolldown -c rolldown.config.ts",
     "typecheck": "tsc --noEmit",
     "refresh-templates": "node scripts/refresh-templates.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:e2e": "vitest run e2e"
   },
   "devDependencies": {
     "@clack/prompts": "1.8.1",

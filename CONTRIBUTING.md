@@ -18,6 +18,8 @@ pnpm node packages/cli/index.js ../demo --yes --no-install
 
 `index.js` loads `packages/cli/dist`, so rebuild after a source change.
 
+CI runs the e2e tests (`packages/cli/test/*.e2e.test.ts`) on Ubuntu only. The pre-push hook runs them locally with `pnpm exec turbo run test:e2e`, which covers Windows.
+
 The CLI README is the same file as the repository README, byte for byte. Edit `README.md` and copy it to `packages/cli/README.md`; `packages/cli/test/readme.test.ts` fails when they differ.
 
 ## Commits and pull requests
