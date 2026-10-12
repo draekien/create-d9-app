@@ -1,8 +1,8 @@
 import { execSync, spawnSync } from "node:child_process"
 import fs from "node:fs"
-import os from "node:os"
 import path from "node:path"
 import { afterAll, beforeAll, expect, test } from "vitest"
+import { scratchRoot } from "./scratch-root.ts"
 
 const cliRoot = path.resolve(import.meta.dirname, "..")
 const ignoredDirs = new Set(["node_modules", ".turbo", "dist", ".output", ".nitro", ".tanstack"])
@@ -45,7 +45,7 @@ function dependencyMaps(files: string[]) {
 }
 
 beforeAll(() => {
-  tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "d9-e2e-"))
+  tmpRoot = fs.mkdtempSync(path.join(scratchRoot(), "d9-e2e-"))
   appDir = path.join(tmpRoot, "app")
   const pnpmVersion = execSync("pnpm --version", { encoding: "utf8" }).trim()
 
