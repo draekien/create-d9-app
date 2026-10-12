@@ -10,7 +10,7 @@ export function FormExample() {
 
   const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
-    form.handleSubmit()
+    void form.handleSubmit()
   }
 
   return (
