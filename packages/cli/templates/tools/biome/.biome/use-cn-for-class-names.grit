@@ -1,0 +1,13 @@
+engine biome(1.0)
+language js(typescript, jsx)
+
+JsxAttribute(name=$name, initializer=$init) as $attr where {
+  $name <: r"className",
+  $init <: contains JsxExpressionAttributeValue(expression=$value),
+  $value <: or {
+    JsTemplateExpression(),
+    JsConditionalExpression(consequent=JsTemplateExpression()),
+    JsConditionalExpression(alternate=JsTemplateExpression())
+  },
+  register_diagnostic(span=$attr, message="Build a className with `cn()` rather than a template string. A template concatenates, so a conditional class and the base class it contradicts both land in the attribute and the later one wins by stylesheet order rather than by intent.")
+}

@@ -165,6 +165,24 @@
     {
       "path": "./tools/biome/.biome/no-fetch-in-handler.grit",
       "includes": ["**/*.tsx"]
+    },
+    "./tools/biome/.biome/route-option-order.grit",
+    "./tools/biome/.biome/zod-validators.grit",
+    {
+      "path": "./tools/biome/.biome/use-cn-for-class-names.grit",
+      "includes": ["**/*.tsx"]
+    },
+    {
+      "path": "./tools/biome/.biome/use-cva-for-variants.grit",
+      "includes": ["**/*.tsx"]
+    },
+    {
+      "path": "./tools/biome/.biome/query-naming.grit",
+      "includes": ["**/*.queries.ts"]
+    },
+    {
+      "path": "./tools/biome/.biome/mutation-naming.grit",
+      "includes": ["**/*.mutations.ts"]
     }
   ],
   "css": {

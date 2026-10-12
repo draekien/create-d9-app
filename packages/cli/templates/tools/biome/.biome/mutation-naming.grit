@@ -1,0 +1,10 @@
+language js
+
+or {
+  `export function $name($_) { $_ }`,
+  `export const $name = ($_) => $_`,
+  `export const $name = ($_) => { $_ }`
+} where {
+  $name <: not r"^use\w+Mutation$",
+  register_diagnostic(span=$name, message="Name a mutation hook use{Name}Mutation.")
+}
