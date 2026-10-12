@@ -37,13 +37,7 @@
       "style": {
         "noInferrableTypes": "error",
         "noNonNullAssertion": "error",
-        "useReadonlyClassProperties": {
-          "level": "error",
-          "options": {
-            "checkAllProperties": true
-          }
-        },
-        "useThrowOnlyError": "error",
+        "useComponentExportOnlyModules": "error",
         "useConsistentTypeDefinitions": {
           "level": "error",
           "options": {
@@ -55,7 +49,14 @@
           "options": {
             "filenameCases": ["kebab-case"]
           }
-        }
+        },
+        "useReadonlyClassProperties": {
+          "level": "error",
+          "options": {
+            "checkAllProperties": true
+          }
+        },
+        "useThrowOnlyError": "error"
       },
       "suspicious": {
         "noExplicitAny": "error",
@@ -63,6 +64,7 @@
       },
       "nursery": {
         "noBaseToString": "error",
+        "noFloatingPromises": "error",
         "noIdenticalTestTitle": "error",
         "noImpliedEval": "error",
         "noLoopFunc": "error",
@@ -189,6 +191,16 @@
         "rules": {
           "style": {
             "useFilenamingConvention": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/src/routes/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useComponentExportOnlyModules": "off"
           }
         }
       }
