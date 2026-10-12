@@ -12,7 +12,7 @@ export default defineConfig({
   resolve: { tsconfigPaths: true },
   plugins: [
     !isTest && tailwindcss(),
-    !isTest && tanstackStart(),
+    !isTest && tanstackStart({ importProtection: { behavior: "error" } }),
     viteReact(),
     babel({ presets: [reactCompilerPreset()] }),
   ],
