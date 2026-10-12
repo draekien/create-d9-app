@@ -104,19 +104,11 @@ test("pnpm check exits 0 until a line comment is added to an apps/web source fil
   }
 }, 300_000)
 
-function scaffoldIntegrations(name: string, integrations: string) {
+function scaffoldWith(name: string, ...flags: string[]) {
   const dir = path.join(tmpRoot, name)
   const result = run(
     "node",
-    [
-      path.join(cliRoot, "index.js"),
-      dir,
-      "--yes",
-      "--no-git",
-      "--no-install",
-      "--integrations",
-      integrations,
-    ],
+    [path.join(cliRoot, "index.js"), dir, "--yes", "--no-git", "--no-install", ...flags],
     tmpRoot,
     { npm_config_user_agent: `pnpm/${execSync("pnpm --version", { encoding: "utf8" }).trim()}` },
   )
@@ -143,7 +135,7 @@ function integrationFiles(dir: string) {
 }
 
 test("--integrations none writes no MCP, Cursor or Codex integration files", () => {
-  const dir = scaffoldIntegrations("none", "none")
+  const dir = scaffoldWith("none", "--integrations", "none")
   const files = integrationFiles(dir)
   expect(files.mcp).toBeNull()
   expect(fs.existsSync(path.join(dir, ".cursor"))).toBe(false)
@@ -152,7 +144,7 @@ test("--integrations none writes no MCP, Cursor or Codex integration files", () 
 }, 120_000)
 
 test("--integrations shadcn,motion-plus,motion-cursor-rule writes the selected integration files", () => {
-  const dir = scaffoldIntegrations("explicit", "shadcn,motion-plus,motion-cursor-rule")
+  const dir = scaffoldWith("explicit", "--integrations", "shadcn,motion-plus,motion-cursor-rule")
   const files = integrationFiles(dir)
   expect(files.cursorRuleExists).toBe(true)
   expect(files.codexSection).toContain("`motion-plus` needs a Motion+ sign-in.")
@@ -163,3 +155,29 @@ test("--integrations shadcn,motion-plus,motion-cursor-rule writes the selected i
   const check = run("pnpm", ["check"], dir)
   expect(check.status, check.output).toBe(0)
 }, 600_000)
+
+test("--data-files directory scaffolds a project whose scripts exit 0", () => {
+  const dir = scaffoldWith("directory", "--data-files", "directory")
+  expect(
+    fs.existsSync(
+      path.join(
+        dir,
+        "apps",
+        "web",
+        "src",
+        "routes",
+        "examples",
+        "-components",
+        "queries",
+        "greeting.ts",
+      ),
+    ),
+  ).toBe(true)
+
+  const install = run("pnpm", ["install"], dir)
+  expect(install.status, install.output).toBe(0)
+  for (const script of ["check", "typecheck", "test", "build"]) {
+    const result = run("pnpm", [script], dir)
+    expect(result.status, `${script}\n${result.output}`).toBe(0)
+  }
+}, 900_000)

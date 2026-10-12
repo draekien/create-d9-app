@@ -3,6 +3,7 @@ import fs from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
 import { parseArgs } from "node:util"
+import { applyDataFiles } from "./data-files.ts"
 import { commitAll, initRepo } from "./git.ts"
 import { readCatalog, writeCodexDocs, writeMcpConfig } from "./integrations.ts"
 import { isInteractive } from "./interactive.ts"
@@ -29,6 +30,8 @@ Options:
   --no-install   Do not run pnpm install
   --integrations <names>
                  Comma-separated agent integrations to configure, or "none"
+  --data-files <layout>
+                 Where query and mutation factories live: "suffix" or "directory"
   --help         Show this message
 `
 
@@ -68,6 +71,7 @@ async function main() {
       "no-git": { type: "boolean" },
       "no-install": { type: "boolean" },
       integrations: { type: "string" },
+      "data-files": { type: "string" },
       help: { type: "boolean" },
     },
   })
@@ -83,6 +87,7 @@ async function main() {
     "no-git": values["no-git"],
     "no-install": values["no-install"],
     integrations: values.integrations,
+    "data-files": values["data-files"],
   }
 
   const catalog = readCatalog(templateRoot)
@@ -128,6 +133,7 @@ ${helpText}`)
   applyOverlays(templateRoot, targetDir, selection)
   writeMcpConfig(catalog, selection, targetDir)
   writeCodexDocs(catalog, selection, targetDir)
+  applyDataFiles(targetDir, options.dataFiles)
   setPackageName(targetDir, name)
 
   const repo = options.git ? initRepo(targetDir) : undefined

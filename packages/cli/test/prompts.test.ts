@@ -18,6 +18,7 @@ const dirMessage = "Where should the project be created?"
 const gitMessage = "Initialise a git repository?"
 const installMessage = "Install dependencies?"
 const integrationsMessage = "Which agent integrations do you want?"
+const dataFilesMessage = "Where do query and mutation factories live?"
 
 describe("resolveWithPrompts", () => {
   it("resolves the same options as --yes when every default is accepted", async () => {
@@ -29,11 +30,12 @@ describe("resolveWithPrompts", () => {
     await press(input, output, gitMessage, enter)
     await press(input, output, installMessage, enter)
     await press(input, output, integrationsMessage, enter)
+    await press(input, output, dataFilesMessage, enter)
 
     expect(await result).toEqual(resolveFromFlags({ yes: true }, catalog))
   })
 
-  it("asks only about git, install and integrations when a directory is given", async () => {
+  it("asks only about git, install, integrations and data files when a directory is given", async () => {
     const input = new MockReadable()
     const output = new MockWritable()
 
@@ -41,17 +43,24 @@ describe("resolveWithPrompts", () => {
     await press(input, output, gitMessage, enter)
     await press(input, output, installMessage, enter)
     await press(input, output, integrationsMessage, enter)
+    await press(input, output, dataFilesMessage, enter)
 
     expect(await result).toEqual(resolveFromFlags({ dir: "custom" }, catalog))
     expect(output.buffer.join("")).not.toContain(dirMessage)
   })
 
-  it("skips the git, install and integrations prompts when their flags are passed", async () => {
+  it("skips the git, install, integrations and data files prompts when their flags are passed", async () => {
     const input = new MockReadable()
     const output = new MockWritable()
 
     const result = await resolveWithPrompts(
-      { dir: "custom", "no-git": true, "no-install": true, integrations: "shadcn,motion-plus" },
+      {
+        dir: "custom",
+        "no-git": true,
+        "no-install": true,
+        integrations: "shadcn,motion-plus",
+        "data-files": "directory",
+      },
       { input, output },
       catalog,
     )
@@ -61,6 +70,7 @@ describe("resolveWithPrompts", () => {
       git: false,
       install: false,
       integrations: ["shadcn", "motion-plus"],
+      dataFiles: "directory",
     })
     expect(output.buffer).toEqual([])
   })
@@ -73,12 +83,14 @@ describe("resolveWithPrompts", () => {
     await press(input, output, gitMessage, decline, enter)
     await press(input, output, installMessage, decline, enter)
     await press(input, output, integrationsMessage, enter)
+    await press(input, output, dataFilesMessage, enter)
 
     expect(await result).toEqual({
       dir: "custom",
       git: false,
       install: false,
       integrations: defaults,
+      dataFiles: "suffix",
     })
   })
 
@@ -94,6 +106,7 @@ describe("resolveWithPrompts", () => {
     await press(input, output, integrationsMessage, down, down, down, down, down)
     await press(input, output, "Motion+ sign-in", down, down)
     await press(input, output, "Cursor only", enter)
+    await press(input, output, dataFilesMessage, enter)
 
     const rendered = output.buffer.join("")
     expect(rendered).toContain("MCP servers")
@@ -125,8 +138,31 @@ describe("resolveFromFlags integrations", () => {
   })
 })
 
+describe("resolveFromFlags data files", () => {
+  it("takes the suffix layout without the flag and with --yes", () => {
+    expect(resolveFromFlags({}, catalog).dataFiles).toBe("suffix")
+    expect(resolveFromFlags({ yes: true }, catalog).dataFiles).toBe("suffix")
+  })
+
+  it("resolves the directory layout", () => {
+    expect(resolveFromFlags({ "data-files": "directory" }, catalog).dataFiles).toBe("directory")
+  })
+
+  it("rejects an unknown layout, naming the flag and the valid values", () => {
+    expect(() => resolveFromFlags({ "data-files": "folders" }, catalog)).toThrow(
+      /--data-files.*folders.*suffix, directory/,
+    )
+  })
+})
+
 describe("buildCommand", () => {
-  const base = { dir: "app", git: true, install: true, integrations: defaults }
+  const base = {
+    dir: "app",
+    git: true,
+    install: true,
+    integrations: defaults,
+    dataFiles: "suffix" as const,
+  }
 
   it("prints the all-defaults command with --yes only", () => {
     expect(buildCommand(resolveFromFlags({ yes: true }, catalog), catalog)).toBe(
@@ -160,6 +196,12 @@ describe("buildCommand", () => {
       "pnpm create @draekien/d9-app app --yes --integrations none",
     )
   })
+
+  it("adds --data-files only for the directory layout", () => {
+    expect(buildCommand({ ...base, dataFiles: "directory" }, catalog)).toBe(
+      "pnpm create @draekien/d9-app app --yes --data-files directory",
+    )
+  })
 })
 
 describe("printCommand", () => {
@@ -168,7 +210,7 @@ describe("printCommand", () => {
     const output = new MockWritable()
 
     printCommand(
-      { dir: "app", git: false, install: true, integrations: defaults },
+      { dir: "app", git: false, install: true, integrations: defaults, dataFiles: "suffix" },
       { input, output },
       catalog,
     )

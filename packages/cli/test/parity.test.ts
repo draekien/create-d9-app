@@ -22,6 +22,11 @@ const prompts = {
     keys: [down, space, enter],
     answer: ["hugeicons", "motion"],
   },
+  dataFiles: {
+    message: "Where do query and mutation factories live?",
+    keys: [down, enter],
+    answer: "directory",
+  },
 }
 
 describe("prompt and flag parity", () => {
