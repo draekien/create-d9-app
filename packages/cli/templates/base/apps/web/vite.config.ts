@@ -16,5 +16,12 @@ export default defineConfig({
     viteReact(),
     babel({ presets: [reactCompilerPreset()] }),
   ],
-  test: { environment: "node" },
+  test: {
+    projects: [
+      {
+        extends: true,
+        test: { name: "unit", environment: "jsdom", setupFiles: ["./src/setup.ts"] },
+      },
+    ],
+  },
 })
