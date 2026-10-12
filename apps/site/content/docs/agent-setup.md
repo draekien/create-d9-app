@@ -15,7 +15,7 @@ The generated project configures Claude Code and Codex. Cursor reads `.cursor/mc
 | `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the skills each project publishes, pinned by content hash in `skills-lock.json`; and `upgrade-dependencies`. |
 | `.claude/agents/motion-reviewer.md` | Motion's reviewer subagent, from the same source as the `motion` skill. |
 | `.mcp.json`, `.cursor/mcp.json` | MCP servers for Claude Code and Cursor: `shadcn` and `hugeicons` as pinned `npx` commands, `motion` over HTTP. Claude Code asks you to approve project servers on first use. |
-| `biome.json` | GritQL plugins that enforce React and TanStack Query rules, such as no fetch in an effect and no inline query key. |
+| `biome.json` | GritQL plugins that enforce React, TanStack Router, TanStack Query and styling rules, such as no fetch in an effect, no inline query key, route options in inference order, and `cn()` for composed class names. |
 
 ## upgrade-dependencies
 
