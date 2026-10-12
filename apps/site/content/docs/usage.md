@@ -18,6 +18,8 @@ Options:
   --no-install   Do not run pnpm install
   --integrations <names>
                  Comma-separated agent integrations to configure, or "none"
+  --data-files <layout>
+                 Where query and mutation factories live: "suffix" or "directory"
   --help         Show this message
 ```
 
@@ -40,6 +42,9 @@ Every prompt has a flag. A flag answers its prompt without asking.
 | Initialise a git repository? | yes | `--no-git` |
 | Install dependencies? | yes | `--no-install` |
 | Which agent integrations do you want? | `shadcn`, `hugeicons`, `motion` | `--integrations <names>` or `--integrations none` |
+| Where do query and mutation factories live? | `suffix` | `--data-files suffix` or `--data-files directory` |
+
+`--data-files` sets which files the `query-naming` and `mutation-naming` lint rules check: `suffix` checks `*.queries.ts` and `*.mutations.ts`, `directory` checks files under `queries/` and `mutations/`.
 
 After an interactive run the CLI prints the command that reproduces your answers:
 

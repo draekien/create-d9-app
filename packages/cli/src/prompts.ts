@@ -1,5 +1,11 @@
 import type { Readable, Writable } from "node:stream"
-import { cancel, confirm, groupMultiselect, isCancel, note, text } from "@clack/prompts"
+import { cancel, confirm, groupMultiselect, isCancel, note, select, text } from "@clack/prompts"
+import {
+  type DataFileLayout,
+  dataFileLayouts,
+  defaultDataFileLayout,
+  parseDataFiles,
+} from "./data-files.ts"
 import { type Catalog, defaultSelection, parseIntegrations } from "./integrations.ts"
 
 export const defaultDir = "my-app"
@@ -10,6 +16,7 @@ export interface Flags {
   "no-git"?: boolean
   "no-install"?: boolean
   integrations?: string
+  "data-files"?: string
 }
 
 export interface ResolvedOptions {
@@ -17,6 +24,7 @@ export interface ResolvedOptions {
   git: boolean
   install: boolean
   integrations: string[]
+  dataFiles: DataFileLayout
 }
 
 export interface PromptStreams {
@@ -33,6 +41,10 @@ export function resolveFromFlags(flags: Flags, catalog: Catalog): ResolvedOption
       flags.integrations === undefined
         ? defaultSelection(catalog)
         : parseIntegrations(flags.integrations, catalog),
+    dataFiles:
+      flags["data-files"] === undefined
+        ? defaultDataFileLayout
+        : parseDataFiles(flags["data-files"]),
   }
 }
 
@@ -70,6 +82,12 @@ export const promptTable = [
       integrations: answer.length > 0 ? answer.join(",") : "none",
     }),
   },
+  {
+    option: "dataFiles",
+    flag: "--data-files",
+    default: defaultDataFileLayout,
+    toFlags: (answer: DataFileLayout) => ({ "data-files": answer }),
+  },
 ] satisfies PromptSpec[]
 
 export function missingValueMessage(flags: Flags): string | undefined {
@@ -94,6 +112,9 @@ export function buildCommand(options: ResolvedOptions, catalog: Catalog): string
     options.integrations.some((name) => !defaults.includes(name))
   ) {
     parts.push(`--integrations ${options.integrations.join(",") || "none"}`)
+  }
+  if (options.dataFiles !== defaultDataFileLayout) {
+    parts.push(`--data-files ${options.dataFiles}`)
   }
   return parts.join(" ")
 }
@@ -162,7 +183,24 @@ export async function resolveWithPrompts(
           }),
         )
 
-  return { dir, git, install, integrations }
+  const dataFiles =
+    flags["data-files"] !== undefined
+      ? base.dataFiles
+      : unwrap(
+          await select({
+            message: "Where do query and mutation factories live?",
+            options: dataFileLayouts.map((layout) => ({
+              value: layout,
+              label: layout === "suffix" ? "File suffix" : "Directories",
+              hint: layout === "suffix" ? "*.queries.ts, *.mutations.ts" : "queries/, mutations/",
+            })),
+            initialValue: defaultDataFileLayout,
+            input,
+            output,
+          }),
+        )
+
+  return { dir, git, install, integrations, dataFiles }
 }
 
 function integrationOptions(catalog: Catalog) {
