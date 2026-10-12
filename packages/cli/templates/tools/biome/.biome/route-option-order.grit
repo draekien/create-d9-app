@@ -1,0 +1,90 @@
+language js
+
+pattern out_of_order($second) {
+  $first where {
+    or {
+      and { $first <: r"(?:loaderDeps|search|ssr|context|beforeLoad|loader|onEnter|onStay|onLeave|head|scripts|headers|remountDeps)(?:\s*[:(<][\s\S]*)?", $second <: r"(?:params|validateSearch)(?:\s*[:(<][\s\S]*)?" },
+      and { $first <: r"(?:context|beforeLoad|loader|onEnter|onStay|onLeave|head|scripts|headers|remountDeps)(?:\s*[:(<][\s\S]*)?", $second <: r"(?:loaderDeps|search|ssr)(?:\s*[:(<][\s\S]*)?" },
+      and { $first <: r"(?:beforeLoad|loader|onEnter|onStay|onLeave|head|scripts|headers|remountDeps)(?:\s*[:(<][\s\S]*)?", $second <: r"(?:context)(?:\s*[:(<][\s\S]*)?" },
+      and { $first <: r"(?:loader|onEnter|onStay|onLeave|head|scripts|headers|remountDeps)(?:\s*[:(<][\s\S]*)?", $second <: r"(?:beforeLoad)(?:\s*[:(<][\s\S]*)?" },
+      and { $first <: r"(?:onEnter|onStay|onLeave|head|scripts|headers|remountDeps)(?:\s*[:(<][\s\S]*)?", $second <: r"(?:loader)(?:\s*[:(<][\s\S]*)?" }
+    }
+  }
+}
+
+or {
+  JsObjectExpression(members = [$first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$first, $_, $_, $_, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $first, $_, $_, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $first, $_, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $first, $_, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $first, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $first, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $first, $_, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $first, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $first, $_, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $first, $_, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $first, $_, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $_, $first, $_, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $_, $_, $first, $_, $second, ...]) where { $first <: out_of_order($second) },
+  JsObjectExpression(members = [$_, $_, $_, $_, $_, $_, $_, $_, $_, $_, $first, $second, ...]) where { $first <: out_of_order($second) }
+} as $options where {
+  $options <: within or {
+    `createFileRoute($_)($options)`,
+    `createRoute($options)`,
+    `createRootRoute($options)`,
+    JsCallExpression(callee = JsCallExpression(callee = r"createRootRouteWithContext[\s\S]*"), arguments = JsCallArguments(args = [$options]))
+  },
+  register_diagnostic(span = $first, message = "Order route options params/validateSearch, loaderDeps/search/ssr, context, beforeLoad, loader, then onEnter/onStay/onLeave/head/scripts/headers/remountDeps: each option infers its types from the options before it.", severity = "error")
+}

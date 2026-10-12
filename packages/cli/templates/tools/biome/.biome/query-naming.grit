@@ -1,0 +1,10 @@
+language js
+
+or {
+  `export function $name($_) { $_ }`,
+  `export const $name = ($_) => $_`,
+  `export const $name = ($_) => { $_ }`
+} where {
+  $name <: not r"^\w+(?:QueryOptions|QueryKey)$",
+  register_diagnostic(span=$name, message="Name a query factory {name}QueryOptions and its key {name}QueryKey.")
+}

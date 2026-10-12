@@ -5,7 +5,7 @@ export const greetingKeys = {
   detail: (name: string) => [...greetingKeys.all, name] as const,
 }
 
-export const greetingOptions = queryOptions({
+export const greetingQueryOptions = queryOptions({
   queryKey: greetingKeys.detail("query"),
   queryFn: () => Promise.resolve("Hello, query"),
 })

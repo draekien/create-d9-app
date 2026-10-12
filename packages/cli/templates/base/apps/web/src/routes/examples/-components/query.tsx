@@ -1,8 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { greetingOptions } from "./greeting.ts"
+import { greetingQueryOptions } from "./greeting.queries.ts"
 
 export function QueryExample() {
-  const { data } = useSuspenseQuery(greetingOptions)
+  const { data } = useSuspenseQuery(greetingQueryOptions)
 
   return <p>{data}</p>
 }

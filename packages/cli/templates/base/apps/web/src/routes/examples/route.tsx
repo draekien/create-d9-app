@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { FormExample } from "./-components/form.tsx"
-import { greetingOptions } from "./-components/greeting.ts"
+import { greetingQueryOptions } from "./-components/greeting.queries.ts"
 import { HotkeysExample } from "./-components/hotkeys.tsx"
 import { MotionExample } from "./-components/motion.tsx"
 import { QueryExample } from "./-components/query.tsx"
@@ -20,7 +20,7 @@ function Examples() {
 
 export const Route = createFileRoute("/examples")({
   loader: async ({ context }) => {
-    await context.queryClient.query(greetingOptions)
+    await context.queryClient.query(greetingQueryOptions)
   },
   component: Examples,
 })

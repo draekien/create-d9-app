@@ -1,0 +1,9 @@
+engine biome(1.0)
+language js(typescript, jsx)
+
+JsxAttribute(name=$name, initializer=$init) as $attr where {
+  $name <: r"className",
+  $init <: contains JsConditionalExpression(alternate=$alt),
+  $alt <: JsConditionalExpression(),
+  register_diagnostic(span=$attr, message="A className branching three ways is a variant table written inline. Declare it with `cva()` and pick a variant by prop, so the steps stay ordered and a fourth one cannot be added to only half of them.")
+}

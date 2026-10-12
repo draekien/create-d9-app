@@ -20,7 +20,7 @@ const messagesOf = (plugin: string) =>
   [
     ...fs
       .readFileSync(path.join(overlay, ".biome", `${plugin}.grit`), "utf8")
-      .matchAll(/message = "([^"]+)"/g),
+      .matchAll(/message\s*=\s*"([^"]+)"/g),
   ].map((match) => match[1] as string)
 
 type Diagnostic = { category: string; message: string; location: { path: string } }
@@ -35,6 +35,9 @@ beforeAll(async () => {
     unknown
   >
   delete config.vcs
+  config.plugins = (config.plugins as (string | { path: string })[]).map((plugin) =>
+    typeof plugin === "string" ? plugin : plugin.path,
+  )
   fs.writeFileSync(path.join(workdir, "biome.json"), JSON.stringify(config))
   fs.cpSync(path.join(overlay, ".biome"), path.join(workdir, ".biome"), { recursive: true })
   for (const plugin of plugins) {
@@ -64,7 +67,7 @@ const reported = (plugin: string, file: "bad.tsx" | "good.tsx") =>
     .map((diagnostic) => diagnostic.message)
 
 it("has a fixture pair for every plugin", () => {
-  expect(plugins).toHaveLength(18)
+  expect(plugins).toHaveLength(24)
   for (const plugin of plugins) {
     expect(fs.existsSync(path.join(fixtures, plugin, "bad.tsx")), plugin).toBe(true)
     expect(fs.existsSync(path.join(fixtures, plugin, "good.tsx")), plugin).toBe(true)

@@ -1,0 +1,13 @@
+engine biome(1.0)
+language js(typescript, jsx)
+
+JsCallExpression(callee=JsStaticMemberExpression(member=$member), arguments=JsCallArguments(args=[
+  $validator
+])) where {
+  $member <: r"validator",
+  $validator <: or {
+    JsArrowFunctionExpression(),
+    JsFunctionExpression()
+  },
+  register_diagnostic(span=$validator, message="Validate a server function's input with a zod schema. A function that returns its argument checks nothing at runtime.")
+}
