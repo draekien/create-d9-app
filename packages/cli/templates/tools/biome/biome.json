@@ -37,6 +37,17 @@
       "style": {
         "noInferrableTypes": "error",
         "noNonNullAssertion": "error",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "react": {
+                "allowImportNames": ["*"],
+                "message": "Import React as a namespace: import * as React from \"react\". Biome's noUnresolvedImports cannot resolve named React imports such as Suspense."
+              }
+            }
+          }
+        },
         "useComponentExportOnlyModules": "error",
         "useConsistentTypeDefinitions": {
           "level": "error",

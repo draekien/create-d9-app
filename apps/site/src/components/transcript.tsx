@@ -1,5 +1,5 @@
 import * as m from "motion/react-m"
-import { type MouseEvent, type ReactNode, use, useState } from "react"
+import * as React from "react"
 import { CursorTravel } from "../cursor-travel.ts"
 import { ripple } from "../ripple.ts"
 
@@ -13,7 +13,7 @@ export function Line({
 }: {
   glyph?: string
   className?: string
-  children?: ReactNode
+  children?: React.ReactNode
 }) {
   return (
     <div className={`tx-line ${className ?? ""}`}>
@@ -31,10 +31,10 @@ export function Command({
   children,
 }: {
   active?: boolean
-  action?: ReactNode
-  children?: ReactNode
+  action?: React.ReactNode
+  children?: React.ReactNode
 }) {
-  const travels = use(CursorTravel)
+  const travels = React.use(CursorTravel)
 
   return (
     <Line glyph="$">
@@ -79,9 +79,9 @@ const createCommand = "pnpm create @draekien/d9-app my-app"
 type CopyStatus = "idle" | "copied" | "failed"
 
 export function CopyCommand({ active = false }: { active?: boolean }) {
-  const [status, setStatus] = useState<CopyStatus>("idle")
+  const [status, setStatus] = React.useState<CopyStatus>("idle")
 
-  async function copy(event: MouseEvent<HTMLButtonElement>) {
+  async function copy(event: React.MouseEvent<HTMLButtonElement>) {
     const button = event.currentTarget.getBoundingClientRect()
     try {
       await navigator.clipboard.writeText(createCommand)

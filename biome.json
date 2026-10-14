@@ -18,7 +18,20 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "react": {
+                "allowImportNames": ["*"],
+                "message": "Import React as a namespace: import * as React from \"react\". Biome's noUnresolvedImports cannot resolve named React imports such as Suspense."
+              }
+            }
+          }
+        }
+      }
     },
     "domains": {
       "project": "all",

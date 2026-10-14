@@ -1,3 +1,3 @@
-import { createContext } from "react"
+import * as React from "react"
 
-export const CursorTravel = createContext(false)
+export const CursorTravel = React.createContext(false)

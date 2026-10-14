@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import * as React from "react"
 import { rippleEvent } from "../ripple.ts"
 
 const grid = 48
@@ -16,9 +16,9 @@ const rippleRise = 3
 const rippleAlpha = 0.5
 
 export function BackgroundFx() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef = React.useRef<HTMLCanvasElement>(null)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const canvas = canvasRef.current
     const context = canvas?.getContext("2d")
     if (!canvas || !context) return

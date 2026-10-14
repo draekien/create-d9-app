@@ -1,8 +1,8 @@
 import { useForm } from "@tanstack/react-form"
-import { useState } from "react"
+import * as React from "react"
 
 export function FormExample() {
-  const [submitted, setSubmitted] = useState("")
+  const [submitted, setSubmitted] = React.useState("")
   const form = useForm({
     defaultValues: { name: "" },
     onSubmit: ({ value }) => setSubmitted(value.name),

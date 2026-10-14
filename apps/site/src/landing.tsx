@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router"
 import * as m from "motion/react-m"
-import { type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react"
+import * as React from "react"
 import { BrandMark, Mark } from "./components/mark.tsx"
 import { Command, CopyCommand, Line, Prompt } from "./components/transcript.tsx"
 import { CursorTravel } from "./cursor-travel.ts"
@@ -31,7 +31,7 @@ const tree = [
 const treeLines = ["my-app/", ...tree.map(([path, about]) => `${path.padEnd(25)}${about}`)]
 
 function printOrder(index: number) {
-  return { "--i": index } as CSSProperties
+  return { "--i": index } as React.CSSProperties
 }
 
 const listing =
@@ -69,10 +69,10 @@ const rootCommands = [
 ] as const
 
 function useActiveSection() {
-  const [active, setActive] = useState<SectionId>("run")
-  const [travels, setTravels] = useState(false)
+  const [active, setActive] = React.useState<SectionId>("run")
+  const [travels, setTravels] = React.useState(false)
 
-  useEffect(() => {
+  React.useEffect(() => {
     let frame = 0
     const observer = new IntersectionObserver(
       (entries) => {
@@ -115,7 +115,7 @@ function Step({
   id: SectionId
   lead: string
   rest: string
-  children: ReactNode
+  children: React.ReactNode
 }) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="scroll-mt-8 pt-24 sm:pt-32">
@@ -130,7 +130,7 @@ function Step({
   )
 }
 
-function Prose({ children }: { children: ReactNode }) {
+function Prose({ children }: { children: React.ReactNode }) {
   return (
     <p className="mt-5 max-w-[60ch] text-[1.0625rem] leading-relaxed text-muted-foreground">
       {children}
@@ -138,7 +138,7 @@ function Prose({ children }: { children: ReactNode }) {
   )
 }
 
-function Output({ children }: { children: ReactNode }) {
+function Output({ children }: { children: React.ReactNode }) {
   return <div className="tx mt-8 max-w-[58rem]">{children}</div>
 }
 
@@ -173,9 +173,9 @@ function OutputTable({
 
 export function Landing() {
   const { active, travels } = useActiveSection()
-  const sectionNav = useRef<HTMLElement>(null)
+  const sectionNav = React.useRef<HTMLElement>(null)
 
-  useEffect(() => {
+  React.useEffect(() => {
     const nav = sectionNav.current
     const item = nav?.querySelector<HTMLElement>(`a[href="#${active}"]`)
     if (!nav || !item || nav.scrollWidth <= nav.clientWidth) return
