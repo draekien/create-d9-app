@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router"
-import { useEffect, useState } from "react"
+import * as React from "react"
 import { Command, Line } from "./transcript.tsx"
 
 export function NotFound() {
-  const [path, setPath] = useState<string | undefined>()
+  const [path, setPath] = React.useState<string | undefined>()
 
-  useEffect(() => {
+  React.useEffect(() => {
     const base = import.meta.env.BASE_URL
     const pathname = window.location.pathname
     setPath(pathname.startsWith(base) ? `/${pathname.slice(base.length)}` : pathname)

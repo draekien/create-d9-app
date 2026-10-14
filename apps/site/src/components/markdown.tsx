@@ -5,13 +5,13 @@ import {
   renderMarkdownReact,
 } from "@tanstack/markdown/react"
 import { Link } from "@tanstack/react-router"
-import type { ComponentPropsWithoutRef } from "react"
+import type * as React from "react"
 import { extensions } from "../content.ts"
 import { highlightCode, highlightCss } from "../highlight.ts"
 
 const docLink = /^(?:\.\/)?([a-z0-9-]+)(?:\.md)?(#[\w-]+)?$/
 
-function MarkdownLink({ href = "", children, ...props }: ComponentPropsWithoutRef<"a">) {
+function MarkdownLink({ href = "", children, ...props }: React.ComponentPropsWithoutRef<"a">) {
   const doc = href.match(docLink)
   if (doc?.[1]) {
     return (
@@ -27,7 +27,7 @@ function MarkdownLink({ href = "", children, ...props }: ComponentPropsWithoutRe
   )
 }
 
-function MarkdownTable(props: ComponentPropsWithoutRef<"table">) {
+function MarkdownTable(props: React.ComponentPropsWithoutRef<"table">) {
   return (
     <div className="table-scroll">
       <table {...props} />

@@ -1,7 +1,7 @@
 import type { MarkdownHeading } from "@tanstack/markdown"
 import { Link } from "@tanstack/react-router"
 import * as m from "motion/react-m"
-import type { ReactNode } from "react"
+import type * as React from "react"
 import { docs } from "../content.ts"
 import { BrandMark } from "./mark.tsx"
 
@@ -89,7 +89,7 @@ export function DocShell({
   title: string
   description?: string
   headings?: MarkdownHeading[]
-  children: ReactNode
+  children: React.ReactNode
 }) {
   const contents = headings.filter((heading) => heading.level === 2)
 

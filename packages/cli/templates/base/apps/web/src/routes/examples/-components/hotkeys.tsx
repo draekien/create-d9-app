@@ -1,8 +1,8 @@
 import { useHotkey } from "@tanstack/react-hotkeys"
-import { useState } from "react"
+import * as React from "react"
 
 export function HotkeysExample() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = React.useState(0)
 
   useHotkey("Mod+K", () => setCount((current) => current + 1))
 
