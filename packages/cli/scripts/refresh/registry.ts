@@ -1,4 +1,4 @@
 import type { Generator } from "./generators.ts"
-import { skills } from "./skills.ts"
+import { motion } from "./motion.ts"
 
-export const generators: Generator[] = [skills]
+export const generators: Generator[] = [motion]

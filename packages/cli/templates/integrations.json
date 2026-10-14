@@ -19,5 +19,5 @@
     "default": false
   },
   "motion-cursor-rule": { "kind": "overlay", "hint": "Cursor only", "default": false },
-  "tanstack-data-loading": { "kind": "overlay", "hint": "agent skill", "default": true }
+  "tanstack-data-loading": { "kind": "skill", "hint": "agent skill", "default": true }
 }

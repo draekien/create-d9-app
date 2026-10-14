@@ -12,7 +12,7 @@ The generated project configures Claude Code and Codex. Cursor reads `.cursor/mc
 | `.claude/rules/*.md` | Path-scoped rules for TypeScript, components, tests and generated files. Loaded only for matching files. |
 | `.claude/settings.json`, `.codex/hooks.json` | `SessionStart` and `PreToolUse` hooks that run the TanStack Intent gate. |
 | `.intent/hooks/` | The gate: lists the skills shipped inside the installed `@tanstack/*` packages at session start, and denies the first edit of a session until the agent has checked that list and loaded a matching skill with `pnpm exec intent load`. |
-| `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the skills each project publishes, pinned by content hash in `skills-lock.json`; `upgrade-dependencies`; and `tanstack-data-loading` unless you deselect it. |
+| `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the latest version of the skills each project publishes, installed while scaffolding and recorded by content hash in `skills-lock.json`; `tanstack-data-loading` from `draekien/skills` unless you deselect it; and `upgrade-dependencies`. |
 | `.claude/agents/motion-reviewer.md` | Motion's reviewer subagent, from the same source as the `motion` skill. |
 | `.mcp.json`, `.cursor/mcp.json` | MCP servers for Claude Code and Cursor: `shadcn` and `hugeicons` as pinned `npx` commands, `motion` over HTTP. Claude Code asks you to approve project servers on first use. |
 | `biome.json` | GritQL plugins that enforce React, TanStack Router, TanStack Query and styling rules, such as no fetch in an effect, no inline query key, route options in inference order, and `cn()` for composed class names. |
@@ -20,6 +20,10 @@ The generated project configures Claude Code and Codex. Cursor reads `.cursor/mc
 ## tanstack-data-loading
 
 Selected by default in the integrations prompt. `--integrations` without `tanstack-data-loading`, or `--integrations none`, leaves it out.
+
+The skill runs its scripts with [uv](https://docs.astral.sh/uv/). When uv is missing, the CLI asks whether to install it (default no), or installs it with `--install-uv`; otherwise it prints the install command.
+
+On first use the skill discovers the app root, the backend shape and the verify commands, and caches them in `.draekien/tanstack-data-loading/discovery.json`. It asks before creating `.draekien/` and offers to add the cache to `.gitignore`.
 
 The agent loads it when writing a route loader, `useSuspenseQuery`, `useMutation` or `createServerFn`. It covers:
 
@@ -33,9 +37,30 @@ Ask it to audit existing code:
 ```text
 /tanstack-data-loading audit
 /tanstack-data-loading audit apps/web/src/routes/orders
+/tanstack-data-loading audit --fix
 ```
 
-The audit lists each finding with its file and line, applies the fixes, and runs check, typecheck and test. It reports latency changes only when they were measured.
+`audit` lists each finding with its file and line. `audit --fix` also applies the fixes and runs the verify commands it discovered.
+
+## Skills installed while scaffolding
+
+Before writing files the CLI checks for `git` and `pnpm`, and for `uv` when a selected skill needs it:
+
+```text
+Pre-flight checks
+  ✓ git: git version 2.47.1
+  ✓ pnpm: 11.25.0
+  ✗ uv not found
+```
+
+Each skill is installed with `pnpm dlx skills@latest add`. When an install fails, for example without network access, the project is still created and the CLI prints the command to run later:
+
+```text
+Install the skills that could not be installed:
+  pnpm dlx skills@latest add shadcn/ui --skill shadcn --agent claude-code universal --copy --yes
+```
+
+`hugeicons` is downloaded file by file instead of cloned, because its repository contains a file name Windows cannot check out. `skills update` for `hugeicons` fails on Windows for the same reason.
 
 ## upgrade-dependencies
 

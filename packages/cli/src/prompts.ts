@@ -17,6 +17,7 @@ export interface Flags {
   "no-install"?: boolean
   integrations?: string
   "data-files"?: string
+  "install-uv"?: boolean
 }
 
 export interface ResolvedOptions {
@@ -97,7 +98,11 @@ export function missingValueMessage(flags: Flags): string | undefined {
   return "Missing required <dir>. Pass a project directory or --yes to use the default."
 }
 
-export function buildCommand(options: ResolvedOptions, catalog: Catalog): string {
+export function buildCommand(
+  options: ResolvedOptions,
+  catalog: Catalog,
+  installUv = false,
+): string {
   const dir = /\s/.test(options.dir) ? JSON.stringify(options.dir) : options.dir
   const parts = ["pnpm create @draekien/d9-app", dir, "--yes"]
   if (!options.git) {
@@ -116,6 +121,9 @@ export function buildCommand(options: ResolvedOptions, catalog: Catalog): string
   if (options.dataFiles !== defaultDataFileLayout) {
     parts.push(`--data-files ${options.dataFiles}`)
   }
+  if (installUv) {
+    parts.push("--install-uv")
+  }
   return parts.join(" ")
 }
 
@@ -123,8 +131,31 @@ export function printCommand(
   options: ResolvedOptions,
   { output }: PromptStreams,
   catalog: Catalog,
+  installUv = false,
 ) {
-  note(buildCommand(options, catalog), "To create a project with the same options", { output })
+  note(buildCommand(options, catalog, installUv), "To create a project with the same options", {
+    output,
+  })
+}
+
+/**
+ * Asks whether to install uv, which the skills in `requiredBy` need. Defaults
+ * to no. Returns true without asking when `--install-uv` was passed.
+ */
+export async function confirmUvInstall(
+  flags: Flags,
+  requiredBy: string[],
+  { input, output }: PromptStreams,
+): Promise<boolean> {
+  if (flags["install-uv"]) return true
+  return unwrap(
+    await confirm({
+      message: `${requiredBy.join(", ")} needs uv, which is not installed. Install it now?`,
+      initialValue: false,
+      input,
+      output,
+    }),
+  )
 }
 
 export async function resolveWithPrompts(
@@ -207,7 +238,7 @@ function integrationOptions(catalog: Catalog) {
   const servers: { value: string; hint?: string }[] = []
   const files: { value: string; hint?: string }[] = []
   for (const [name, integration] of Object.entries(catalog)) {
-    if (integration.kind === "overlay") {
+    if (integration.kind === "overlay" || integration.kind === "skill") {
       files.push({ value: name, hint: integration.hint })
     } else {
       servers.push({

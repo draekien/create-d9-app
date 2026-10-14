@@ -19,7 +19,8 @@ describe("dist/index.js", () => {
     expect(bundle).not.toMatch(/["'](?:node:)?(?:https?|net|tls|dgram|dns)["']/)
   })
 
-  it("does not call fetch", () => {
-    expect(bundle).not.toMatch(/\bfetch\s*\(/)
+  it("names no host other than raw.githubusercontent.com, for skill files, and astral.sh, for the uv installer", () => {
+    const hosts = new Set(bundle.match(/https:\/\/[a-zA-Z0-9.-]+/g))
+    expect([...hosts].sort()).toEqual(["https://astral.sh", "https://raw.githubusercontent.com"])
   })
 })

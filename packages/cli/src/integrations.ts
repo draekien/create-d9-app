@@ -5,6 +5,7 @@ export type Integration =
   | { kind: "stdio"; command: string; args: string[]; default: boolean }
   | { kind: "http"; url: string; login?: string; default: boolean }
   | { kind: "overlay"; hint?: string; default: boolean }
+  | { kind: "skill"; hint?: string; default: boolean }
 
 export type Catalog = Record<string, Integration>
 
@@ -22,14 +23,19 @@ export function defaultSelection(catalog: Catalog): string[] {
   return Object.keys(catalog).filter((name) => catalog[name]?.default)
 }
 
-function serverEntry(integration: Integration, client: "claude" | "cursor") {
+type Server = Extract<Integration, { kind: "stdio" | "http" }>
+
+function isServer(integration: Integration | undefined): integration is Server {
+  return integration?.kind === "stdio" || integration?.kind === "http"
+}
+
+function serverEntry(integration: Server, client: "claude" | "cursor") {
   if (integration.kind === "stdio") {
     return { command: integration.command, args: integration.args }
   }
   if (integration.kind === "http") {
     return client === "claude" ? { type: "http", url: integration.url } : { url: integration.url }
   }
-  return undefined
 }
 
 function writeJson(file: string, value: unknown) {
@@ -44,7 +50,7 @@ function writeJson(file: string, value: unknown) {
 /**
  * Writes `.mcp.json` (Claude Code) and `.cursor/mcp.json` (Cursor) into
  * `targetDir` from the stdio and http catalog entries named in `selection`,
- * in catalog order. Overlay entries are ignored. Writes neither file when no
+ * in catalog order. Overlay and skill entries are ignored. Writes neither file when no
  * stdio or http entry is selected.
  *
  * @param catalog Parsed `integrations.json`.
@@ -53,7 +59,7 @@ function writeJson(file: string, value: unknown) {
  */
 export function writeMcpConfig(catalog: Catalog, selection: string[], targetDir: string) {
   const names = Object.keys(catalog).filter(
-    (name) => selection.includes(name) && catalog[name]?.kind !== "overlay",
+    (name) => selection.includes(name) && isServer(catalog[name]),
   )
   if (names.length === 0) return
 
@@ -61,7 +67,7 @@ export function writeMcpConfig(catalog: Catalog, selection: string[], targetDir:
     Object.fromEntries(
       names.flatMap((name) => {
         const integration = catalog[name]
-        return integration ? [[name, serverEntry(integration, client)]] : []
+        return isServer(integration) ? [[name, serverEntry(integration, client)]] : []
       }),
     )
 
@@ -106,7 +112,7 @@ export function codexSection(catalog: Catalog, selection: string[]): string {
   const tables: string[] = []
   const logins: string[] = []
   for (const [name, integration] of Object.entries(catalog)) {
-    if (!selection.includes(name) || integration.kind === "overlay") continue
+    if (!selection.includes(name) || !isServer(integration)) continue
     if (integration.kind === "stdio") {
       tables.push(
         `[mcp_servers.${name}]\ncommand = ${JSON.stringify(integration.command)}\nargs = [${integration.args.map((arg) => JSON.stringify(arg)).join(", ")}]`,

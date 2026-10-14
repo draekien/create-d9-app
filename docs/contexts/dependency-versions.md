@@ -2,7 +2,7 @@
 
 Read before adding dependency or changing pinned version (CLI or template).
 
-- Templates pin exact versions. Never `latest`; never resolve at scaffold time.
+- Templates pin exact versions. Never `latest`; never resolve at scaffold time. Exception: scaffold-time skill installs run `skills@latest` (ADR 0004).
 - Look up current version on npm registry before pinning. Never pin from memory.
 - Every generated project ships upgrade-dependencies skill; agent uses it to upgrade pinned versions systematically.
 - upgrade-dependencies skill source: `skills/upgrade-dependencies/SKILL.md`. Template copies under `templates/base/.agents/skills/` + `templates/base/.claude/skills/` stay byte-identical; test `template-upgrade-skill.test.ts` enforces.
@@ -16,4 +16,3 @@ Read before adding dependency or changing pinned version (CLI or template).
 - `@types/node` major = lowest supported Node major (`MAJOR_CEILINGS` in `packages/cli/scripts/refresh/pins.ts`). Raise it in the same change as `engines.node` and the Node check in `packages/cli/index.js`.
 - New library bundled into CLI needs reason a few lines of code cannot meet. Build tooling + template dependencies: no limit.
 - Upstream-tool output under `templates/`: rewritten by refresh generators registered in `packages/cli/scripts/refresh/registry.ts`, each declaring owned paths or `d9:begin`/`d9:end` blocks. Never edit declared outputs by hand.
-- `skills` generator: run on Linux only (CI, or a `node:22` container). `hugeicons/hugeicons` contains `icons/re:.svg`; git refuses that path on NTFS.
