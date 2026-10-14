@@ -40,18 +40,24 @@ export function applyDataFiles(targetDir: string, layout: DataFileLayout) {
   fs.writeFileSync(biomeFile, biome)
 
   const examples = path.join(targetDir, examplesDir)
-  fs.mkdirSync(path.join(examples, "queries"))
-  fs.renameSync(
-    path.join(examples, "greeting.queries.ts"),
-    path.join(examples, "queries", "greeting.ts"),
-  )
+  for (const kind of ["queries", "mutations"]) {
+    fs.mkdirSync(path.join(examples, kind))
+    fs.renameSync(
+      path.join(examples, `greeting.${kind}.ts`),
+      path.join(examples, kind, "greeting.ts"),
+    )
+  }
 
   const sourceDir = path.join(targetDir, "apps", "web", "src")
   for (const entry of fs.readdirSync(sourceDir, { recursive: true, encoding: "utf8" })) {
     if (!/\.tsx?$/.test(entry)) continue
     const file = path.join(sourceDir, entry)
     const source = fs.readFileSync(file, "utf8")
-    const updated = source.replaceAll('greeting.queries.ts"', 'queries/greeting.ts"')
+    const nested = path.dirname(path.dirname(file)) === examples
+    const updated = source
+      .replaceAll('"./greeting.', nested ? '"../greeting.' : '"./greeting.')
+      .replaceAll('greeting.queries.ts"', 'queries/greeting.ts"')
+      .replaceAll('greeting.mutations.ts"', 'mutations/greeting.ts"')
     if (updated !== source) fs.writeFileSync(file, sortRelativeImports(updated))
   }
 }

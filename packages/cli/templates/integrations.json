@@ -18,5 +18,6 @@
     "login": "Motion+ sign-in",
     "default": false
   },
-  "motion-cursor-rule": { "kind": "overlay", "hint": "Cursor only", "default": false }
+  "motion-cursor-rule": { "kind": "overlay", "hint": "Cursor only", "default": false },
+  "tanstack-data-loading": { "kind": "overlay", "hint": "agent skill", "default": true }
 }

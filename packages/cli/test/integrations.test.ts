@@ -100,7 +100,7 @@ describe("parseIntegrations", () => {
 
   it("names the flag and every valid name for an unknown name", () => {
     expect(() => parseIntegrations("bogus", catalog)).toThrow(
-      "Unknown --integrations value bogus. Valid names: shadcn, hugeicons, motion, motion-plus, motion-cursor-rule, or none.",
+      "Unknown --integrations value bogus. Valid names: shadcn, hugeicons, motion, motion-plus, motion-cursor-rule, tanstack-data-loading, or none.",
     )
     expect(() => parseIntegrations("none,shadcn", catalog)).toThrow(/--integrations.*none/)
     expect(() => parseIntegrations("", catalog)).toThrow(/--integrations/)

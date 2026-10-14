@@ -51,6 +51,16 @@ it("scopes the naming plugins to directories and moves the greeting queries", ()
   expect(includesOf("mutation-naming")).toEqual(["**/mutations/**/*.ts"])
   expect(fs.existsSync(path.join(examples(), "greeting.queries.ts"))).toBe(false)
   expect(fs.existsSync(path.join(examples(), "queries", "greeting.ts"))).toBe(true)
+  expect(fs.existsSync(path.join(examples(), "greeting.mutations.ts"))).toBe(false)
+  expect(fs.existsSync(path.join(examples(), "mutations", "greeting.ts"))).toBe(true)
+})
+
+it("points the moved greeting mutations at the moved greeting queries", () => {
+  applyDataFiles(targetDir, "directory")
+
+  expect(fs.readFileSync(path.join(examples(), "mutations", "greeting.ts"), "utf8")).toContain(
+    'from "../queries/greeting.ts"',
+  )
 })
 
 it("rewrites every import of the greeting queries to the moved module", () => {
@@ -62,6 +72,7 @@ it("rewrites every import of the greeting queries to the moved module", () => {
     .filter((entry) => /\.tsx?$/.test(entry))
     .map((entry) => fs.readFileSync(path.join(sourceDir, entry), "utf8"))
   expect(sources.join("\n")).not.toContain("greeting.queries.ts")
+  expect(sources.join("\n")).not.toContain("greeting.mutations.ts")
   expect(fs.readFileSync(path.join(examples(), "query.tsx"), "utf8")).toContain(
     'from "./queries/greeting.ts"',
   )

@@ -1,6 +1,7 @@
+import { noop } from "@tanstack/react-query"
 import { createFileRoute } from "@tanstack/react-router"
 import { FormExample } from "./-components/form.tsx"
-import { greetingQueryOptions } from "./-components/greeting.queries.ts"
+import { greetingEditsQueryOptions, greetingQueryOptions } from "./-components/greeting.queries.ts"
 import { HotkeysExample } from "./-components/hotkeys.tsx"
 import { MotionExample } from "./-components/motion.tsx"
 import { QueryExample } from "./-components/query.tsx"
@@ -20,6 +21,7 @@ function Examples() {
 
 export const Route = createFileRoute("/examples")({
   loader: async ({ context }) => {
+    void context.queryClient.query(greetingEditsQueryOptions).catch(noop)
     await context.queryClient.query(greetingQueryOptions)
   },
   component: Examples,

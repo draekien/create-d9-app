@@ -1,6 +1,6 @@
 ---
 title: Agent setup
-description: The agent files the generated project ships, and the upgrade-dependencies skill.
+description: The agent files the generated project ships, and the upgrade-dependencies and tanstack-data-loading skills.
 order: 50
 ---
 
@@ -12,10 +12,30 @@ The generated project configures Claude Code and Codex. Cursor reads `.cursor/mc
 | `.claude/rules/*.md` | Path-scoped rules for TypeScript, components, tests and generated files. Loaded only for matching files. |
 | `.claude/settings.json`, `.codex/hooks.json` | `SessionStart` and `PreToolUse` hooks that run the TanStack Intent gate. |
 | `.intent/hooks/` | The gate: lists the skills shipped inside the installed `@tanstack/*` packages at session start, and denies the first edit of a session until the agent has checked that list and loaded a matching skill with `pnpm exec intent load`. |
-| `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the skills each project publishes, pinned by content hash in `skills-lock.json`; and `upgrade-dependencies`. |
+| `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the skills each project publishes, pinned by content hash in `skills-lock.json`; `upgrade-dependencies`; and `tanstack-data-loading` unless you deselect it. |
 | `.claude/agents/motion-reviewer.md` | Motion's reviewer subagent, from the same source as the `motion` skill. |
 | `.mcp.json`, `.cursor/mcp.json` | MCP servers for Claude Code and Cursor: `shadcn` and `hugeicons` as pinned `npx` commands, `motion` over HTTP. Claude Code asks you to approve project servers on first use. |
 | `biome.json` | GritQL plugins that enforce React, TanStack Router, TanStack Query and styling rules, such as no fetch in an effect, no inline query key, route options in inference order, and `cn()` for composed class names. |
+
+## tanstack-data-loading
+
+Selected by default in the integrations prompt. `--integrations` without `tanstack-data-loading`, or `--integrations none`, leaves it out.
+
+The agent loads it when writing a route loader, `useSuspenseQuery`, `useMutation` or `createServerFn`. It covers:
+
+- Loaders that await only the data a route cannot render without and start the rest without awaiting it, so the rest streams.
+- One `useSuspenseQueries` call instead of several `useSuspenseQuery` calls, which fetch one after another.
+- Mutations that write the server response with `setQueryData` and do not await invalidation, so the save is no longer pending while queries refetch.
+- Server functions that do each piece of work once: one call for a list instead of one per row, and middleware that computes only what every function reads.
+
+Ask it to audit existing code:
+
+```text
+/tanstack-data-loading audit
+/tanstack-data-loading audit apps/web/src/routes/orders
+```
+
+The audit lists each finding with its file and line, applies the fixes, and runs check, typecheck and test. It reports latency changes only when they were measured.
 
 ## upgrade-dependencies
 

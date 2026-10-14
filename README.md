@@ -20,7 +20,7 @@ Full documentation: [create-d9-app.wpei.me](https://create-d9-app.wpei.me/)
 - [Requirements](apps/site/content/docs/requirements.md): Node.js, pnpm and git.
 - [Usage](apps/site/content/docs/usage.md): the command, prompts and flags, and non-interactive use.
 - [Working in the generated project](apps/site/content/docs/generated-project.md): root commands, examples and the pre-commit hook.
-- [Agent setup](apps/site/content/docs/agent-setup.md): agent files and the `upgrade-dependencies` skill.
+- [Agent setup](apps/site/content/docs/agent-setup.md): agent files and the `upgrade-dependencies` and `tanstack-data-loading` skills.
 - [Errors](apps/site/content/docs/errors.md): every message and its fix.
 - [Versioning](apps/site/content/docs/versioning.md): release scheme and pin refresh.
 

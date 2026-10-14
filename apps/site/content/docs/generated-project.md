@@ -18,7 +18,7 @@ Run every task from the repository root. Turborepo runs it in each workspace pac
 
 `pnpm dev` shows the TanStack Devtools panel with Router, Query and Form tabs. `pnpm build` removes it.
 
-The query, form, table, hotkeys and motion examples render at `/examples` and live in `apps/web/src/routes/examples/`: the route file `route.tsx` plus the components and their tests in `-components/`. TanStack Router ignores paths prefixed with `-`. Delete that one directory to remove every example; the next `pnpm dev` or `pnpm build` regenerates `apps/web/src/routeTree.gen.ts` without the route.
+The query, form, table, hotkeys and motion examples render at `/examples` and live in `apps/web/src/routes/examples/`: the route file `route.tsx` plus the components and their tests in `-components/`. The query example's loader awaits the greeting and streams the edit count without awaiting it. Its mutation writes the server function's response into the cache and invalidates only the edit count. The server functions are in `greeting.functions.ts`. TanStack Router ignores paths prefixed with `-`. Delete that one directory to remove every example; the next `pnpm dev` or `pnpm build` regenerates `apps/web/src/routeTree.gen.ts` without the route.
 
 The pre-commit hook runs the comment check and `biome check --write` on staged files, then re-stages what it fixed. The pre-push hook runs `pnpm typecheck` and `pnpm test`. `.gitattributes` checks every text file out with `lf` line endings.
 

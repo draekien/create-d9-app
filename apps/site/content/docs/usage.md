@@ -41,7 +41,7 @@ Every prompt has a flag. A flag answers its prompt without asking.
 | Where should the project be created? | `my-app` | `<dir>` |
 | Initialise a git repository? | yes | `--no-git` |
 | Install dependencies? | yes | `--no-install` |
-| Which agent integrations do you want? | `shadcn`, `hugeicons`, `motion` | `--integrations <names>` or `--integrations none` |
+| Which agent integrations do you want? | `shadcn`, `hugeicons`, `motion`, `tanstack-data-loading` | `--integrations <names>` or `--integrations none` |
 | Where do query and mutation factories live? | `suffix` | `--data-files suffix` or `--data-files directory` |
 
 `--data-files` sets which files the `query-naming` and `mutation-naming` lint rules check: `suffix` checks `*.queries.ts` and `*.mutations.ts`, `directory` checks files under `queries/` and `mutations/`.
