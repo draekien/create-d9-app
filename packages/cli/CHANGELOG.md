@@ -1,5 +1,12 @@
 # @draekien/create-d9-app
 
+## 0.0.12
+
+### Patch Changes
+
+- dd516e9: Install the shadcn, turborepo, motion, hugeicons and tanstack-data-loading skills at scaffold time with skills@latest instead of shipping copies; check for git, pnpm and uv before scaffolding, and offer to install uv (--install-uv).
+- fc088d1: Generated projects ship the tanstack-data-loading skill (on by default), stream a second query and run a mutation in the query example, show a Skeleton while routes load, and import React as a namespace. The npm package README now describes the CLI.
+
 ## 0.0.11
 
 ### Patch Changes
