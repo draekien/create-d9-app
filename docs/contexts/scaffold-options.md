@@ -8,4 +8,5 @@ Read before adding/changing tool choice, prompt, flag, default, or template.
 - Every tool choice, in any combination → project where install, build, lint, typecheck pass.
 - Prompts rendered with `@clack/prompts`. No hand-rolled terminal rendering.
 - TanStack skills: shipped inside `@tanstack/*` packages, wired with `@tanstack/intent` (`intent install`, `intent hooks install`). Never `skills add` for TanStack.
+- In-house opt-in skill: source `skills/<name>/SKILL.md`; copies under `templates/optional/<name>/.agents/skills/<name>/` + `.claude/skills/<name>/` stay byte-identical; test `template-data-loading-skill.test.ts` enforces for `tanstack-data-loading`.
 - Agent integrations (MCP servers, opt-in agent files): one entry each in `packages/cli/templates/integrations.json`, `default: true|false`. `kind: overlay` entry = directory `templates/optional/<name>`, copied only when selected. `tools/<name>` overlays always copied.

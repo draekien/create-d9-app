@@ -1,18 +1,20 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
-import { renderToString } from "react-dom/server"
+import { render, screen } from "@testing-library/react"
 import { expect, it } from "vitest"
-import { greetingQueryOptions } from "./greeting.queries.ts"
+import { greetingEditsQueryOptions, greetingQueryOptions } from "./greeting.queries.ts"
 import { QueryExample } from "./query.tsx"
 
-it("renders the prefetched greeting", async () => {
+it("renders the cached greeting and edit count", () => {
   const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: 60_000 } } })
-  await queryClient.prefetchQuery(greetingQueryOptions)
+  queryClient.setQueryData(greetingQueryOptions.queryKey, "Hello, query")
+  queryClient.setQueryData(greetingEditsQueryOptions.queryKey, 2)
 
-  const html = renderToString(
+  render(
     <QueryClientProvider client={queryClient}>
       <QueryExample />
     </QueryClientProvider>
   )
 
-  expect(html).toContain("Hello, query")
+  expect(screen.getByText("Hello, query")).toBeDefined()
+  expect(screen.getByText("Edited 2 times")).toBeDefined()
 })
