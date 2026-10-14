@@ -6,6 +6,17 @@ import { scratchRoot } from "./scratch-root.ts"
 
 const cliRoot = path.resolve(import.meta.dirname, "..")
 const ignoredDirs = new Set(["node_modules", ".turbo", "dist", ".output", ".nitro", ".tanstack"])
+const scaffoldTimeSkills = ["shadcn", "turborepo", "motion", "hugeicons", "tanstack-data-loading"]
+
+function isScaffoldTimeSkillFile(file: string) {
+  return (
+    file === "skills-lock.json" ||
+    scaffoldTimeSkills.some(
+      (skill) =>
+        file.startsWith(`.agents/skills/${skill}/`) || file.startsWith(`.claude/skills/${skill}/`),
+    )
+  )
+}
 
 let tmpRoot: string
 let appDir: string
@@ -68,8 +79,24 @@ afterAll(() => {
 
 test("scaffolded project has the expected files and dependencies", () => {
   const files = listFiles(appDir)
-  expect(files).toMatchSnapshot("files")
+  expect(files.filter((file) => !isScaffoldTimeSkillFile(file))).toMatchSnapshot("files")
   expect(dependencyMaps(files)).toMatchSnapshot("dependencies")
+})
+
+test.each(scaffoldTimeSkills.flatMap((skill) => [".agents", ".claude"].map((dir) => [dir, skill])))(
+  "%s/skills/%s/SKILL.md is installed at scaffold time",
+  (dir, skill) => {
+    expect(fs.existsSync(path.join(appDir, dir, "skills", skill, "SKILL.md"))).toBe(true)
+  },
+)
+
+test("skills-lock.json records hugeicons under its GitHub source", () => {
+  const lock = JSON.parse(fs.readFileSync(path.join(appDir, "skills-lock.json"), "utf8"))
+  expect(lock.skills.hugeicons).toMatchObject({
+    source: "hugeicons/hugeicons",
+    sourceType: "github",
+    skillPath: "skills/hugeicons/SKILL.md",
+  })
 })
 
 test.each(["build", "typecheck", "test", "check"])(

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest"
 import { readCatalog } from "../src/integrations.ts"
 import {
   buildCommand,
+  confirmUvInstall,
   missingValueMessage,
   printCommand,
   resolveFromFlags,
@@ -197,6 +198,13 @@ describe("buildCommand", () => {
     )
   })
 
+  it("adds --install-uv only when uv installation was chosen", () => {
+    expect(buildCommand(base, catalog, true)).toBe(
+      "pnpm create @draekien/d9-app app --yes --install-uv",
+    )
+    expect(buildCommand(base, catalog, false)).toBe("pnpm create @draekien/d9-app app --yes")
+  })
+
   it("adds --data-files only for the directory layout", () => {
     expect(buildCommand({ ...base, dataFiles: "directory" }, catalog)).toBe(
       "pnpm create @draekien/d9-app app --yes --data-files directory",
@@ -234,5 +242,39 @@ describe("missingValueMessage", () => {
 
   it("is undefined with --yes and no directory", () => {
     expect(missingValueMessage({ yes: true })).toBeUndefined()
+  })
+})
+
+describe("confirmUvInstall", () => {
+  const uvMessage = "tanstack-data-loading needs uv, which is not installed. Install it now?"
+
+  it("defaults to not installing uv", async () => {
+    const input = new MockReadable()
+    const output = new MockWritable()
+
+    const result = confirmUvInstall({}, ["tanstack-data-loading"], { input, output })
+    await press(input, output, uvMessage, enter)
+
+    expect(await result).toBe(false)
+  })
+
+  it("installs uv when the user accepts", async () => {
+    const input = new MockReadable()
+    const output = new MockWritable()
+
+    const result = confirmUvInstall({}, ["tanstack-data-loading"], { input, output })
+    await press(input, output, uvMessage, { sequence: "y", name: "y" }, enter)
+
+    expect(await result).toBe(true)
+  })
+
+  it("does not ask when --install-uv is passed", async () => {
+    const input = new MockReadable()
+    const output = new MockWritable()
+
+    expect(
+      await confirmUvInstall({ "install-uv": true }, ["tanstack-data-loading"], { input, output }),
+    ).toBe(true)
+    expect(output.buffer).toEqual([])
   })
 })

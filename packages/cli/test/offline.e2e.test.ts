@@ -48,6 +48,10 @@ describe("offline scaffold", () => {
     expect(result.status, `${result.stdout}${result.stderr}`).toBe(0)
     expect(fs.existsSync(path.join(dir, "package.json"))).toBe(true)
     expect(fs.existsSync(path.join(dir, ".git"))).toBe(false)
+    expect(result.stdout).toContain(
+      "Install the skills that could not be installed:\n  pnpm dlx skills@latest add shadcn/ui --skill shadcn --agent claude-code universal --copy --yes\n",
+    )
+    expect(fs.existsSync(path.join(dir, ".d9-skills"))).toBe(false)
   }, 60_000)
 
   it.each([

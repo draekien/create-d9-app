@@ -10,6 +10,14 @@ import { isInteractive } from "./interactive.ts"
 import { buildNextSteps } from "./next-steps.ts"
 import { applyOverlays } from "./overlays.ts"
 import {
+  formatPreflight,
+  installUv,
+  runPreflight,
+  type Tool,
+  uvInstallCommand,
+} from "./preflight.ts"
+import {
+  confirmUvInstall,
   missingValueMessage,
   printCommand,
   type ResolvedOptions,
@@ -17,6 +25,7 @@ import {
   resolveWithPrompts,
 } from "./prompts.ts"
 import { renameFiles } from "./rename-files.ts"
+import { installCommand, installSkills, readSkills, selectSkills } from "./skills.ts"
 import { packageNameFor, unexpectedEntries, validatePackageName } from "./target.ts"
 
 const helpText = `Usage: create-d9-app <dir> [options]
@@ -32,6 +41,7 @@ Options:
                  Comma-separated agent integrations to configure, or "none"
   --data-files <layout>
                  Where query and mutation factories live: "suffix" or "directory"
+  --install-uv   Install uv when a selected skill needs it and it is missing
   --help         Show this message
 `
 
@@ -72,6 +82,7 @@ async function main() {
       "no-install": { type: "boolean" },
       integrations: { type: "string" },
       "data-files": { type: "string" },
+      "install-uv": { type: "boolean" },
       help: { type: "boolean" },
     },
   })
@@ -88,6 +99,7 @@ async function main() {
     "no-install": values["no-install"],
     integrations: values.integrations,
     "data-files": values["data-files"],
+    "install-uv": values["install-uv"],
   }
 
   const catalog = readCatalog(templateRoot)
@@ -128,6 +140,22 @@ ${helpText}`)
     fail(`${targetDir} is not empty. Remove these entries or choose another directory:\n${listed}`)
   }
 
+  const skills = readSkills(templateRoot)
+  const skillNames = selectSkills(skills, options.integrations)
+  const uvRequiredBy = skillNames.filter((skill) => skills[skill]?.requires?.includes("uv"))
+  const tools: Tool[] = uvRequiredBy.length > 0 ? ["git", "pnpm", "uv"] : ["git", "pnpm"]
+  const preflight = runPreflight(tools)
+  process.stdout.write(formatPreflight(preflight))
+  const uvMissing = uvRequiredBy.length > 0 && !preflight.uv
+  const chooseUv = !uvMissing
+    ? false
+    : interactive
+      ? await confirmUvInstall(flags, uvRequiredBy, {
+          input: process.stdin,
+          output: process.stdout,
+        })
+      : Boolean(flags["install-uv"])
+
   copyDir(templateDir, targetDir)
   const selection = options.integrations
   applyOverlays(templateRoot, targetDir, selection)
@@ -140,6 +168,16 @@ ${helpText}`)
   if (repo && !repo.ok) {
     fail(`git initialisation failed:\n${repo.output}`)
   }
+
+  const failedSkills =
+    preflight.git && preflight.pnpm
+      ? await installSkills(targetDir, skills, skillNames, (skill) =>
+          process.stdout.write(`Installing skill ${skill}
+`),
+        )
+      : skillNames
+
+  const uvInstalled = chooseUv && installUv(process.platform)
 
   if (options.install) {
     const result = spawnSync("pnpm install", {
@@ -160,10 +198,21 @@ ${helpText}`)
   }
 
   process.stdout.write(`Created ${targetDir}\n`)
-  process.stdout.write(buildNextSteps({ targetDir, cwd: process.cwd(), install: options.install }))
+  process.stdout.write(
+    buildNextSteps({
+      targetDir,
+      cwd: process.cwd(),
+      install: options.install,
+      skillCommands: failedSkills.map((skill) => installCommand(skills, skill)),
+      uv:
+        uvMissing && !uvInstalled
+          ? { command: uvInstallCommand(process.platform), requiredBy: uvRequiredBy }
+          : undefined,
+    }),
+  )
 
   if (interactive) {
-    printCommand(options, { input: process.stdin, output: process.stdout }, catalog)
+    printCommand(options, { input: process.stdin, output: process.stdout }, catalog, chooseUv)
   }
 }
 

@@ -20,6 +20,7 @@ Options:
                  Comma-separated agent integrations to configure, or "none"
   --data-files <layout>
                  Where query and mutation factories live: "suffix" or "directory"
+  --install-uv   Install uv when a selected skill needs it and it is missing
   --help         Show this message
 ```
 
@@ -43,6 +44,9 @@ Every prompt has a flag. A flag answers its prompt without asking.
 | Install dependencies? | yes | `--no-install` |
 | Which agent integrations do you want? | `shadcn`, `hugeicons`, `motion`, `tanstack-data-loading` | `--integrations <names>` or `--integrations none` |
 | Where do query and mutation factories live? | `suffix` | `--data-files suffix` or `--data-files directory` |
+| tanstack-data-loading needs uv, which is not installed. Install it now? | no | `--install-uv` |
+
+The uv prompt appears only when a selected skill needs uv and `uv --version` fails.
 
 `--data-files` sets which files the `query-naming` and `mutation-naming` lint rules check: `suffix` checks `*.queries.ts` and `*.mutations.ts`, `directory` checks files under `queries/` and `mutations/`.
 

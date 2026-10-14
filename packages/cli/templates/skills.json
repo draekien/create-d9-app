@@ -1,0 +1,18 @@
+{
+  "shadcn": { "source": "shadcn/ui" },
+  "turborepo": { "source": "vercel/turborepo" },
+  "motion": { "source": "motiondivision/ai-kit" },
+  "hugeicons": {
+    "source": "hugeicons/hugeicons",
+    "fetch": {
+      "ref": "main",
+      "path": "skills/hugeicons",
+      "files": ["SKILL.md", "references/icon-list.md", "references/icon-list-flutter.md"]
+    }
+  },
+  "tanstack-data-loading": {
+    "source": "draekien/skills",
+    "integration": "tanstack-data-loading",
+    "requires": ["uv"]
+  }
+}
