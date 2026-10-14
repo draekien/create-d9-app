@@ -1,6 +1,6 @@
-# create-d9-app
+# @draekien/create-d9-app
 
-Scaffolds a Turborepo monorepo with TanStack Start, React, TypeScript, Biome, Tailwind, shadcn and pnpm, set up for AI coding agents from the first commit.
+Scaffolds a Turborepo monorepo with TanStack Start, React, TypeScript, Biome, Tailwind, shadcn and pnpm, set up for AI coding agents.
 
 ```sh
 pnpm create @draekien/d9-app my-app
@@ -8,32 +8,37 @@ cd my-app
 pnpm dev
 ```
 
-## What you get
+`npm create @draekien/d9-app`, `yarn create @draekien/d9-app` and `bun create @draekien/d9-app` run the same CLI. Pass `.` instead of a directory name to scaffold into the current directory, which must be empty.
 
-A pnpm workspace with a TanStack Start app and a shadcn `ui` package, Biome, Lefthook and Turborepo, every dependency pinned to an exact version, and project rules, skills, hooks and MCP servers for Claude Code, Codex and Cursor.
+## Usage
 
-## Documentation
+```text
+Usage: create-d9-app <dir> [options]
 
-Full documentation: [create-d9-app.wpei.me](https://create-d9-app.wpei.me/)
+Arguments:
+  <dir>          Directory to create the project in; "." uses the current directory
 
-- [Getting started](apps/site/content/docs/getting-started.md): the generated tree and the tool table.
-- [Requirements](apps/site/content/docs/requirements.md): Node.js, pnpm and git.
-- [Usage](apps/site/content/docs/usage.md): the command, prompts and flags, and non-interactive use.
-- [Working in the generated project](apps/site/content/docs/generated-project.md): root commands, examples and the pre-commit hook.
-- [Agent setup](apps/site/content/docs/agent-setup.md): agent files and the `upgrade-dependencies` skill.
-- [Errors](apps/site/content/docs/errors.md): every message and its fix.
-- [Versioning](apps/site/content/docs/versioning.md): release scheme and pin refresh.
+Options:
+  --yes          Accept every default and skip all prompts
+  --no-git       Do not initialise a git repository or make the initial commit
+  --no-install   Do not run pnpm install
+  --integrations <names>
+                 Comma-separated agent integrations to configure, or "none"
+  --data-files <layout>
+                 Where query and mutation factories live: "suffix" or "directory"
+  --help         Show this message
+```
 
-## Design decisions
+## Requirements
 
-- [ADR 0001: Pin template dependency versions](https://github.com/draekien/create-d9-app/blob/main/docs/adr/0001-pin-template-dependency-versions.md)
-- [ADR 0002: Always generate a monorepo](https://github.com/draekien/create-d9-app/blob/main/docs/adr/0002-always-generate-a-monorepo.md)
-- [ADR 0003: Generate templates at build time from upstream tools](https://github.com/draekien/create-d9-app/blob/main/docs/adr/0003-generate-templates-at-build-time-from-upstream-tools.md)
+| Requirement | Why |
+| --- | --- |
+| Node.js 22.18 or newer | The generated project sets `engines.node` to `>=22.18.0`. The CLI exits with an error below Node 22. |
+| pnpm | The CLI runs `pnpm install` unless you pass `--no-install`, whichever package manager runs the CLI. |
+| git | Optional. Used for the initial commit unless you pass `--no-git`. |
 
-## Contributing
+## More
 
-See [CONTRIBUTING.md](https://github.com/draekien/create-d9-app/blob/main/CONTRIBUTING.md). Bugs and requests: [issues](https://github.com/draekien/create-d9-app/issues).
-
-## License
-
-[MIT](https://github.com/draekien/create-d9-app/blob/main/LICENSE)
+- Documentation: [create-d9-app.wpei.me](https://create-d9-app.wpei.me/)
+- Repository: [github.com/draekien/create-d9-app](https://github.com/draekien/create-d9-app#readme)
+- License: [MIT](https://github.com/draekien/create-d9-app/blob/main/LICENSE)
