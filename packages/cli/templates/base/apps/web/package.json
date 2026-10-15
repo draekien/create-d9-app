@@ -14,19 +14,19 @@
     "@tanstack/react-form": "1.33.5",
     "@tanstack/react-form-devtools": "0.2.34",
     "@tanstack/react-hotkeys": "0.13.0",
-    "@tanstack/react-query": "5.104.1",
-    "@tanstack/react-query-devtools": "5.104.1",
-    "@tanstack/react-router": "1.170.41",
+    "@tanstack/react-query": "5.104.2",
+    "@tanstack/react-query-devtools": "5.104.2",
+    "@tanstack/react-router": "1.170.44",
     "@tanstack/react-router-devtools": "1.167.2",
     "@tanstack/react-router-ssr-query": "1.167.3",
-    "@tanstack/react-start": "1.168.60",
-    "@tanstack/react-table": "9.2.8",
+    "@tanstack/react-start": "1.169.1",
+    "@tanstack/react-table": "9.3.1",
     "@workspace/ui": "workspace:*",
-    "motion": "14.0.0",
+    "motion": "14.2.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "tailwindcss": "4.3.3",
-    "zod": "4.6.5"
+    "zod": "4.6.7"
   },
   "devDependencies": {
     "@babel/core": "8.0.7",
@@ -34,7 +34,7 @@
     "@tanstack/devtools-vite": "0.8.5",
     "@testing-library/dom": "10.4.2",
     "@testing-library/react": "16.3.3",
-    "@testing-library/user-event": "14.6.7",
+    "@testing-library/user-event": "14.6.8",
     "@types/node": "22.20.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
@@ -43,6 +43,6 @@
     "jsdom": "30.1.2",
     "typescript": "7.0.2",
     "vite": "8.3.4",
-    "vitest": "5.0.3"
+    "vitest": "5.0.4"
   }
 }
