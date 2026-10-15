@@ -1,5 +1,11 @@
 # @draekien/create-d9-app
 
+## 0.0.13
+
+### Patch Changes
+
+- c55289d: chore(templates): refresh pinned versions
+
 ## 0.0.12
 
 ### Patch Changes
