@@ -8,6 +8,7 @@ export type Skill = {
   source: string
   integration?: string
   requires?: string[]
+  gitignore?: string[]
   fetch?: Fetch
 }
 

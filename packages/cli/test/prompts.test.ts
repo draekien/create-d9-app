@@ -13,7 +13,7 @@ import { decline, enter, press } from "./helpers/drive.ts"
 import { MockReadable, MockWritable } from "./helpers/streams.ts"
 
 const catalog = readCatalog(path.resolve(import.meta.dirname, "..", "templates"))
-const defaults = ["shadcn", "hugeicons", "motion", "tanstack-data-loading"]
+const defaults = ["shadcn", "hugeicons", "motion", "tanstack-data-loading", "playwright-cli"]
 const down = { name: "down" }
 const dirMessage = "Where should the project be created?"
 const gitMessage = "Initialise a git repository?"
@@ -134,7 +134,7 @@ describe("resolveFromFlags integrations", () => {
 
   it("rejects an unknown name, naming the flag and the valid names", () => {
     expect(() => resolveFromFlags({ integrations: "shadcn,nope" }, catalog)).toThrow(
-      /--integrations.*nope.*shadcn, hugeicons, motion, motion-plus, motion-cursor-rule, tanstack-data-loading/,
+      /--integrations.*nope.*shadcn, hugeicons, motion, motion-plus, motion-cursor-rule, tanstack-data-loading, playwright-cli/,
     )
   })
 })

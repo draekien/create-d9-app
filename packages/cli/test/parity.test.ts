@@ -20,7 +20,7 @@ const prompts = {
   integrations: {
     message: "Which agent integrations do you want?",
     keys: [down, space, enter],
-    answer: ["hugeicons", "motion", "tanstack-data-loading"],
+    answer: ["hugeicons", "motion", "tanstack-data-loading", "playwright-cli"],
   },
   dataFiles: {
     message: "Where do query and mutation factories live?",

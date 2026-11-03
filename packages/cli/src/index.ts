@@ -162,6 +162,13 @@ ${helpText}`)
   writeMcpConfig(catalog, selection, targetDir)
   writeCodexDocs(catalog, selection, targetDir)
   applyDataFiles(targetDir, options.dataFiles)
+  const ignored = skillNames.flatMap((skill) => skills[skill]?.gitignore ?? [])
+  if (ignored.length > 0) {
+    fs.appendFileSync(
+      path.join(targetDir, ".gitignore"),
+      `\n# Agent skill output\n${ignored.join("\n")}\n`,
+    )
+  }
   setPackageName(targetDir, name)
 
   const repo = options.git ? initRepo(targetDir) : undefined

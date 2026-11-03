@@ -42,7 +42,7 @@ Every prompt has a flag. A flag answers its prompt without asking.
 | Where should the project be created? | `my-app` | `<dir>` |
 | Initialise a git repository? | yes | `--no-git` |
 | Install dependencies? | yes | `--no-install` |
-| Which agent integrations do you want? | `shadcn`, `hugeicons`, `motion`, `tanstack-data-loading` | `--integrations <names>` or `--integrations none` |
+| Which agent integrations do you want? | `shadcn`, `hugeicons`, `motion`, `tanstack-data-loading`, `playwright-cli` | `--integrations <names>` or `--integrations none` |
 | Where do query and mutation factories live? | `suffix` | `--data-files suffix` or `--data-files directory` |
 | tanstack-data-loading needs uv, which is not installed. Install it now? | no | `--install-uv` |
 

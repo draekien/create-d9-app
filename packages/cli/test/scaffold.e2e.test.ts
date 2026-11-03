@@ -6,7 +6,14 @@ import { scratchRoot } from "./scratch-root.ts"
 
 const cliRoot = path.resolve(import.meta.dirname, "..")
 const ignoredDirs = new Set(["node_modules", ".turbo", "dist", ".output", ".nitro", ".tanstack"])
-const scaffoldTimeSkills = ["shadcn", "turborepo", "motion", "hugeicons", "tanstack-data-loading"]
+const scaffoldTimeSkills = [
+  "shadcn",
+  "turborepo",
+  "motion",
+  "hugeicons",
+  "tanstack-data-loading",
+  "playwright-cli",
+]
 
 function isScaffoldTimeSkillFile(file: string) {
   return (
@@ -99,6 +106,10 @@ test("skills-lock.json records hugeicons under its GitHub source", () => {
   })
 })
 
+test(".gitignore ignores .playwright-cli/ when playwright-cli is selected", () => {
+  expect(fs.readFileSync(path.join(appDir, ".gitignore"), "utf8")).toContain("\n.playwright-cli/\n")
+})
+
 test.each(["build", "typecheck", "test", "check"])(
   "pnpm %s exits 0 in the scaffolded project",
   (script) => {
@@ -167,6 +178,8 @@ test("--integrations none writes no MCP, Cursor or Codex integration files", () 
   expect(files.mcp).toBeNull()
   expect(fs.existsSync(path.join(dir, ".cursor"))).toBe(false)
   expect(files.codexSection).toBeNull()
+  expect(fs.existsSync(path.join(dir, ".claude", "skills", "playwright-cli"))).toBe(false)
+  expect(fs.readFileSync(path.join(dir, ".gitignore"), "utf8")).not.toContain(".playwright-cli/")
   expect(files).toMatchSnapshot("integrations-none")
 }, 120_000)
 

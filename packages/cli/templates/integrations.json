@@ -19,5 +19,6 @@
     "default": false
   },
   "motion-cursor-rule": { "kind": "overlay", "hint": "Cursor only", "default": false },
-  "tanstack-data-loading": { "kind": "skill", "hint": "agent skill", "default": true }
+  "tanstack-data-loading": { "kind": "skill", "hint": "agent skill", "default": true },
+  "playwright-cli": { "kind": "skill", "hint": "browser automation skill", "default": true }
 }
