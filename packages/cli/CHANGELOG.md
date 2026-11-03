@@ -1,5 +1,15 @@
 # @draekien/create-d9-app
 
+## 0.0.13
+
+### Patch Changes
+
+- a33fefa: Install only SKILL.md for the hugeicons skill, because upstream removed its references files
+- 8fc1201: Declare VITEST in the scaffolded turbo.json test task so pnpm check reports no warnings
+- 4e3a0f7: Scope the scaffolded Intent edit gate to apps/web so edits elsewhere no longer require intent list
+- c55289d: chore(templates): refresh pinned versions
+- d5dbb7e: Add the playwright-cli skill as an agent integration, selected by default
+
 ## 0.0.12
 
 ### Patch Changes
