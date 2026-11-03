@@ -2,7 +2,8 @@
 import { appendFileSync, existsSync, mkdirSync, readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
-import { dirname, join, relative, sep } from 'node:path'
+import { dirname, isAbsolute, join, relative, resolve, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { createHash } from 'node:crypto'
 import { performance } from 'node:perf_hooks'
 
@@ -10,6 +11,7 @@ const AGENT = "codex"
 const CATALOG_COMMAND = "pnpm exec intent list --json --no-notices"
 const LOAD_COMMAND = "pnpm exec intent load <package>#<skill>"
 const EDIT_TOOLS = new Set(["Edit","Write","apply_patch"])
+const GATED_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..', 'apps', 'web')
 const GATE_DENY_REASON = "Blocked: check TanStack guidance before editing. If a listed skill matches, load it, then retry the edit."
 const INTENT_INVOCATION_PATTERN = /(?:^|&&|\|\||;|\|)\s*((?:bunx\s+--no-install\s+--package\s+@tanstack\/intent\s+intent)|(?:npm\s+exec\s+--no\s+--\s+intent)|(?:yarn\s+exec\s+intent)|(?:bunx\s+@tanstack\/intent(?:@latest)?)|(?:pnpm\s+exec\s+intent)|(?:pnpm\s+dlx\s+@tanstack\/intent(?:@latest)?)|(?:npx\s+@tanstack\/intent(?:@latest)?)|(?:yarn\s+dlx\s+@tanstack\/intent(?:@latest)?)|(?:(?:[^\s|;&]*[\\/])?intent))\s+(list|load)(?:\s+([^\s|;&]+))?/i
 
@@ -41,9 +43,46 @@ async function main() {
   }
 
   const toolName = event?.tool_name ?? event?.toolName
-  if (typeof toolName === 'string' && EDIT_TOOLS.has(toolName) && !hasIntentCheck(stateFile)) {
+  if (typeof toolName === 'string' && EDIT_TOOLS.has(toolName) && editsGatedDir(event) && !hasIntentCheck(stateFile)) {
     process.stdout.write(JSON.stringify(denyOutput()))
   }
+}
+
+function editsGatedDir(event) {
+  const paths = editedPaths(event?.tool_input ?? event?.toolArgs)
+  if (paths.length === 0) return true
+  return paths.some(isInsideGatedDir)
+}
+
+function editedPaths(toolInput) {
+  const input = typeof toolInput === 'string' ? parseJsonOrString(toolInput) : toolInput
+  if (typeof input === 'string') return patchPaths(input)
+  if (!input || typeof input !== 'object') return []
+  const direct = [input.file_path, input.notebook_path, input.path].filter((value) => typeof value === 'string')
+  const patched = Object.values(input).filter((value) => typeof value === 'string').flatMap(patchPaths)
+  return [...direct, ...patched]
+}
+
+function parseJsonOrString(value) {
+  try {
+    return JSON.parse(value)
+  } catch {
+    return value
+  }
+}
+
+function patchPaths(text) {
+  return [...text.matchAll(/^\*\*\* (?:Add File|Update File|Delete File|Move to): (.+)$/gm)].map((match) => match[1].trim())
+}
+
+function isInsideGatedDir(path) {
+  const absolute = isAbsolute(path) ? path : resolve(GATED_DIR, '..', '..', path)
+  const fromGated = relative(normalizeCase(GATED_DIR), normalizeCase(resolve(absolute)))
+  return fromGated === '' || (!fromGated.startsWith('..') && !isAbsolute(fromGated))
+}
+
+function normalizeCase(path) {
+  return process.platform === 'win32' ? path.toLowerCase() : path
 }
 
 function readEventFromStdin() {
