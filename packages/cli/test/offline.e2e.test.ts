@@ -43,6 +43,7 @@ describe("offline scaffold", () => {
       http_proxy: unreachable,
       https_proxy: unreachable,
       all_proxy: unreachable,
+      pnpm_config_fetch_retries: "0",
       npm_config_user_agent: "pnpm/11.25.0",
     })
     expect(result.status, `${result.stdout}${result.stderr}`).toBe(0)
