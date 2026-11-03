@@ -17,7 +17,7 @@ create-d9-app writes a `package.json` for every package in the generated project
 
 ## Decision
 
-We will pin exact dependency versions in the templates. Generated projects ship an upgrade-dependencies skill that an AI agent uses to upgrade those versions systematically, and this repository upgrades its own template pins through a refresh workflow that runs on the 1st and 15th of each month. The workflow applies patch and minor bumps automatically, holds major bumps for human review, and only pins versions published more than 24 hours earlier.
+We will pin exact dependency versions in the templates. Generated projects ship an upgrade-dependencies skill that an AI agent uses to upgrade those versions systematically, and this repository upgrades its own template pins through a refresh workflow that the owner runs by manual dispatch. The workflow applies patch and minor bumps automatically, holds major bumps for human review, and only pins versions published more than 24 hours earlier.
 
 ## Consequences
 
@@ -30,3 +30,4 @@ Every scaffold produced by a given create-d9-app release installs the same versi
 ## Amendments
 
 - 2026-10-10: This repository's template pins are upgraded by the fortnightly refresh workflow instead of by running the upgrade-dependencies skill. The refresh removes manual upgrade passes and enforces a 24-hour minimum release age. Generated projects still ship the skill.
+- 2026-11-03: Refresh workflow schedule removed; it runs on manual dispatch only. Generated projects ship the upgrade-dependencies skill, so scheduled pin bumps are no longer needed.
