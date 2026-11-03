@@ -8,6 +8,7 @@ Read before adding/changing tool choice, prompt, flag, default, or template.
 - Every tool choice, in any combination → project where install, build, lint, typecheck pass.
 - Prompts rendered with `@clack/prompts`. No hand-rolled terminal rendering.
 - Skills shipped inside `@tanstack/*` packages: wired with `@tanstack/intent` (`intent install`, `intent hooks install`). Never `skills add` for them.
+- `templates/base/.intent/hooks/intent-*-gate.mjs`: hand-edited to gate only edits under `apps/web/` (no path option in `intent hooks install`). Rerunning `intent hooks install` drops that scope; reapply it.
 - Skills hosted outside this repo: one entry each in `packages/cli/templates/skills.json`; installed at scaffold time with `pnpm dlx skills@latest` (ADR 0004). Never copied into `templates/`. `integration: <name>` = installed only when that `kind: skill` integration is selected.
 - Failed skill install: scaffold continues, exits 0, prints the command.
 - Skills hosted in this repo: copied from `templates/base`, never installed at scaffold time.
