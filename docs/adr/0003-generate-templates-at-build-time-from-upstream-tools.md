@@ -19,11 +19,11 @@ The shadcn package exports `addRegistryItems` from `shadcn/registry` but not `in
 
 ## Decision
 
-We will run upstream tools inside this repository, at pinned versions, through a refresh script, and commit their output under `templates/`. The published CLI only copies files from `templates/`; it never runs an upstream tool and never reaches the network for template content. A GitHub Actions workflow, scheduled on the 1st and 15th of each month and on manual dispatch, runs the refresh script, bumps pins, regenerates output, runs the regression suite, and auto-merges patch and minor changes; major bumps wait for human review.
+We will run upstream tools inside this repository, at pinned versions, through a refresh script, and commit their output under `templates/`. The published CLI only copies files from `templates/`; it never runs an upstream tool and never reaches the network for template content. A GitHub Actions workflow, run by manual dispatch, runs the refresh script, bumps pins, regenerates output, runs the regression suite, and auto-merges patch and minor changes; major bumps wait for human review.
 
 ## Consequences
 
-A scaffold works offline and installs exactly what the regression suite tested. Every upstream change arrives as a reviewable diff in a pull request. Templates trail upstream by at least one day (pnpm `minimumReleaseAge` default 1440 minutes) and by one release cycle of this CLI. The refresh script and the scheduled workflow are code this repository maintains, with no prior art in other `create-*` CLIs. Template content that no upstream CLI produces is hand-written and kept current only by pin bumps.
+A scaffold works offline and installs exactly what the regression suite tested. Every upstream change arrives as a reviewable diff in a pull request. Templates trail upstream by at least one day (pnpm `minimumReleaseAge` default 1440 minutes) and by one release cycle of this CLI. The refresh script and the refresh workflow are code this repository maintains, with no prior art in other `create-*` CLIs. Template content that no upstream CLI produces is hand-written and kept current only by pin bumps.
 
 ## Alternatives considered
 
@@ -38,3 +38,4 @@ A scaffold works offline and installs exactly what the regression suite tested. 
 - 2026-10-10: Refresh schedule set to the 1st and 15th of each month instead of daily, to reduce pull request volume.
 - 2026-10-10: Each major bump opens its own pull request on branch `bot/major-<slug>` with auto-merge off, so the owner reviews breaking changes one at a time.
 - 2026-10-14: Agent skills hosted outside this repository are installed at scaffold time instead (ADR 0004). shadcn components, Intent wiring, and the Motion reviewer agent and Cursor rule stay generated at build time.
+- 2026-11-03: Refresh schedule removed; workflow runs on manual dispatch only, because generated projects ship the upgrade-dependencies skill.
