@@ -19,6 +19,10 @@ describe("selectSkills", () => {
     ])
   })
 
+  it("adds playwright-cli when its integration is selected", () => {
+    expect(selectSkills(skills, ["playwright-cli"])).toEqual([...always, "playwright-cli"])
+  })
+
   it("ignores selected integrations that are not skills", () => {
     expect(selectSkills(skills, ["shadcn", "motion-plus"])).toEqual(always)
   })

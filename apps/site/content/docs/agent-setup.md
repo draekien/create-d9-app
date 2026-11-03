@@ -12,10 +12,16 @@ The generated project configures Claude Code and Codex. Cursor reads `.cursor/mc
 | `.claude/rules/*.md` | Path-scoped rules for TypeScript, components, tests and generated files. Loaded only for matching files. |
 | `.claude/settings.json`, `.codex/hooks.json` | `SessionStart` and `PreToolUse` hooks that run the TanStack Intent gate. |
 | `.intent/hooks/` | The gate: lists the skills shipped inside the installed `@tanstack/*` packages at session start, and denies the first edit of a session until the agent has checked that list and loaded a matching skill with `pnpm exec intent load`. |
-| `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the latest version of the skills each project publishes, installed while scaffolding and recorded by content hash in `skills-lock.json`; `tanstack-data-loading` from `draekien/skills` unless you deselect it; and `upgrade-dependencies`. |
+| `.agents/skills/`, `.claude/skills/` | `shadcn`, `turborepo`, `motion` and `hugeicons`, the latest version of the skills each project publishes, installed while scaffolding and recorded by content hash in `skills-lock.json`; `tanstack-data-loading` from `draekien/skills` and `playwright-cli` from `microsoft/playwright-cli` unless you deselect them; and `upgrade-dependencies`. |
 | `.claude/agents/motion-reviewer.md` | Motion's reviewer subagent, from the same source as the `motion` skill. |
 | `.mcp.json`, `.cursor/mcp.json` | MCP servers for Claude Code and Cursor: `shadcn` and `hugeicons` as pinned `npx` commands, `motion` over HTTP. Claude Code asks you to approve project servers on first use. |
 | `biome.json` | GritQL plugins that enforce React, TanStack Router, TanStack Query and styling rules, such as no fetch in an effect, no inline query key, route options in inference order, and `cn()` for composed class names. |
+
+## playwright-cli
+
+Selected by default in the integrations prompt. `--integrations` without `playwright-cli`, or `--integrations none`, leaves it out.
+
+The skill drives a browser through the [`@playwright/cli`](https://github.com/microsoft/playwright-cli) CLI so an agent can check UI changes. `playwright-cli open` needs a local Chrome or Chromium. The CLI writes its output to `.playwright-cli/`, which the generated `.gitignore` ignores.
 
 ## tanstack-data-loading
 

@@ -14,5 +14,10 @@
     "source": "draekien/skills",
     "integration": "tanstack-data-loading",
     "requires": ["uv"]
+  },
+  "playwright-cli": {
+    "source": "microsoft/playwright-cli",
+    "integration": "playwright-cli",
+    "gitignore": [".playwright-cli/"]
   }
 }
