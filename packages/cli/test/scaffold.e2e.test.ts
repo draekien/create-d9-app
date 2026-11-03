@@ -129,6 +129,7 @@ test("pnpm exec intent list lists TanStack skills", () => {
 test("pnpm check exits 0 until a line comment is added to an apps/web source file", () => {
   const clean = run("pnpm", ["check"], appDir)
   expect(clean.status, clean.output).toBe(0)
+  expect(clean.output).not.toMatch(/Found \d+ warning/)
 
   const file = path.join(appDir, "apps", "web", "src", "home.tsx")
   const original = fs.readFileSync(file, "utf8")

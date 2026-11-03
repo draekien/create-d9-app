@@ -14,7 +14,9 @@
     "typecheck": {
       "dependsOn": ["^typecheck"]
     },
-    "test": {},
+    "test": {
+      "env": ["VITEST"]
+    },
     "dev": {
       "cache": false,
       "persistent": true
