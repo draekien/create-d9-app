@@ -7,7 +7,7 @@
     "fetch": {
       "ref": "main",
       "path": "skills/hugeicons",
-      "files": ["SKILL.md", "references/icon-list.md", "references/icon-list-flutter.md"]
+      "files": ["SKILL.md"]
     }
   },
   "tanstack-data-loading": {
